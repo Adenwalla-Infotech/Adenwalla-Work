@@ -28,7 +28,7 @@ if(isset($_POST['submit'])){
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Skydash Admin</title>
+  <title>Skydash Admin-123</title>
   <!-- plugins:css -->
   <link rel="stylesheet" href="assets/vendors/feather/feather.css">
   <link rel="stylesheet" href="assets/vendors/ti-icons/css/themify-icons.css">
