@@ -15,13 +15,14 @@ if(isset($_POST['submit'])){
        _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $userpassword, $useremail);
     }else{
         $alert = new PHPAlert();
+        
         $alert->warn("All Feilds are Required");
     }
 
 }
 
 ?>
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 
 <head>
