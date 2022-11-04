@@ -26,8 +26,8 @@ if (isset($_POST['submit'])) {
     $usertype = $_POST['usertype'];
     $userphone = $_POST['userphone'];
     
-    $userlongitude = $_POST['userlongitude'];
-    $userlatitude = $_POST['userlatitude'];
+    // $userlongitude = $_POST['userlongitude'];
+    // $userlatitude = $_POST['userlatitude'];
 
 
     $userwebsite =  $_POST['userwebsite'];
@@ -102,11 +102,11 @@ if (isset($_POST['submit'])) {
                                 <form method="POST" action="">
                                     <div class="row g-3">
                                         <div class="col">
-                                            <label for="username" class="form-label">Name</label>
+                                            <label for="username" class="form-label">User Name</label>
                                             <input type="text" class="form-control" placeholder="User name" aria-label="user name" id="username" name="username" required>
                                         </div>
                                         <div class="col">
-                                            <label for="useremail" class="form-label">Email</label>
+                                            <label for="useremail" class="form-label">UserEmail</label>
                                             <input type="text" class="form-control" placeholder="Email ID" aria-label="Email Id" id="useremail" name="useremail" required>
                                         </div>
                                     </div>
@@ -121,21 +121,21 @@ if (isset($_POST['submit'])) {
                                         </div>
 
                                         <div class="col">
-                                            <label for="userphone" class="form-label">Phone</label>
+                                            <label for="userphone" class="form-label">User Phone</label>
                                             <input type="tel" class="form-control" placeholder="Phone Number" aria-label="phone" id="userphone" name="userphone" required>
                                         </div>
                                     </div>
                                     <div class="row g-3" style="margin-top: 20px;">
 
 
-                                        <div class="col">
-                                            <label for="userlocation" class="form-label">Location</label>
+                                        <!-- <div class="col">
+                                            <label for="userlocation" class="form-label">User Location</label>
                                             <input type="text" class="form-control" placeholder="IP Location" aria-label="user location" id="userlocation" name="userlocation">
-                                        </div>
+                                        </div> -->
 
 
                                         <div class="col">
-                                            <label for="userwebsite" class="form-label">Website</label>
+                                            <label for="userwebsite" class="form-label">User Website</label>
                                             <input type="text" class="form-control" placeholder="User Website" aria-label="user website" id="userwebsite" name="userwebsite">
                                         </div>
 
