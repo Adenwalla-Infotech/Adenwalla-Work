@@ -92,11 +92,11 @@ if (isset($_POST['submit'])) {
                                 <form method="POST" action="">
                                     <div class="row g-3">
                                         <div class="col">
-                                            <label for="useremail" class="form-label">Email</label>
+                                            <label for="useremail" class="form-label">User Name</label>
                                             <input type="text" value="<?php echo _getsingleuser($_id, '_username'); ?>" class="form-control" placeholder="User name" aria-label="user name" id="username" name="username" required>
                                         </div>
                                         <div class="col">
-                                            <label for="useremail" class="form-label">Email</label>
+                                            <label for="useremail" class="form-label">User Email</label>
                                             <input type="email" value="<?php echo _getsingleuser($_id, '_useremail'); ?>" class="form-control" placeholder="Email ID" aria-label="Email Id" name="useremail" required>
                                         </div>
                                     </div>
@@ -118,7 +118,7 @@ if (isset($_POST['submit'])) {
                                             </select>
                                         </div>
                                         <div class="col">
-                                            <label for="userphone" class="form-label">Phone</label>
+                                            <label for="userphone" class="form-label">User Phone</label>
                                             <input type="tel" value="<?php echo _getsingleuser($_id, '_userphone'); ?>" class="form-control" placeholder="Phone Number" aria-label="phone" name="userphone" required>
                                         </div>
                                     </div>
@@ -127,12 +127,12 @@ if (isset($_POST['submit'])) {
 
 
                                         <div class="col">
-                                            <label for="userlocation" class="form-label">Location</label>
+                                            <label for="userlocation" class="form-label">IP Location</label>
                                             <input type="text" class="form-control" placeholder="IP Location" aria-label="user location" id="userlocation" name="userlocation">
                                         </div>
 
                                         <div class="col">
-                                            <label for="userwebsite" class="form-label">Website</label>
+                                            <label for="userwebsite" class="form-label"> User Website</label>
                                             <input type="text" value="<?php echo _getsingleuser($_id, '_usersite'); ?>" class="form-control" placeholder="User Website" aria-label="user website" name="userwebsite">
                                         </div>
 
