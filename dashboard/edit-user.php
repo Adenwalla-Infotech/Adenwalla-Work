@@ -124,7 +124,7 @@ if (isset($_POST['submit'])) {
                                             </select>
                                         </div>
                                         <div class="col">
-                                            <input type="password" value="<?php echo _getsingleuser($_id, '_userpassword'); ?>" class="form-control" placeholder="Password" aria-label="password" name="userpassword" name="Password" required>
+                                            <input disabled type="password" value="<?php echo _getsingleuser($_id, '_userpassword'); ?>" class="form-control" placeholder="Password" aria-label="password" name="userpassword" name="Password" required>
                                         </div>
                                     </div>
 
