@@ -24,20 +24,15 @@ if (isset($_POST['submit'])) {
     $username = $_POST['username'];
     $useremail = $_POST['useremail'];
     $usertype = $_POST['usertype'];
-    $userpassword = $_POST['userpassword'];
     $userphone = $_POST['userphone'];
     
     $userlongitude = $_POST['userlongitude'];
     $userlatitude = $_POST['userlatitude'];
 
-    $userbio = $_POST['userbio'];
-    $userage = $_POST['userage'];
 
-    $userwebsite = $_POST['userwebsite'];
-    $usertwitter = $_POST['usertwitter'];
-    $userinstagram = $_POST['userinstagram'];
-    $userlinkedin = $_POST['userlinkedin'];
-    
+    $userwebsite =  $_POST['userwebsite'];
+
+
 
     if (isset($_POST['notify'])) {
         $notify = $_POST['notify'];
@@ -55,7 +50,7 @@ if (isset($_POST['submit'])) {
         $isverified = false;
     }
 
-    _createuser($userpassword, $useremail, $username, $usertype, $userphone,$userlongitude, $userlatitude,$userbio,$userage,$userwebsite,$usertwitter,$userinstagram,$userlinkedin,$isactive, $isverified, $notify);
+    _createuser(  $username , $useremail, $usertype, $userphone, $userwebsite,  $isactive, $isverified, $notify);
 }
 
 ?>
@@ -107,69 +102,41 @@ if (isset($_POST['submit'])) {
                                 <form method="POST" action="">
                                     <div class="row g-3">
                                         <div class="col">
-                                            <input type="text" class="form-control" placeholder="User name" aria-label="user name" name="username" required>
+                                            <label for="username" class="form-label">Name</label>
+                                            <input type="text" class="form-control" placeholder="User name" aria-label="user name" id="username" name="username" required>
                                         </div>
                                         <div class="col">
-                                            <input type="text" class="form-control" placeholder="Email ID" aria-label="Email Id" name="useremail" required>
+                                            <label for="useremail" class="form-label">Email</label>
+                                            <input type="text" class="form-control" placeholder="Email ID" aria-label="Email Id" id="useremail" name="useremail" required>
                                         </div>
                                     </div>
                                     <div class="row g-3" style="margin-top: 20px;">
                                         <div class="col">
-                                            <select style="height: 46px;" name="usertype" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
+                                            <label for="usertype" class="form-label">Account Type</label>
+                                            <select style="height: 46px;" id="usertype" name="usertype" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
                                                 <option>Account Type</option>
                                                 <option value="0">Student</option>
                                                 <option value="1">Teacher</option>
                                             </select>
                                         </div>
+
                                         <div class="col">
-                                            <input type="password" class="form-control" placeholder="Password" aria-label="password" name="userpassword" required>
+                                            <label for="userphone" class="form-label">Phone</label>
+                                            <input type="tel" class="form-control" placeholder="Phone Number" aria-label="phone" id="userphone" name="userphone" required>
                                         </div>
                                     </div>
                                     <div class="row g-3" style="margin-top: 20px;">
+
+
                                         <div class="col">
-                                            <input type="tel" class="form-control" placeholder="Phone Number" aria-label="phone" name="userphone" required>
+                                            <label for="userlocation" class="form-label">Location</label>
+                                            <input type="text" class="form-control" placeholder="IP Location" aria-label="user location" id="userlocation" name="userlocation">
                                         </div>
 
-                                        <div class="col">
-                                            <!-- <input type="text" class="form-control" placeholder="User Bio" aria-label="User Bio" name="userbio" required> -->
-                                            <textarea name="userbio" id="userbio" class="form-control" placeholder="User Bio" ></textarea>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="row g-3" style="margin-top: 30px;">
 
                                         <div class="col">
-                                            <input type="text" class="form-control" placeholder="User Age" aria-label="user age" name="userage">
-                                        </div>
-
-                                        <div class="col">
-                                            <input type="text" class="form-control" placeholder="User Twitter" aria-label="user twitter" name="usertwitter">
-                                        </div>
-
-                                    </div>
-
-
-                                    <div class="row g-3" style="margin-top: 30px;">
-
-                                        <div class="col">
-                                            <input type="text" class="form-control" placeholder="User Linkedin" aria-label="user linkedin" name="userlinkedin">
-                                        </div>
-
-                                        <div class="col">
-                                            <input type="text" class="form-control" placeholder="User Instagram" aria-label="user instagram" name="userinstagram">
-                                        </div>
-
-                                    </div>
-
-                                    <div class="row g-3" style="margin-top: 30px;">
-
-                                        <div class="col">
-                                            <input type="text" class="form-control" placeholder="User Latitude" aria-label="user latitude" name="userlatitude">
-                                        </div>
-
-                                        <div class="col">
-                                            <input type="text" class="form-control" placeholder="User Longitude" aria-label="user longitude" name="userlongitude">
+                                            <label for="userwebsite" class="form-label">Website</label>
+                                            <input type="text" class="form-control" placeholder="User Website" aria-label="user website" id="userwebsite" name="userwebsite">
                                         </div>
 
                                     </div>
@@ -188,9 +155,6 @@ if (isset($_POST['submit'])) {
                                             </label>
                                         </div>
 
-                                        <div class="col">
-                                            <input type="text" class="form-control" placeholder="User Website" aria-label="user website" name="userwebsite" >
-                                        </div>
 
                                     </div>
 

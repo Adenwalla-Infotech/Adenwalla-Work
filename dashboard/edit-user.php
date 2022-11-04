@@ -23,20 +23,11 @@ if (isset($_POST['submit'])) {
     $username = $_POST['username'];
     $useremail = $_POST['useremail'];
     $usertype = $_POST['usertype'];
-    $userpassword = $_POST['userpassword'];
     $userphone = $_POST['userphone'];
 
 
-    $userlongitude = $_POST['userlongitude'];
-    $userlatitude = $_POST['userlatitude'];
+    $userwebsite =  $_POST['userwebsite'];
 
-    $userbio = $_POST['userbio'];
-    $userage = $_POST['userage'];
-
-    $userwebsite = $_POST['userwebsite'];
-    $usertwitter = $_POST['usertwitter'];
-    $userinstagram = $_POST['userinstagram'];
-    $userlinkedin = $_POST['userlinkedin'];
 
 
 
@@ -56,7 +47,7 @@ if (isset($_POST['submit'])) {
         $isverified = false;
     }
 
-    _updateuser($userpassword, $useremail, $username, $usertype, $userphone, $userlongitude, $userlatitude, $userbio, $userage, $userwebsite, $usertwitter, $userinstagram, $userlinkedin, $isactive, $isverified, $_id);
+    _updateuser($username, $useremail, $usertype, $userphone, $userwebsite,  $isactive, $isverified, $_id);
 }
 
 ?>
@@ -101,15 +92,18 @@ if (isset($_POST['submit'])) {
                                 <form method="POST" action="">
                                     <div class="row g-3">
                                         <div class="col">
-                                            <input type="text" value="<?php echo _getsingleuser($_id, '_username'); ?>" class="form-control" placeholder="User name" aria-label="user name" name="username" required>
+                                            <label for="useremail" class="form-label">Email</label>
+                                            <input type="text" value="<?php echo _getsingleuser($_id, '_username'); ?>" class="form-control" placeholder="User name" aria-label="user name" id="username" name="username" required>
                                         </div>
                                         <div class="col">
+                                            <label for="useremail" class="form-label">Email</label>
                                             <input type="email" value="<?php echo _getsingleuser($_id, '_useremail'); ?>" class="form-control" placeholder="Email ID" aria-label="Email Id" name="useremail" required>
                                         </div>
                                     </div>
 
                                     <div class="row g-3" style="margin-top: 20px;">
                                         <div class="col">
+                                            <label for="usertype" class="form-label">Account Type</label>
                                             <select style="height: 46px;" name="usertype" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
                                                 <?php
                                                 $type = _getsingleuser($_id, '_usertype');
@@ -120,55 +114,31 @@ if (isset($_POST['submit'])) {
                                                                                                                                                                                                                                         if ($type != 0) { ?><option value="0">Student</option><?php }
                                                                                                                                                                                                                                                                                             if ($type != 1) { ?><option value="1">Teacher</option><?php }
                                                                                                                                                                                                                                                                                                                                                 if ($type != 2) { ?><option value="2">Site Admin</option><?php }
-                                                                                                                                                                                                                                                                                                                                                                                            ?>
+                                                                                                                                                                                                                                                                                                                                                                                                            ?>
                                             </select>
                                         </div>
                                         <div class="col">
-                                            <input type="password" value="<?php echo _getsingleuser($_id, '_userpassword'); ?>" class="form-control" placeholder="Password" aria-label="password" name="userpassword" name="Password" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="row g-3" style="margin-top: 20px;">
-                                        <div class="col">
+                                            <label for="userphone" class="form-label">Phone</label>
                                             <input type="tel" value="<?php echo _getsingleuser($_id, '_userphone'); ?>" class="form-control" placeholder="Phone Number" aria-label="phone" name="userphone" required>
                                         </div>
-
-                                        <div class="col">
-                                            <!-- <input type="text" class="form-control" placeholder="User Bio" aria-label="User Bio" name="userbio" required> -->
-                                            <textarea name="userbio" id="userbio" class="form-control" placeholder="User Bio">
-                                            <?php echo _getsingleuser($_id, '_userbio'); ?>
-                                            </textarea>
-                                        </div>
-
-                                    </div>
-
-
-                                    <div class="row g-3 " style="margin-top: 20px;">
-                                        <div class="col">
-                                            <input type="text" value="<?php echo _getsingleuser($_id, '_userage'); ?>" class="form-control" placeholder="User Age" aria-label="user age" name="userage">
-                                        </div>
-                                        <div class="col">
-                                            <input type="text" value="<?php echo _getsingleuser($_id, '_usertwitter'); ?>" class="form-control" placeholder="User Twitter" aria-label="user twitter" name="usertwitter">
-                                        </div>
                                     </div>
 
                                     <div class="row g-3" style="margin-top: 20px;">
+
+
                                         <div class="col">
-                                            <input type="text" value="<?php echo _getsingleuser($_id, '_userlinked'); ?>" class="form-control" placeholder="User Linkedin" aria-label="user linkedin" name="userlinkedin">
+                                            <label for="userlocation" class="form-label">Location</label>
+                                            <input type="text" class="form-control" placeholder="IP Location" aria-label="user location" id="userlocation" name="userlocation">
                                         </div>
+
                                         <div class="col">
-                                            <input type="text" value="<?php echo _getsingleuser($_id, '_userinstagram'); ?>" class="form-control" placeholder="User Instagram" aria-label="user instagram" name="userinstagram">
+                                            <label for="userwebsite" class="form-label">Website</label>
+                                            <input type="text" value="<?php echo _getsingleuser($_id, '_usersite'); ?>" class="form-control" placeholder="User Website" aria-label="user website" name="userwebsite">
                                         </div>
+
+
                                     </div>
 
-                                    <div class="row g-3" style="margin-top: 20px;">
-                                        <div class="col">
-                                            <input type="text" value="<?php echo _getsingleuser($_id, '_userlatitude'); ?>" class="form-control" placeholder="User Latitude" aria-label="user latitude" name="userlatitude">
-                                        </div>
-                                        <div class="col">
-                                            <input type="text" value="<?php echo _getsingleuser($_id, '_userlongitude'); ?>" class="form-control" placeholder="User Longitude" aria-label="user longitude" name="userlongitude">
-                                        </div>
-                                    </div>
 
 
                                     <div class="row g-3" style="margin-top: 20px;">
@@ -187,9 +157,6 @@ if (isset($_POST['submit'])) {
                                             </label>
                                         </div>
 
-                                        <div class="col">
-                                            <input type="text" value="<?php echo _getsingleuser($_id, '_usersite'); ?>" class="form-control" placeholder="User Website" aria-label="user website" name="userwebsite">
-                                        </div>
 
                                     </div>
 

@@ -261,6 +261,9 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_userlinked` varchar(25) NOT NULL,
                 `_usertwitter` varchar(25) NOT NULL,
 
+                
+                `_userdp` varchar(25) NOT NULL,
+
 
                 `_usertype` int(11) NOT NULL,
                 `_userstatus` varchar(50) NOT NULL,
@@ -400,12 +403,12 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
 
 /* User Functions */
 
-function _createuser($userpassword, $useremail, $username, $usertype, $userphone, $userlongitude, $userlatitude, $userbio, $userage, $userwebsite, $usertwitter, $userinstagram, $userlinkedin, $isactive, $isverified, $notify)
+function _createuser($username, $useremail, $usertype, $userphone, $userwebsite,  $isactive, $isverified, $notify)
 {
     require('_config.php');
     require('_alert.php');
-    if ($userpassword != '' && $useremail != '' && $username != '' && $usertype != '' && $userphone != '' && $userphone != '') {
-        $enc_password = md5($userpassword);
+    if ($useremail != '' && $username != '' && $usertype != '' && $userphone != '') {
+
         $userotp = rand(1111, 9999);
         $subject = "Account Created";
         $message = "Account Created Successfully";
@@ -417,14 +420,7 @@ function _createuser($userpassword, $useremail, $username, $usertype, $userphone
                 $alert = new PHPAlert();
                 $alert->warn("User Already Exists");
             } else {
-                $sql = "INSERT INTO `tblusers`(`_username`, `_useremail`, `_userphone`, `_usertype`, `_userstatus`, `_userpassword`, `_userlongitude` ,
-                `_userlatitude`,
-                `_userbio`,
-                `_userage`,
-                `_usersite`,
-                `_userinstagram`,
-                `_userlinked`,
-                `_usertwitter` , `_userotp`, `_userverify`) VALUES ('$username','$useremail', '$userphone', '$usertype', '$isactive', '$enc_password',  '$userlongitude', '$userlatitude', '$userbio', '$userage', '$userwebsite' , '$userinstagram' , '$userlinkedin',   '$usertwitter',  '$userotp', '$isverified')";
+                $sql = "INSERT INTO `tblusers`(`_username`, `_useremail`, `_userphone`, `_usertype`, `_userstatus`,`_usersite`, `_userotp`, `_userverify`) VALUES ('$username','$useremail', '$userphone', '$usertype', '$isactive','$userwebsite', '$userotp', '$isverified')";
 
                 $query = mysqli_query($conn, $sql);
                 if ($query) {
@@ -709,12 +705,13 @@ function _deleteuser($id)
     }
 }
 
-function _updateuser($userpassword, $useremail, $username, $usertype, $userphone, $userlongitude, $userlatitude, $userbio, $userage, $userwebsite, $usertwitter, $userinstagram, $userlinkedin, $isactive, $isverified, $id)
+function _updateuser($username, $useremail, $usertype, $userphone, $userwebsite,  $isactive, $isverified, $_id)
 {
     require('_config.php');
     require('_alert.php');
-    $enc_pass = md5($userpassword);
-    $sql = "UPDATE `tblusers` SET `_username`='$username',`_useremail`='$useremail',`_userphone`='$userphone'  ,    `_userlongitude`='$userlongitude'  ,`_userlatitude`='$userlatitude'  ,`_userbio`='$userbio'  ,`_userage`='$userage'  ,`_usersite`='$userwebsite'  ,`_usertwitter`='$usertwitter'  ,`_userinstagram`='$userinstagram'  ,`_userlinked`='$userlinkedin'      ,`_usertype`='$usertype' ,`_userstatus`='$isactive',`_userpassword`='$enc_pass',`_userverify`='$isverified' WHERE `_id` = $id";
+
+    $sql = "UPDATE `tblusers` SET `_username`='$username' , `_useremail`='$useremail' , `_userphone`='$userphone' 
+    , `_usersite`='$userwebsite' , `_usertype`='$usertype' , `_userstatus`='$isactive' , `_userverify`='$isverified' WHERE `_id` = $_id";
     $query = mysqli_query($conn, $sql);
     if ($query) {
         $alert = new PHPAlert();
