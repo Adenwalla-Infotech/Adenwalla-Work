@@ -25,6 +25,9 @@ if (isset($_POST['submit'])) {
     $useremail = $_POST['useremail'];
     $usertype = $_POST['usertype'];
     $userphone = $_POST['userphone'];
+    
+    $userlongitude = $_POST['userlongitude'];
+    $userlatitude = $_POST['userlatitude'];
 
 
     $userwebsite =  $_POST['userwebsite'];
