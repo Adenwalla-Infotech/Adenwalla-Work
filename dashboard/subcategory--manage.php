@@ -82,8 +82,7 @@ session_start();
                                         </div>
                                         
                                         <div class="col-lg-3" style="margin-bottom: 20px;">
-                                            <input type="text" class="form-control form-control-sm" name="categoryid"
-                                                placeholder="Category ID">
+                                            
                                         </div>
 
                                         <div class="col-lg-2" style="margin-bottom: 20px;">
