@@ -70,7 +70,7 @@ session_start();
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Manage Category</h4>
+                                <h4 class="card-title">Manage Parent (ALL Category)</h4>
                                 <p class="card-description">
                                     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti fugit cum recusandae aut similique nihil optio, esse ipsam. Quasi, ipsa.
                                 </p>

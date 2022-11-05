@@ -70,7 +70,7 @@ session_start();
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Manage Sub-Category</h4>
+                                <h4 class="card-title">Manage Child (All Sub-Category)</h4>
                                 <p class="card-description">
                                 From here, you'll see a list of all the categories on your site. You can edit or delete them from here. You can also change the order of your categories by dragging and dropping them into the order you
                                 </p>
@@ -79,10 +79,6 @@ session_start();
                                         <div class="col-lg-3" style="margin-bottom: 20px;">
                                             <input type="text" class="form-control form-control-sm" name="subcategoryname"
                                                 placeholder="Sub Category Name">
-                                        </div>
-                                        
-                                        <div class="col-lg-3" style="margin-bottom: 20px;">
-                                            
                                         </div>
 
                                         <div class="col-lg-2" style="margin-bottom: 20px;">

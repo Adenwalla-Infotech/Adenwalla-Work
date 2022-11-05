@@ -70,7 +70,7 @@ session_start();
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Manage Category</h4>
+                                <h4 class="card-title">Manage Parent (All Category)</h4>
                                 <p class="card-description">
                                 From here, you'll see a list of all the categories on your site. You can edit or delete them from here. You can also change the order of your categories by dragging and dropping them into the order you
                                 </p>

@@ -60,22 +60,10 @@
       </a>
       <div class="collapse" id="ui-category">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="add-category">Add Category</a></li>
-          <li class="nav-item"> <a class="nav-link" href="manage-category">Manage Category</a></li>
-        </ul>
-      </div>
-    </li>
-
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="collapse" href="#ui-subcategoryId" aria-expanded="false" aria-controls="ui-basic">
-      <i class="mdi mdi-source-fork menu-icon"></i>
-        <span class="menu-title">Sub Category</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="ui-subcategoryId">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="add-subcategory">Add Subcategory</a></li>
-          <li class="nav-item"> <a class="nav-link" href="manage-subcategory">Manage Category</a></li>
+          <li class="nav-item"> <a class="nav-link" href="add-category">Add Parent</a></li>
+          <li class="nav-item"> <a class="nav-link" href="add-subcategory">Add Child</a></li>
+          <li class="nav-item"> <a class="nav-link" href="manage-category">Manage Parent</a></li>
+          <li class="nav-item"> <a class="nav-link" href="manage-subcategory">Manage Child</a></li>
         </ul>
       </div>
     </li>

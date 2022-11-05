@@ -72,7 +72,7 @@ if (isset($_POST['submit'])) {
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Edit Sub-Category</h4>
+                                <h4 class="card-title">Edit Child (Edit Sub-Category)</h4>
                                 <p class="card-description">
                                 Before you start writing about your new topic, it's important to do some research. This will help you to understand the topic better, This will make it easier for you to write about the topic, and it will also make it more likely that people will be interested in reading what you have to say.
                                 </p>

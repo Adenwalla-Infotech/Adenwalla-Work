@@ -40,7 +40,7 @@ $start_from = ($page-1)*$record_per_page;
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Manage Users | <?php echo _siteconfig('_sitetitle'); ?></title>
+  <title>Manage Tickets | <?php echo _siteconfig('_sitetitle'); ?></title>
   <!-- plugins:css -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@mdi/font@6.9.96/css/materialdesignicons.min.css">
   <link rel="stylesheet" href="../assets/vendors/feather/feather.css">
