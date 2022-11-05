@@ -73,9 +73,11 @@ $start_from = ($page-1)*$record_per_page;
                   </p>
                   <form method="POST" action="">
                     <div class="row">
+                      <?php if ($_SESSION['userType'] == 2) { ?>
                       <div class="col-lg-3" style="margin-bottom: 20px;">
                         <input type="text" class="form-control form-control-sm" name="ticketid" placeholder="Ticket Id">
                       </div>
+                      <?php } ?>
                       <div class="col-lg-3" style="margin-bottom: 20px;">
                         <select style="height: 40px;" name="statustype" class="form-control form-control-sm" id="exampleFormControlSelect2">
                             <option>Status Type</option>
@@ -96,8 +98,13 @@ $start_from = ($page-1)*$record_per_page;
                         <table id="example" class="display expandable-table" style="width:100%">
                           <thead>
                             <tr>
+                              <?php if ($_SESSION['userType'] == 2) { ?>
+                              <th>Ticket Id</th>
+                              <?php } ?>
                               <th>Subject</th>
+                              <?php if ($_SESSION['userType'] == 2) { ?>
                               <th>User Email</th>
+                              <?php } ?>
                               <th>Status</th>
                               <th>Created at</th>
                               <th>Updated at</th>
@@ -108,7 +115,13 @@ $start_from = ($page-1)*$record_per_page;
                           <tbody style="text-align: left;margin-left: 30px">
                             <?php
                                if(isset($_POST['search'])){
-                                _gettickets($_POST['ticketid'],$_POST['statustype']);
+                                if(isset($_POST['ticketid'])){
+                                  $ticketid = $_POST['ticketid'];
+                                }else{
+                                  $ticketid = null;
+                                }
+                                $status = $_POST['statustype'];
+                                _gettickets($ticketid,$status);
                               }
                               if(!isset($_POST['search'])){
                                 _gettickets('','',$record_per_page,$start_from);

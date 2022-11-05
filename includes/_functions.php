@@ -886,12 +886,20 @@ function _saveticket($subject, $category, $status, $image, $user, $message)
 function _gettickets($ticketid = '', $status = '', $limit = '', $startfrom = '')
 {
     require('_config.php');
+    $user =  $_SESSION['userEmailId'];
     if ($status != '' && $ticketid == '') {
-        $sql = "SELECT * FROM `tbltickets` WHERE `_status` = '$status'";
+        if ($_SESSION['userType'] == 2) {
+            $sql = "SELECT * FROM `tbltickets` WHERE `_status` = '$status'";
+        }else{
+            $sql = "SELECT * FROM `tbltickets` WHERE `_status` = '$status' AND `_useremail` = '$user'";
+        }
     } else if ($ticketid != '' && $status != '') {
-        $sql = "SELECT * FROM `tbltickets` WHERE `_id` = '$ticketid'";
+        if ($_SESSION['userType'] == 2) {
+            $sql = "SELECT * FROM `tbltickets` WHERE `_id` = '$ticketid'";
+        }else{
+            $sql = "SELECT * FROM `tbltickets` WHERE `_id` = '$ticketid'  AND `_useremail` = '$user'";
+        }
     } else {
-        $user =  $_SESSION['userEmailId'];
         if ($_SESSION['userType'] == 2) {
             $sql = "SELECT * FROM `tbltickets` ORDER BY `CreationDate` DESC LIMIT $startfrom, $limit";
         } else {
@@ -902,8 +910,13 @@ function _gettickets($ticketid = '', $status = '', $limit = '', $startfrom = '')
     if ($query) {
         foreach ($query as $data) { ?>
             <tr>
+                <?php if ($_SESSION['userType'] == 2) { ?>
+                <td><?php echo $data['_id']; ?></td>
+                <?php } ?>
                 <td><?php echo $data['_title']; ?></td>
+                <?php if ($_SESSION['userType'] == 2) { ?>
                 <td><?php echo $data['_useremail']; ?></td>
+                <?php } ?>
                 <td><?php echo $data['_status']; ?></td>
                 <td>
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>

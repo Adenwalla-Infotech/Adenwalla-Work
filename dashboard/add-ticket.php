@@ -32,6 +32,8 @@ if(isset($_POST['submit'])){
         $extension = substr($file,strlen($file)-4,strlen($file));
         $newfile=md5($file).$extension;
         move_uploaded_file($_FILES["file"]["tmp_name"],"../uploads/tickets/".$newfile);
+    }else{
+        $newfile = null;
     }
 
     _saveticket($subject,$category,$status,$newfile,$useremail,$message);
