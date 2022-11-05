@@ -70,7 +70,7 @@ if (isset($_POST['submit'])) {
                             <div class="card-body">
                                 <h4 class="card-title">Edit Category</h4>
                                 <p class="card-description">
-                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ullam, expedita.
+                                Before you start writing about your new topic, it's important to do some research. This will help you to understand the topic better, This will make it easier for you to write about the topic, and it will also make it more likely that people will be interested in reading what you have to say.
                                 </p>
                                 <form method="POST" action="">
                                    
@@ -88,13 +88,10 @@ if (isset($_POST['submit'])) {
                                     </div>
 
                                    
-                                   
 
-
-
-                                    <div class="row g-3" style="margin-top: 20px;">
+                                    <div class="row g-3" style="margin-top: 15px;">
                                         <div class="col" style="margin-top: 10px;">
-                                            <label class="checkbox-inline" style="margin-left: 20px;">
+                                            <label class="checkbox-inline" style="margin-left: 5px;">
                                                 <?php
                                                 if (_getSingleCategory($_id, '_status') == true) { ?><input name="isactive" value="true" checked type="checkbox">&nbsp;Is Active<?php }
                                                                                                                                                                             if (_getSingleCategory($_id, '_status') != true) { ?><input name="isactive" value="true" type="checkbox">&nbsp;Is Active<?php }

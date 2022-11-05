@@ -20,7 +20,7 @@ session_start();
        
         if(isset($_GET['del'])){
             $_id = $_GET['id'];
-            _deleteSubCategory($_id);
+            _deleteCategory($_id);
           }
           
 
@@ -40,7 +40,7 @@ session_start();
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Manage Sub Category |
+    <title>Manage Category |
         <?php echo _siteconfig('_sitetitle'); ?>
     </title>
     <!-- plugins:css -->
@@ -70,21 +70,16 @@ session_start();
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Manage Sub-Category</h4>
+                                <h4 class="card-title">Manage Category</h4>
                                 <p class="card-description">
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti fugit cum recusandae aut similique nihil optio, esse ipsam. Quasi, ipsa.
+                                From here, you'll see a list of all the categories on your site. You can edit or delete them from here. You can also change the order of your categories by dragging and dropping them into the order you
                                 </p>
                                 <form method="POST" action="">
                                     <div class="row">
                                         <div class="col-lg-3" style="margin-bottom: 20px;">
-                                            <input type="text" class="form-control form-control-sm" name="subcategoryname"
-                                                placeholder="Sub Category Name">
+                                            <input type="text" class="form-control form-control-sm" name="categoryname"
+                                                placeholder="Category Name">
                                         </div>
-                                        
-                                        <div class="col-lg-3" style="margin-bottom: 20px;">
-                                            
-                                        </div>
-
                                         <div class="col-lg-2" style="margin-bottom: 20px;">
                                             <button name="search"
                                                 class="btn btn-block btn-primary btn-sm font-weight-medium auth-form-btn"
@@ -99,10 +94,7 @@ session_start();
                                             <table id="example" class="display expandable-table" style="width:100%">
                                                 <thead>
                                                     <tr>
-                                                        <th>Category ID</th>
-                                                        <th>Sub-Category Name</th>
-                                                        <th>Sub-Category Description</th>
-                                                        <th>Category ID</th>
+                                                        <th>Category Name</th>
                                                         <th>Status</th>
                                                         <th>Created at</th>
                                                         <th>Updated at</th>
@@ -113,10 +105,10 @@ session_start();
                                                 <tbody style="text-align: left;margin-left: 30px">
                                                     <?php
                                                     if (isset($_POST['search'])) {
-                                                        _getSubCategory($_POST['subcategoryname'],$_POST['categoryid']);
+                                                        _getCategory($_POST['categoryname']);
                                                     }
                                                     if (!isset($_POST['search'])) {
-                                                        _getSubCategory('', '', $record_per_page, $start_from);
+                                                        _getCategory('', '', $record_per_page, $start_from);
                                                     }
                                                     ?>
                                                 </tbody>
@@ -127,7 +119,7 @@ session_start();
                                 <nav aria-label="Page navigation example" style="margin-top: 10px;">
                                     <ul class="pagination">
                                         <?php
-                                        $query = mysqli_query($conn, "SELECT * FROM `tblsubcategory`");
+                                        $query = mysqli_query($conn, "SELECT * FROM `tblcategory`");
                                         $total_records = mysqli_num_rows($query);
                                         $total_pages = ceil($total_records / $record_per_page);
                                         $start_loop = $page;
@@ -138,16 +130,16 @@ session_start();
                                         $end_loop = $start_loop + 3;
                                         if ($page > 1) {
                                             echo "<li class='page-item'>
-                        <a href='subcategory-manage?page=" . ($page - 1) . "' class='page-link'>Previous</a>
+                        <a href='category-manage?page=" . ($page - 1) . "' class='page-link'>Previous</a>
                       </li>";
                                         }
                                         for ($i = 1; $i <= $total_pages; $i++) {
                                             echo "
-                      <li class='page-item'><a class='page-link' href='subcategory-manage?page=" . $i . "'>$i</a></li>";
+                      <li class='page-item'><a class='page-link' href='category-manage?page=" . $i . "'>$i</a></li>";
                                         }
                                         if ($page <= $end_loop) {
                                             echo "<li class='page-item'>
-                        <a class='page-link' href='subcategory-manage?page=" . ($page + 1) . "'>Next</a>
+                        <a class='page-link' href='category-manage?page=" . ($page + 1) . "'>Next</a>
                       </li>";
                                         } ?>
                                     </ul>

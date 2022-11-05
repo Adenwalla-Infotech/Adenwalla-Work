@@ -51,33 +51,35 @@
         </ul>
       </div>
     </li>
-
+    <?php if ($_SESSION['userType'] == 2) { ?>
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#ui-category" aria-expanded="false" aria-controls="ui-basic">
-      <i class="mdi mdi-ticket-account menu-icon"></i>
+      <i class="mdi mdi-source-branch menu-icon"></i>
         <span class="menu-title">Category</span>
         <i class="menu-arrow"></i> 
       </a>
       <div class="collapse" id="ui-category">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="category-add">Add Category</a></li>
-          <li class="nav-item"> <a class="nav-link" href="category-manage">Manage Category</a></li>
+          <li class="nav-item"> <a class="nav-link" href="add-category">Add Category</a></li>
+          <li class="nav-item"> <a class="nav-link" href="manage-category">Manage Category</a></li>
         </ul>
       </div>
     </li>
 
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#ui-subcategoryId" aria-expanded="false" aria-controls="ui-basic">
-      <i class="mdi mdi-ticket-account menu-icon"></i>
+      <i class="mdi mdi-source-fork menu-icon"></i>
         <span class="menu-title">Sub Category</span>
         <i class="menu-arrow"></i>
       </a>
       <div class="collapse" id="ui-subcategoryId">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="subcategory--add">Add Sub Category</a></li>
-          <li class="nav-item"> <a class="nav-link" href="subcategory--manage">Manage SubCategory</a></li>
+          <li class="nav-item"> <a class="nav-link" href="add-subcategory">Add Subcategory</a></li>
+          <li class="nav-item"> <a class="nav-link" href="manage-subcategory">Manage Category</a></li>
         </ul>
       </div>
     </li>
+    <?php } ?>
+
   </ul>
 </nav>

@@ -1023,10 +1023,9 @@ function _createCategory($categoryname, $categoryDesc, $isactive)
 
                 $query = mysqli_query($conn, $sql);
                 if ($query) {
-                 
-                        $alert = new PHPAlert();
-                        $alert->success("Category Created");
-                    
+
+                    $alert = new PHPAlert();
+                    $alert->success("Category Created");
                 }
             }
         }
@@ -1045,7 +1044,7 @@ function _getCategory($_categoryname = '', $status = '', $limit = '', $startfrom
     if ($status != '' && $_categoryname == '') {
         $sql = "SELECT * FROM `tblcategory` WHERE `_status` = '$status'";
     } else if ($_categoryname != '' && $status == '') {
-        $sql = "SELECT * FROM `tblcategory` WHERE `_categoryname` = '$_categoryname'";
+        $sql = "SELECT * FROM `tblcategory` WHERE `_categoryname` LIKE '%$_categoryname%'";
     } else {
         $sql = "SELECT * FROM `tblcategory` ORDER BY `CreationDate` DESC LIMIT $startfrom, $limit";
     }
@@ -1053,19 +1052,25 @@ function _getCategory($_categoryname = '', $status = '', $limit = '', $startfrom
     if ($query) {
         foreach ($query as $data) { ?>
             <tr>
-                <td><?php echo $data['_id']; ?></td>
                 <td><?php echo $data['_categoryname']; ?></td>
-                <td><?php echo $data['_categoryDescription']; ?></td>
-                <td><?php echo $data['_status']; ?></td>
+                <td>
+                    
+                <label class="checkbox-inline form-switch">
+                            <?php
+                            if ($data['_status'] == true) { ?><input disabled role="switch" name="isactive" value="true" checked type="checkbox"><?php }
+                                                                                                                                                    if ($data['_status'] != true) { ?><input disabled role="switch" name="isactive" value="true" type="checkbox"><?php }
+                                                                                                                                                                                                                                                                        ?>
+                        </label>
+                </td>
                 <td>
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
                 </td>
                 <td>
                     <?php echo date("M j, Y", strtotime($data['UpdationDate'])); ?>
                 </td>
-                <td><a href="category-edit?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
+                <td><a href="edit-category?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
                     <?php if ($_SESSION['userType'] == 2) { ?>
-                        <a href='category-edit?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
+                        <a href='manage-category?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
                 </td>
             <?php } ?>
             </tr>
@@ -1180,20 +1185,37 @@ function _getSubCategory($_subcategoryname = '', $categoryId = '', $limit = '', 
     if ($query) {
         foreach ($query as $data) { ?>
             <tr>
-                <td><?php echo $data['_id']; ?></td>
                 <td><?php echo $data['_subcategoryname']; ?></td>
-                <td><?php echo $data['_subcategorydesc']; ?></td>
-                <td><?php echo $data['_categoryid']; ?></td>
-                <td><?php echo $data['_status']; ?></td>
+                <td><?php
+                    $catid = $data['_categoryid'];
+                    $sql = "SELECT * FROM `tblcategory` WHERE `_id` = $catid";
+                    $query = mysqli_query($conn, $sql);
+                    if ($query) {
+                        foreach ($query as $data) {
+                            echo $data['_categoryname'];
+                        }
+                    }
+                    ?></td>
+                <td>
+
+                <label class="checkbox-inline form-switch">
+                            <?php
+                            if ($data['_status'] == true) { ?><input disabled role="switch" name="isactive" value="true" checked type="checkbox"><?php }
+                                                                                                                                                    if ($data['_status'] != true) { ?><input disabled role="switch" name="isactive" value="true" type="checkbox"><?php }
+                                                                                                                                                                                                                                                                        ?>
+                        </label>
+                    
+            
+                </td>
                 <td>
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
                 </td>
                 <td>
                     <?php echo date("M j, Y", strtotime($data['UpdationDate'])); ?>
                 </td>
-                <td><a href="subcategory-edit?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
+                <td><a href="edit-subcategory?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
                     <?php if ($_SESSION['userType'] == 2) { ?>
-                        <a href='subcategory-edit?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
+                        <a href='manage-subcategory?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
                 </td>
             <?php } ?>
             </tr>
@@ -1265,14 +1287,11 @@ function _showCategoryOptions()
         <select style="height: 46px;" id="categoryId" name="categoryId" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
 
             <?php
-
             foreach ($query as $data) {
             ?>
-                <option value="0"> <?php echo $data['_categoryname']; ?> </option>
+                <option value="<?php echo $data['_id']; ?>"> <?php echo $data['_categoryname']; ?> </option>
             <?php
             }
-
-
             ?>
 
         </select>

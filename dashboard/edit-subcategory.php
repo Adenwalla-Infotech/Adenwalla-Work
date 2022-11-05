@@ -14,16 +14,17 @@ if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['is
     }
 }
 
-if (isset($_SESSION['forgot_success']) || !isset($_SESSION['forgot_success'])) {
-    $_SESSION['forgot_success'] = false;
-}
-
 require('../includes/_functions.php');
 
+$_id = $_GET['id'];
+
+
 if (isset($_POST['submit'])) {
-    $subCategoryname = $_POST['subCategoryname'];
-    $subCategoryDesc = $_POST['subCategoryDesc'];
+
+    $subCategoryname = $_POST['subcategoryname'];
+    $subCategoryDesc = $_POST['subcategoryDesc'];
     $categoryId = $_POST['categoryId'];
+
 
 
 
@@ -33,8 +34,7 @@ if (isset($_POST['submit'])) {
     } else {
         $isactive = false;
     }
-
-    _createSubCategory($subCategoryname, $categoryId, $subCategoryDesc, $isactive);
+    _updateSubCategory($subCategoryname, $categoryId, $subCategoryDesc, $isactive, $_id);
 }
 
 ?>
@@ -44,7 +44,7 @@ if (isset($_POST['submit'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Add Sub-Category | <?php echo _siteconfig('_sitetitle'); ?></title>
+    <title>Edit <?php echo _getSingleSubCategory($_id, '_subcategoryname'); ?> | <?php echo _siteconfig('_sitetitle'); ?></title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@mdi/font@6.9.96/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../assets/vendors/feather/feather.css">
@@ -69,54 +69,67 @@ if (isset($_POST['submit'])) {
             <!-- partial -->
             <div class="main-panel">
                 <div class="content-wrapper">
-                    <?php if ($_SESSION['forgot_success']) { ?>
-                        <div id="liveAlertPlaceholder">
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                <strong>Sub-Category Created!</strong> New Sub-Category created successfully.
-                            </div>
-                        </div>
-                    <?php } ?>
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Create a New Sub-Category</h4>
+                                <h4 class="card-title">Edit Sub-Category</h4>
                                 <p class="card-description">
-                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Fuga totam alias impedit sequi quidem dolorum ut voluptatum laudantium animi recusandae.
+                                Before you start writing about your new topic, it's important to do some research. This will help you to understand the topic better, This will make it easier for you to write about the topic, and it will also make it more likely that people will be interested in reading what you have to say.
                                 </p>
                                 <form method="POST" action="">
+
+
                                     <div class="row g-3">
                                         <div class="col">
-                                            <label for="subCategoryname" class="form-label">Sub Category Name</label>
-                                            <input type="text" class="form-control" placeholder="Sub Category name" aria-label="SubCategory name" id="subCategoryname" name="subCategoryname" required>
+                                            <label for="subcategoryname" class="form-label">Sub Category Name</label>
+                                            <input type="text" value="<?php echo _getSingleSubCategory($_id, '_subcategoryname'); ?>" class="form-control" placeholder="Sub Category name" aria-label="Sub Category name" id="subcategoryname" name="subcategoryname" required>
                                         </div>
+
                                         <div class="col">
-                                            <label for="subCategoryDesc" class="form-label">Sub Category Description</label>
-                                            <input type="text" class="form-control" placeholder="Sub Category Description" aria-label="SubCategory Description" id="subCategoryDesc" name="subCategoryDesc" required>
+                                            <label for="subcategoryDesc" class="form-label">Sub Category Description</label>
+                                            <input type="text" value="<?php echo _getSingleSubCategory($_id, '_subcategorydesc'); ?>" class="form-control" placeholder="Sub Category Description" aria-label="Sub Category description" id="subcategoryDesc" name="subcategoryDesc" required>
                                         </div>
                                     </div>
 
-                                    <div class="row g-3" style="margin-top: 30px;">
+
+
+
+
+
+                                    <div class="row g-3" style="margin-top: 20px;">
+
+                                        <!-- <div class="col">
+                                            <label for="categoryId" class="form-label">Sub Category ID</label>
+                                            <input type="text" value="<?php echo _getSingleSubCategory($_id, '_categoryid'); ?>" class="form-control" placeholder="Sub Category ID" aria-label="SubCategoryID" id="categoryId" name="categoryId" required>
+                                        </div> -->
 
                                         <div class="col">
-
                                             <?php _showCategoryOptions() ?>
-
-                                            <!-- <label for="categoryId" class="form-label">Sub Category ID</label> -->
-                                            <!-- <input type="text" class="form-control" placeholder="Sub Category ID" aria-label="SubCategoryID" id="categoryId" name="categoryId" required> -->
                                         </div>
 
-                                        <div class="col" style="margin-top: 30px;">
-                                            <label class="checkbox-inline" style="margin-left: 20px;">
-                                                <input name="isactive" value="true" type="checkbox"> &nbsp; Is Active
+
+
+                                    </div>
+
+
+                                    <div class="row g-3" style="margin-top: 15px;">
+
+
+                                        <div class="col" style="margin-top: 20px;">
+                                            <label class="checkbox-inline" style="margin-left: 5px;">
+                                                <?php
+                                                if (_getSingleSubCategory($_id, '_status') == true) { ?><input name="isactive" value="true" checked type="checkbox">&nbsp;Is Active<?php }
+                                                                                                                                                                                if (_getSingleSubCategory($_id, '_status') != true) { ?><input name="isactive" value="true" type="checkbox">&nbsp;Is Active<?php }
+                                                                                                                                                                                                                                                                                                            ?>
                                             </label>
                                         </div>
+
 
                                     </div>
 
                                     <div class="col-12" style="margin-top: 30px;">
-                                        <button type="submit" name="submit" style="width: 200px;margin-left: -10px" class="btn btn-primary">Create Sub-Category</button>
+                                        <button type="submit" name="submit" style="width: 220px;margin-left: -10px" class="btn btn-primary">Update Sub-Category</button>
                                     </div>
-
                                 </form>
                             </div>
                         </div>

@@ -113,6 +113,7 @@ if (isset($_POST['submit'])) {
                                                 <option>Account Type</option>
                                                 <option value="0">Student</option>
                                                 <option value="1">Teacher</option>
+                                                <option value="2">Site Admin</option>
                                             </select>
                                         </div>
 
