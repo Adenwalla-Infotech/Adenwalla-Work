@@ -6,37 +6,38 @@
         <span class="menu-title">Dashboard</span>
       </a>
     </li>
-    <?php if($_SESSION['userType'] == 2){ ?>
+    <?php if ($_SESSION['userType'] == 2) { ?>
       <li class="nav-item">
-      <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-        <i class="mdi mdi-account-outline menu-icon"></i>
-        <span class="menu-title">All User</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="ui-basic">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="add-user">Add user</a></li>
-          <li class="nav-item"> <a class="nav-link" href="manage-users">Manage Users</a></li>
-        </ul>
-      </div>
-    </li>
+        <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+          <i class="mdi mdi-account-outline menu-icon"></i>
+          <span class="menu-title">All User</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="ui-basic">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="add-user">Add user</a></li>
+            <li class="nav-item"> <a class="nav-link" href="manage-users">Manage Users</a></li>
+          </ul>
+        </div>
+      </li>
     <?php } ?>
-    <?php if($_SESSION['userType'] == 2){ ?>
+    <?php if ($_SESSION['userType'] == 2) { ?>
       <li class="nav-item">
-      <a class="nav-link" data-toggle="collapse" href="#ui-setting" aria-expanded="false" aria-controls="ui-basic">
-        <i class="mdi mdi-security menu-icon"></i>
-        <span class="menu-title">Settings</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="ui-setting">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="sms-config">SMS Setting</a></li>
-          <li class="nav-item"> <a class="nav-link" href="email-config">Email Setting</a></li>
-          <li class="nav-item"> <a class="nav-link" href="site-config">Site Setting</a></li>
-        </ul>
-      </div>
-    </li>
+        <a class="nav-link" data-toggle="collapse" href="#ui-setting" aria-expanded="false" aria-controls="ui-basic">
+          <i class="mdi mdi-security menu-icon"></i>
+          <span class="menu-title">Settings</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="ui-setting">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="sms-config">SMS Setting</a></li>
+            <li class="nav-item"> <a class="nav-link" href="email-config">Email Setting</a></li>
+            <li class="nav-item"> <a class="nav-link" href="site-config">Site Setting</a></li>
+          </ul>
+        </div>
+      </li>
     <?php } ?>
+    
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#ui-ticket" aria-expanded="false" aria-controls="ui-basic">
         <i class="mdi mdi-ticket-account menu-icon"></i>
@@ -47,6 +48,34 @@
         <ul class="nav flex-column sub-menu">
           <li class="nav-item"> <a class="nav-link" href="add-ticket">Add Ticket</a></li>
           <li class="nav-item"> <a class="nav-link" href="manage-tickets">Manage Tickets</a></li>
+        </ul>
+      </div>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#ui-category" aria-expanded="false" aria-controls="ui-basic">
+      <i class="mdi mdi-ticket-account menu-icon"></i>
+        <span class="menu-title">Category</span>
+        <i class="menu-arrow"></i> 
+      </a>
+      <div class="collapse" id="ui-category">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"> <a class="nav-link" href="category-add">Add Category</a></li>
+          <li class="nav-item"> <a class="nav-link" href="category-manage">Manage Category</a></li>
+        </ul>
+      </div>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#ui-subcategoryId" aria-expanded="false" aria-controls="ui-basic">
+      <i class="mdi mdi-ticket-account menu-icon"></i>
+        <span class="menu-title">Sub Category</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="ui-subcategoryId">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"> <a class="nav-link" href="subcategory--add">Add Sub Category</a></li>
+          <li class="nav-item"> <a class="nav-link" href="subcategory--manage">Manage SubCategory</a></li>
         </ul>
       </div>
     </li>

@@ -343,7 +343,29 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `PostedAt` datetime NOT NULL DEFAULT current_timestamp()
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
-            $tables = [$admin_table, $sms_config, $email_config, $site_config, $tickets_table, $ticket_comment, $contact_table];
+            $category_table = "CREATE TABLE IF NOT EXISTS `tblcategory` (
+                `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                `_categoryname` varchar(50) NOT NULL,
+                `_categoryDescription` varchar(100) NOT NULL,
+                `_status` varchar(20) NOT NULL,
+                `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                `UpdationDate` datetime NULL ON UPDATE current_timestamp()
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+
+
+            $subcategory_table = "CREATE TABLE IF NOT EXISTS `tblsubcategory` (
+                `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                `_subcategoryname` varchar(50) NOT NULL,
+                `_categoryid` varchar(20) NOT NULL,
+                `_subcategorydesc` varchar(100) NOT NULL,
+                `_status` varchar(20) NOT NULL,
+                `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                `UpdationDate` datetime NULL ON UPDATE current_timestamp()
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+
+
+
+            $tables = [$admin_table, $sms_config, $email_config, $site_config, $tickets_table, $ticket_comment, $contact_table, $category_table, $subcategory_table];
 
             foreach ($tables as $k => $sql) {
                 $query = @$temp_conn->query($sql);
@@ -967,8 +989,300 @@ function _getticketres($id)
                     <a href="../uploads/tickets/<?php echo $data['_image'] ?>" class="badge bg-primary rounded-pill"><i style="font-size: 18px" class="mdi mdi-cloud-download text-light"></i></a>
                 <?php } ?>
             </li>
-<?php }
+        <?php }
     }
 }
+
+
+// 
+// Category Functions
+// 
+
+/// ADD CATEGORY
+function _createCategory($categoryname, $categoryDesc, $isactive)
+{
+
+    require('_config.php');
+    require('_alert.php');
+
+    if ($categoryname != '') {
+
+        $subject = "Category Created";
+        $message = "Category Created Successfully";
+        $sql = "SELECT * FROM `tblcategory` WHERE `_categoryname` = '$categoryname'";
+        $query = mysqli_query($conn, $sql);
+        if ($query) {
+            $count = mysqli_num_rows($query);
+            if ($count > 0) {
+                $alert = new PHPAlert();
+                $alert->warn("Category Already Exists");
+            } else {
+
+                $sql = "INSERT INTO `tblcategory`(`_categoryname`, `_categoryDescription`, `_status`) VALUES ('$categoryname','$categoryDesc','$isactive')";
+
+
+                $query = mysqli_query($conn, $sql);
+                if ($query) {
+                    if ($notify) {
+                        _notifyuser($useremail, $userphone, $message, $subject);
+                    } else {
+                        $alert = new PHPAlert();
+                        $alert->success("Category Created");
+                    }
+                }
+            }
+        }
+    } else {
+        $alert = new PHPAlert();
+        $alert->warn("All Feilds are Required");
+    }
+}
+
+
+/// Get CATEGORY
+
+function _getCategory($_categoryname = '', $status = '', $limit = '', $startfrom = '')
+{
+    require('_config.php');
+    if ($status != '' && $_categoryname == '') {
+        $sql = "SELECT * FROM `tblcategory` WHERE `_status` = '$status'";
+    } else if ($_categoryname != '' && $status == '') {
+        $sql = "SELECT * FROM `tblcategory` WHERE `_categoryname` = '$_categoryname'";
+    } else {
+        $sql = "SELECT * FROM `tblcategory` ORDER BY `CreationDate` DESC LIMIT $startfrom, $limit";
+    }
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        foreach ($query as $data) { ?>
+            <tr>
+                <td><?php echo $data['_id']; ?></td>
+                <td><?php echo $data['_categoryname']; ?></td>
+                <td><?php echo $data['_categoryDescription']; ?></td>
+                <td><?php echo $data['_status']; ?></td>
+                <td>
+                    <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
+                </td>
+                <td>
+                    <?php echo date("M j, Y", strtotime($data['UpdationDate'])); ?>
+                </td>
+                <td><a href="category-edit?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
+                    <?php if ($_SESSION['userType'] == 2) { ?>
+                        <a href='category-edit?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
+                </td>
+            <?php } ?>
+            </tr>
+        <?php }
+    }
+}
+
+
+// Get Single Category
+function _getSingleCategory($id, $param)
+{
+    require('_config.php');
+    $sql = "SELECT * FROM `tblcategory` WHERE `_id` = $id";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        foreach ($query as $data) {
+            return $data[$param];
+        }
+    }
+}
+
+// Update Category
+function _updateCategory($_categoryname, $categoryDesc, $isactive, $_id)
+{
+
+    require('_config.php');
+    require('_alert.php');
+
+
+    $sql = "UPDATE `tblcategory` SET `_categoryname`='$_categoryname' , `_categoryDescription`='$categoryDesc' , `_status`='$isactive' WHERE `_id` = $_id";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->success("Category Updated");
+    } else {
+        $alert = new PHPAlert();
+        $alert->warn("Something went wrong");
+    }
+}
+
+// Delete Category
+function _deleteCategory($id)
+{
+
+    require('_config.php');
+    require('_alert.php');
+    $sql = "DELETE FROM `tblcategory` WHERE `_id` = $id";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->error("Category Deleted Permanently");
+    }
+}
+
+// 
+// Sub Category Functions
+// 
+
+
+
+/// ADD Sub CATEGORY
+function _createSubCategory($subCategoryname, $categoryId, $subCategoryDesc, $isactive)
+{
+
+    require('_config.php');
+    require('_alert.php');
+
+    if ($subCategoryname != '') {
+
+        $subject = "Sub Category Created";
+        $message = "Sub Category Created Successfully";
+        $sql = "SELECT * FROM `tblsubcategory` WHERE `_subcategoryname` = '$subCategoryname'";
+        $query = mysqli_query($conn, $sql);
+        if ($query) {
+            $count = mysqli_num_rows($query);
+            if ($count > 0) {
+                $alert = new PHPAlert();
+                $alert->warn("Sub Category Already Exists");
+            } else {
+
+                $sql = "INSERT INTO `tblsubcategory`( `_subcategoryname` , `_categoryid` , `_subcategorydesc`, `_status`) VALUES ('$subCategoryname','$categoryId','$subCategoryDesc','$isactive')";
+
+
+                $query = mysqli_query($conn, $sql);
+                if ($query) {
+
+                    $alert = new PHPAlert();
+                    $alert->success("Sub Category Created");
+                }
+            }
+        }
+    } else {
+        $alert = new PHPAlert();
+        $alert->warn("All Feilds are Required");
+    }
+}
+
+
+/// Get CATEGORY
+
+function _getSubCategory($_subcategoryname = '', $categoryId = '', $limit = '', $startfrom = '')
+{
+    require('_config.php');
+    if ($categoryId != '' && $_subcategoryname == '') {
+        $sql = "SELECT * FROM `tblsubcategory` WHERE `_categoryid` = '$categoryId'";
+    } else if ($_subcategoryname != '' && $categoryId == '') {
+        $sql = "SELECT * FROM `tblsubcategory` WHERE `_subcategoryname` = '$_subcategoryname'";
+    } else {
+        $sql = "SELECT * FROM `tblsubcategory` ORDER BY `CreationDate` DESC LIMIT $startfrom, $limit";
+    }
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        foreach ($query as $data) { ?>
+            <tr>
+                <td><?php echo $data['_id']; ?></td>
+                <td><?php echo $data['_subcategoryname']; ?></td>
+                <td><?php echo $data['_subcategorydesc']; ?></td>
+                <td><?php echo $data['_categoryid']; ?></td>
+                <td><?php echo $data['_status']; ?></td>
+                <td>
+                    <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
+                </td>
+                <td>
+                    <?php echo date("M j, Y", strtotime($data['UpdationDate'])); ?>
+                </td>
+                <td><a href="subcategory-edit?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
+                    <?php if ($_SESSION['userType'] == 2) { ?>
+                        <a href='subcategory-edit?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
+                </td>
+            <?php } ?>
+            </tr>
+        <?php }
+    }
+}
+
+
+// Get Single Category
+function _getSingleSubCategory($id, $param)
+{
+    require('_config.php');
+    $sql = "SELECT * FROM `tblsubcategory` WHERE `_id` = $id";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        foreach ($query as $data) {
+            return $data[$param];
+        }
+    }
+}
+
+// Update Category
+function _updateSubCategory($subCategoryname, $categoryId, $subCategoryDesc, $isactive, $_id)
+{
+
+    require('_config.php');
+    require('_alert.php');
+
+
+    $sql = "UPDATE `tblsubcategory` SET `_subcategoryname`='$subCategoryname' , `_categoryid`='$categoryId'  , `_subcategorydesc`='$subCategoryDesc'  , `_status`='$isactive' WHERE `_id` = $_id";
+
+
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->success("Sub Category Updated");
+    } else {
+        $alert = new PHPAlert();
+        $alert->warn("Something went wrong");
+    }
+}
+
+// Delete Category
+function _deleteSubCategory($id)
+{
+
+    require('_config.php');
+    require('_alert.php');
+    $sql = "DELETE FROM `tblsubcategory` WHERE `_id` = $id";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->error("Sub Category Deleted Permanently");
+    }
+}
+
+function _showCategoryOptions()
+{
+
+    require('_config.php');
+
+    $sql = "SELECT * FROM `tblcategory`";
+
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+
+        ?>
+        <label for="categoryId" class="form-label">Select Category</label>
+        <select style="height: 46px;" id="categoryId" name="categoryId" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
+
+            <?php
+
+            foreach ($query as $data) {
+            ?>
+                <option value="0"> <?php echo $data['_categoryname']; ?> </option>
+            <?php
+            }
+
+
+            ?>
+
+        </select>
+<?php
+
+
+    }
+}
+
 
 ?>

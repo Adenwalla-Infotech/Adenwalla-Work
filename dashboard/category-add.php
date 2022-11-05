@@ -21,32 +21,21 @@ if (isset($_SESSION['forgot_success']) || !isset($_SESSION['forgot_success'])) {
 require('../includes/_functions.php');
 
 if (isset($_POST['submit'])) {
-    $username = $_POST['username'];
-    $useremail = $_POST['useremail'];
-    $usertype = $_POST['usertype'];
-    $userphone = $_POST['userphone'];
-
-    $userwebsite =  $_POST['userwebsite'];
+    $categoryname = $_POST['categoryname'];
+    $categoryDesc = $_POST['categoryDesc'];
 
 
 
-    if (isset($_POST['notify'])) {
-        $notify = $_POST['notify'];
-    } else {
-        $notify = false;
-    }
+    
     if (isset($_POST['isactive'])) {
         $isactive = $_POST['isactive'];
-    } else {
-        $isactive = false;
     }
-    if (isset($_POST['isverified'])) {
-        $isverified = $_POST['isverified'];
-    } else {
-        $isverified = false;
+    else{
+        $isactive = false;
+
     }
 
-    _createuser(  $username , $useremail, $usertype, $userphone, $userwebsite,  $isactive, $isverified, $notify);
+    _createCategory($categoryname, $categoryDesc,$isactive);
 }
 
 ?>
@@ -56,7 +45,7 @@ if (isset($_POST['submit'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Add User | <?php echo _siteconfig('_sitetitle'); ?></title>
+    <title>Add Category | <?php echo _siteconfig('_sitetitle'); ?></title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@mdi/font@6.9.96/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../assets/vendors/feather/feather.css">
@@ -84,57 +73,27 @@ if (isset($_POST['submit'])) {
                     <?php if ($_SESSION['forgot_success']) { ?>
                         <div id="liveAlertPlaceholder">
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                <strong>User Created!</strong> New user created successfully.
+                                <strong>Category Created!</strong> New Category created successfully.
                             </div>
                         </div>
                     <?php } ?>
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Create a New User Account</h4>
+                                <h4 class="card-title">Create a New Category</h4>
                                 <p class="card-description">
-                                    When you create a new user account, you must assign access credentials, a user type, and a security password to the user. User type define what actions the user has permission to perform. Security password secures users permission to access. You can create multiple user accounts that include administrative right
+                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Fuga totam alias impedit sequi quidem dolorum ut voluptatum laudantium animi recusandae.
                                 </p>
                                 <form method="POST" action="">
                                     <div class="row g-3">
                                         <div class="col">
-                                            <label for="username" class="form-label">User Name</label>
-                                            <input type="text" class="form-control" placeholder="User name" aria-label="user name" id="username" name="username" required>
+                                            <label for="categoryname" class="form-label">Category Name</label>
+                                            <input type="text" class="form-control" placeholder="Category name" aria-label="Category name" id="categoryname" name="categoryname" required>
                                         </div>
                                         <div class="col">
-                                            <label for="useremail" class="form-label">UserEmail</label>
-                                            <input type="text" class="form-control" placeholder="Email ID" aria-label="Email Id" id="useremail" name="useremail" required>
+                                            <label for="categoryDesc" class="form-label">Category Description</label>
+                                            <input type="text" class="form-control" placeholder="Category Description" aria-label="Category Description" id="categoryDesc" name="categoryDesc" required>
                                         </div>
-                                    </div>
-                                    <div class="row g-3" style="margin-top: 20px;">
-                                        <div class="col">
-                                            <label for="usertype" class="form-label">Account Type</label>
-                                            <select style="height: 46px;" id="usertype" name="usertype" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
-                                                <option>Account Type</option>
-                                                <option value="0">Student</option>
-                                                <option value="1">Teacher</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="col">
-                                            <label for="userphone" class="form-label">User Phone</label>
-                                            <input type="tel" class="form-control" placeholder="Phone Number" aria-label="phone" id="userphone" name="userphone" required>
-                                        </div>
-                                    </div>
-                                    <div class="row g-3" style="margin-top: 20px;">
-
-
-                                        <!-- <div class="col">
-                                            <label for="userlocation" class="form-label">User Location</label>
-                                            <input type="text" class="form-control" placeholder="IP Location" aria-label="user location" id="userlocation" name="userlocation">
-                                        </div> -->
-
-
-                                        <div class="col">
-                                            <label for="userwebsite" class="form-label">User Website</label>
-                                            <input type="text" class="form-control" placeholder="User Website" aria-label="user website" id="userwebsite" name="userwebsite">
-                                        </div>
-
                                     </div>
 
                                     <div class="row g-3" style="margin-top: 30px;">
@@ -143,19 +102,12 @@ if (isset($_POST['submit'])) {
                                             <label class="checkbox-inline" style="margin-left: 20px;">
                                                 <input name="isactive" value="true" type="checkbox"> &nbsp; Is Active
                                             </label>
-                                            <label class="checkbox-inline" style="margin-left: 20px;">
-                                                <input name="isverified" value="true" type="checkbox"> &nbsp; Is Verified
-                                            </label>
-                                            <label class="checkbox-inline" style="margin-left: 20px;">
-                                                <input name="notify" value="true" type="checkbox"> &nbsp; Notify User (SMS/Email)
-                                            </label>
                                         </div>
-
 
                                     </div>
 
                                     <div class="col-12" style="margin-top: 30px;">
-                                        <button type="submit" name="submit" style="width: 150px;margin-left: -10px" class="btn btn-primary">Create Account</button>
+                                        <button type="submit" name="submit" style="width: 160px;margin-left: -10px" class="btn btn-primary">Create Category</button>
                                     </div>
 
                                 </form>
