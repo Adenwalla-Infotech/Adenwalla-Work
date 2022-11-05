@@ -86,7 +86,7 @@ session_start();
                                                 style="height:40px" name="submit"><i
                                                     class="mdi mdi-account-search"></i>&nbsp;SEARCH</button>
                                         </div>
-                                    </div>
+                                    </div> 
                                 </form>
                                 <div class="row">
                                     <div class="col-12">
