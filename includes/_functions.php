@@ -1023,12 +1023,10 @@ function _createCategory($categoryname, $categoryDesc, $isactive)
 
                 $query = mysqli_query($conn, $sql);
                 if ($query) {
-                    if ($notify) {
-                        _notifyuser($useremail, $userphone, $message, $subject);
-                    } else {
+                 
                         $alert = new PHPAlert();
                         $alert->success("Category Created");
-                    }
+                    
                 }
             }
         }

@@ -94,8 +94,8 @@ session_start();
                                             <table id="example" class="display expandable-table" style="width:100%">
                                                 <thead>
                                                     <tr>
-                                                        <th>Category Name</th>
                                                         <th>Category ID</th>
+                                                        <th>Category Name</th>
                                                         <th>Category Description</th>
                                                         <th>Status</th>
                                                         <th>Created at</th>
