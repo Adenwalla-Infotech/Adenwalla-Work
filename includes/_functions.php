@@ -252,17 +252,17 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_useremail` varchar(255) NOT NULL,
                 `_userphone` varchar(255) NOT NULL,
                 
-                `_userlongitude` varchar(25) NOT NULL,
-                `_userlatitude` varchar(25) NOT NULL,
-                `_userbio` varchar(255) NOT NULL,
-                `_userage` varchar(10) NOT NULL,
-                `_usersite` varchar(25) NOT NULL,
-                `_userinstagram` varchar(25) NOT NULL,
-                `_userlinked` varchar(25) NOT NULL,
-                `_usertwitter` varchar(25) NOT NULL,
+                `_userlongitude` varchar(25) NULL,
+                `_userlatitude` varchar(25) NULL,
+                `_userbio` varchar(255) NULL,
+                `_userage` varchar(10) NULL,
+                `_usersite` varchar(25) NULL,
+                `_userinstagram` varchar(25) NULL,
+                `_userlinked` varchar(25) NULL,
+                `_usertwitter` varchar(25) NULL,
 
                 
-                `_userdp` varchar(25) NOT NULL,
+                `_userdp` varchar(25) NULL,
 
 
                 `_usertype` int(11) NOT NULL,
@@ -299,14 +299,14 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
 
             $site_config = "CREATE TABLE IF NOT EXISTS `tblsiteconfig` (
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
-                `_sitetitle` varchar(50) NOT NULL,
-                `_siteemail` varchar(50) NOT NULL,
-                `_timezone` varchar(50) NOT NULL,
-                `_customheader` text NOT NULL,
-                `_customcss` text NOT NULL,
-                `_sitelogo` varchar(100) NOT NULL,
-                `_sitereslogo` varchar(100) NOT NULL,
-                `_favicon` varchar(100) NOT NULL,
+                `_sitetitle` varchar(50) NULL,
+                `_siteemail` varchar(50) NULL,
+                `_timezone` varchar(50) NULL,
+                `_customheader` text NULL,
+                `_customcss` text NULL,
+                `_sitelogo` varchar(100) NULL,
+                `_sitereslogo` varchar(100) NULL,
+                `_favicon` varchar(100) NULL,
                 `CreationDate` datetime NOT NULL DEFAULT current_timestamp(),
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
