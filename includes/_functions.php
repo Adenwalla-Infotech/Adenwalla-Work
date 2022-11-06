@@ -268,7 +268,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_usertype` int(11) NOT NULL,
                 `_userstatus` varchar(50) NOT NULL,
                 `_userpassword` varchar(255) NOT NULL,
-                `_userotp` int(100) NOT NULL,
+                `_userotp` int(100) NULL,
                 `_userverify` varchar(50) NOT NULL,
                 `CreationDate` datetime NOT NULL DEFAULT current_timestamp(),
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
