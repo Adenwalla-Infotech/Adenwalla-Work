@@ -315,7 +315,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
                 `_title` varchar(255) NOT NULL,
                 `_message` text NOT NULL,
-                `_image` varchar(255) NOT NULL,
+                `_image` varchar(255) NULL,
                 `_category` varchar(255) NOT NULL,
                 `_subcategory` varchar(255) NOT NULL,
                 `_useremail` varchar(255) NOT NULL,
