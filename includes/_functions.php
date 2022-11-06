@@ -1211,6 +1211,16 @@ function _getSubCategory($_subcategoryname = '', $categoryId = '', $limit = '', 
 
 
                 </td>
+                <td><?php
+                    $catid = $data['_categoryid'];
+                    $sql = "SELECT * FROM `tblcategory` WHERE `_id` = $catid";
+                    $query = mysqli_query($conn, $sql);
+                    if ($query) {
+                        foreach ($query as $data) {
+                            echo $data['_categoryname'];
+                        }
+                    }
+                    ?></td>
                 <td>
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
                 </td>

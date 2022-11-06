@@ -97,6 +97,7 @@ session_start();
                                                     <tr>
                                                         <th>Sub-Category Name</th>
                                                         <th>Status</th>
+                                                        <th>Parent</th>
                                                         <th>Created at</th>
                                                         <th>Updated at</th>
                                                         <th>Action</th>

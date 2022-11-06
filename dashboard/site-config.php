@@ -32,7 +32,7 @@ if(isset($_POST['submit'])){
     if($_FILES["logo"]["name"] != ''){
         $logofile=$_FILES["logo"]["name"];
         $extension = substr($logofile,strlen($logofile)-4,strlen($logofile));
-        $allowed_extensions = array(".jpg",".jpeg",".png",".gif");
+        $allowed_extensions = array(".jpg",".jpeg",".png",".gif",".webp");
         if(!in_array($extension,$allowed_extensions)){
             echo "<script>alert('Invalid format. Only jpg / jpeg/ png /gif format allowed');</script>";
         }
