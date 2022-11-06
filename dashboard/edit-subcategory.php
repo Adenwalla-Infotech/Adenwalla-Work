@@ -87,7 +87,7 @@ if (isset($_POST['submit'])) {
 
                                         <div class="col">
                                             <label for="subcategoryDesc" class="form-label">Sub Category Description</label>
-                                            <input type="text" value="<?php echo _getSingleSubCategory($_id, '_subcategorydesc'); ?>" class="form-control" placeholder="Sub Category Description" aria-label="Sub Category description" id="subcategoryDesc" name="subcategoryDesc" required>
+                                            <input type="text"  value="<?php echo _getSingleSubCategory($_id, '_subcategorydesc'); ?>" class="form-control" placeholder="Sub Category Description" aria-label="Sub Category description" id="subcategoryDesc" name="subcategoryDesc" required>
                                         </div>
                                     </div>
 
@@ -104,7 +104,12 @@ if (isset($_POST['submit'])) {
                                         </div> -->
 
                                         <div class="col">
-                                            <?php _showCategoryOptions() ?>
+
+                                            <?php
+                                                $_categoryID = _getSingleSubCategory($_id, '_categoryid');
+                                                // echo $_categoryID;
+                                             _showCategoryOptions($_categoryID)
+                                            ?>
                                         </div>
 
 

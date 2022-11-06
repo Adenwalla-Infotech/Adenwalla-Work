@@ -128,8 +128,8 @@ if(isset($_POST['submit'])){
                             <div class="col">
                                 <label for="formFile" class="form-label">Select Timezone</label>
                                 <select  class="form-control form-control-lg" name="timezone">
-                                   <option value="<?php  _siteconfig('_timezone');?>" selected><?php _siteconfig('_timezone');?></option>
                                     <option>Select Timezone</option>
+                                   <option value="<?php echo  _siteconfig('_timezone');?>" selected><?php echo _siteconfig('_timezone');?></option>
                                     <option value="Etc/GMT+12">(GMT-12:00) International Date Line West</option>
                                     <option value="Pacific/Midway">(GMT-11:00) Midway Island, Samoa</option>
                                     <option value="Pacific/Honolulu">(GMT-10:00) Hawaii</option>

@@ -1067,13 +1067,13 @@ function _getCategory($_categoryname = '', $status = '', $limit = '', $startfrom
             <tr>
                 <td><?php echo $data['_categoryname']; ?></td>
                 <td>
-                    
-                <label class="checkbox-inline form-switch">
-                            <?php
-                            if ($data['_status'] == true) { ?><input disabled role="switch" name="isactive" value="true" checked type="checkbox"><?php }
-                                                                                                                                                    if ($data['_status'] != true) { ?><input disabled role="switch" name="isactive" value="true" type="checkbox"><?php }
-                                                                                                                                                                                                                                                                        ?>
-                        </label>
+
+                    <label class="checkbox-inline form-switch">
+                        <?php
+                        if ($data['_status'] == true) { ?><input disabled role="switch" name="isactive" value="true" checked type="checkbox"><?php }
+                                                                                                                                            if ($data['_status'] != true) { ?><input disabled role="switch" name="isactive" value="true" type="checkbox"><?php }
+                                                                                                                                                                                                                                                            ?>
+                    </label>
                 </td>
                 <td>
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
@@ -1199,26 +1199,17 @@ function _getSubCategory($_subcategoryname = '', $categoryId = '', $limit = '', 
         foreach ($query as $data) { ?>
             <tr>
                 <td><?php echo $data['_subcategoryname']; ?></td>
-                <td><?php
-                    $catid = $data['_categoryid'];
-                    $sql = "SELECT * FROM `tblcategory` WHERE `_id` = $catid";
-                    $query = mysqli_query($conn, $sql);
-                    if ($query) {
-                        foreach ($query as $data) {
-                            echo $data['_categoryname'];
-                        }
-                    }
-                    ?></td>
+               
                 <td>
 
-                <label class="checkbox-inline form-switch">
-                            <?php
-                            if ($data['_status'] == true) { ?><input disabled role="switch" name="isactive" value="true" checked type="checkbox"><?php }
-                                                                                                                                                    if ($data['_status'] != true) { ?><input disabled role="switch" name="isactive" value="true" type="checkbox"><?php }
-                                                                                                                                                                                                                                                                        ?>
-                        </label>
-                    
-            
+                    <label class="checkbox-inline form-switch">
+                        <?php
+                        if ($data['_status'] == true) { ?><input disabled role="switch" name="isactive" value="true" checked type="checkbox"><?php }
+                                                                                                                                            if ($data['_status'] != true) { ?><input disabled role="switch" name="isactive" value="true" type="checkbox"><?php }
+                                                                                                                                                                                                                                                            ?>
+                    </label>
+
+
                 </td>
                 <td>
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
@@ -1285,34 +1276,70 @@ function _deleteSubCategory($id)
     }
 }
 
-function _showCategoryOptions()
+function _showCategoryOptions($_categoryID = '')
 {
 
     require('_config.php');
+   
 
-    $sql = "SELECT * FROM `tblcategory`";
+    if ($_categoryID != '') {
 
-    $query = mysqli_query($conn, $sql);
-    if ($query) {
+        $sql = "SELECT * FROM `tblcategory` ";
+
+        $query = mysqli_query($conn, $sql);
+        if ($query) {
+        ?>
+            <label for="categoryId" class="form-label">Select Category</label>
+            <select style="height: 46px;" id="categoryId" name="categoryId" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
+
+                <?php
+                foreach ($query as $data) {
+
+                    $currentId = $data['_id'];
+
+                    if ($_categoryID == $currentId) {
+                ?>
+                        <option value="<?php echo $data['_id']; ?>" selected  > <?php echo $data['_categoryname']; ?> </option>
+                    <?php
+                    } else {
+                    ?>
+                        <option value="<?php echo $data['_id']; ?>"> <?php echo $data['_categoryname']; ?> </option>
+                <?php
+                    }
+                }
+                ?>
+
+            </select>
+        <?php
+
+
+        }
+    } else {
+        $sql = "SELECT * FROM `tblcategory`";
+
+        $query = mysqli_query($conn, $sql);
+        if ($query) {
 
         ?>
-        <label for="categoryId" class="form-label">Select Category</label>
-        <select style="height: 46px;" id="categoryId" name="categoryId" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
+            <label for="categoryId" class="form-label">Select Category</label>
+            <select style="height: 46px;" id="categoryId" name="categoryId" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
 
-            <?php
-            foreach ($query as $data) {
-            ?>
-                <option value="<?php echo $data['_id']; ?>"> <?php echo $data['_categoryname']; ?> </option>
-            <?php
-            }
-            ?>
+                <?php
+                foreach ($query as $data) {
+                ?>
+                    <option value="<?php echo $data['_id']; ?>"> <?php echo $data['_categoryname']; ?> </option>
+                <?php
+                }
+                ?>
 
-        </select>
+            </select>
 <?php
 
 
+        }
     }
 }
 
 
 ?>
+
