@@ -16,11 +16,13 @@ function _login($userpassword, $useremail)
                 foreach ($query as $data) {
                     $usertype = $data['_usertype'];
                     $userverify = $data['_userverify'];
+                    $userid = $data['_id'];
                 }
                 $_SESSION['isLoggedIn'] = true;
                 $_SESSION['userEmailId'] = $useremail;
                 $_SESSION['userType'] = $usertype;
                 $_SESSION['userVerify'] = $userverify;
+                $_SESSION['userId'] = $userid;
                 $alert = new PHPAlert();
                 $alert->success("Login Successfull");
                 echo "<script>";
@@ -299,14 +301,15 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
 
             $site_config = "CREATE TABLE IF NOT EXISTS `tblsiteconfig` (
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
-                `_sitetitle` varchar(50) NULL,
-                `_siteemail` varchar(50) NULL,
-                `_timezone` varchar(50) NULL,
-                `_customheader` text NULL,
-                `_customcss` text NULL,
-                `_sitelogo` varchar(100) NULL,
-                `_sitereslogo` varchar(100) NULL,
-                `_favicon` varchar(100) NULL,
+                `_sitetitle` varchar(50) NOT NULL,
+                `_siteemail` varchar(50) NOT NULL,
+                `_timezone` varchar(50) NOT NULL,
+                `_customheader` text NOT NULL,
+                `_customfooter` text NOT NULL,
+                `_customcss` text NOT NULL,
+                `_sitelogo` varchar(100) NOT NULL,
+                `_sitereslogo` varchar(100) NOT NULL,
+                `_favicon` varchar(100) NOT NULL,
                 `CreationDate` datetime NOT NULL DEFAULT current_timestamp(),
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
@@ -744,6 +747,39 @@ function _updateuser($username, $useremail, $usertype, $userphone, $userwebsite,
     }
 }
 
+function _updateProfile(
+    $_id,
+    $username,
+    $useremail,
+    $userpassword,
+    $userphone,
+    $userwebsite,
+    $userage,
+    $userbio,
+    $userinstagram,
+    $userlinkedln, 
+    $usertwitter,
+    $userDp
+)
+{
+
+    require('_config.php');
+    require('_alert.php');
+
+    $sql = "UPDATE `tblusers` SET `_username`='$username' , `_useremail`='$useremail' , `_userphone`='$userphone' , `_userpassword`='$userpassword' , `_usersite`='$userwebsite'
+    , `_userage`='$userage' , `_userbio`='$userbio' , `_userinstagram`='$userinstagram' , `_userlinked`='$userlinkedln' , `_usertwitter`='$usertwitter' , `_userdp`='$userDp' WHERE `_id` = $_id";
+   
+   $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->success("Profile Updated");
+    } else {
+        $alert = new PHPAlert();
+        $alert->warn("Something went wrong");
+    }
+
+}
+
 function _getsingleuser($id, $param)
 {
     require('_config.php');
@@ -824,33 +860,33 @@ function _siteconfig($param)
     }
 }
 
-function _savesiteconfig($sitetitle, $siteemail, $timezone, $header, $css, $logo = '', $reslogo = '', $favicon = '')
+function _savesiteconfig($sitetitle, $siteemail, $timezone, $header, $footer, $css, $logo = '', $reslogo = '', $favicon = '')
 {
     require('_config.php');
     require('_alert.php');
     if ($logo && $reslogo && $favicon) {
-        $sql = "UPDATE `tblsiteconfig` SET `_sitetitle`='$sitetitle',`_siteemail`='$siteemail',`_timezone`='$timezone', `_customheader`='$header',`_customcss`='$css', `_sitelogo`='$logo',`_sitereslogo`='$reslogo',`_favicon`='$favicon' WHERE `_id` = 1";
+        $sql = "UPDATE `tblsiteconfig` SET `_sitetitle`='$sitetitle',`_siteemail`='$siteemail',`_timezone`='$timezone', `_customheader`='$header', `_customfooter`='$footer',  `_customcss`='$css', `_sitelogo`='$logo',`_sitereslogo`='$reslogo',`_favicon`='$favicon' WHERE `_id` = 1";
     }
     if ($logo && $reslogo) {
-        $sql = "UPDATE `tblsiteconfig` SET `_sitetitle`='$sitetitle',`_siteemail`='$siteemail',`_timezone`='$timezone',`_customheader`='$header',`_customcss`='$css', `_sitelogo`='$logo',`_sitereslogo`='$reslogo' WHERE `_id` = 1";
+        $sql = "UPDATE `tblsiteconfig` SET `_sitetitle`='$sitetitle',`_siteemail`='$siteemail',`_timezone`='$timezone',`_customheader`='$header', `_customfooter`='$footer',  `_customcss`='$css', `_sitelogo`='$logo',`_sitereslogo`='$reslogo' WHERE `_id` = 1";
     }
     if ($reslogo && $favicon) {
-        $sql = "UPDATE `tblsiteconfig` SET `_sitetitle`='$sitetitle',`_siteemail`='$siteemail',`_timezone`='$timezone',`_customheader`='$header',`_customcss`='$css', `_sitereslogo`='$reslogo',`_favicon`='$favicon' WHERE `_id` = 1";
+        $sql = "UPDATE `tblsiteconfig` SET `_sitetitle`='$sitetitle',`_siteemail`='$siteemail',`_timezone`='$timezone',`_customheader`='$header', `_customfooter`='$footer',  `_customcss`='$css', `_sitereslogo`='$reslogo',`_favicon`='$favicon' WHERE `_id` = 1";
     }
     if ($logo && $favicon) {
-        $sql = "UPDATE `tblsiteconfig` SET `_sitetitle`='$sitetitle',`_siteemail`='$siteemail',`_timezone`='$timezone',`_customheader`='$header',`_customcss`='$css', `_sitelogo`='$logo',`_favicon`='$favicon' WHERE `_id` = 1";
+        $sql = "UPDATE `tblsiteconfig` SET `_sitetitle`='$sitetitle',`_siteemail`='$siteemail',`_timezone`='$timezone',`_customheader`='$header', `_customfooter`='$footer',  `_customcss`='$css', `_sitelogo`='$logo',`_favicon`='$favicon' WHERE `_id` = 1";
     }
     if ($logo) {
-        $sql = "UPDATE `tblsiteconfig` SET `_sitetitle`='$sitetitle',`_siteemail`='$siteemail',`_timezone`='$timezone', `_customheader`='$header',`_customcss`='$css', `_sitelogo`='$logo' WHERE `_id` = 1";
+        $sql = "UPDATE `tblsiteconfig` SET `_sitetitle`='$sitetitle',`_siteemail`='$siteemail',`_timezone`='$timezone', `_customheader`='$header', `_customfooter`='$footer',  `_customcss`='$css', `_sitelogo`='$logo' WHERE `_id` = 1";
     }
     if ($reslogo) {
-        $sql = "UPDATE `tblsiteconfig` SET `_sitetitle`='$sitetitle',`_siteemail`='$siteemail',`_timezone`='$timezone', `_customheader`='$header',`_customcss`='$css', `_sitereslogo`='$reslogo' WHERE `_id` = 1";
+        $sql = "UPDATE `tblsiteconfig` SET `_sitetitle`='$sitetitle',`_siteemail`='$siteemail',`_timezone`='$timezone', `_customheader`='$header', `_customfooter`='$footer',  `_customcss`='$css', `_sitereslogo`='$reslogo' WHERE `_id` = 1";
     }
     if ($favicon) {
-        $sql = "UPDATE `tblsiteconfig` SET `_sitetitle`='$sitetitle',`_siteemail`='$siteemail',`_timezone`='$timezone', `_customheader`='$header',`_customcss`='$css', `_favicon`='$favicon' WHERE `_id` = 1";
+        $sql = "UPDATE `tblsiteconfig` SET `_sitetitle`='$sitetitle',`_siteemail`='$siteemail',`_timezone`='$timezone', `_customheader`='$header', `_customfooter`='$footer',  `_customcss`='$css', `_favicon`='$favicon' WHERE `_id` = 1";
     }
     if (!$logo && !$reslogo && !$favicon) {
-        $sql = "UPDATE `tblsiteconfig` SET `_sitetitle`='$sitetitle',`_siteemail`='$siteemail',`_timezone`='$timezone', `_customheader`='$header',`_customcss`='$css'  WHERE `_id` = 1";
+        $sql = "UPDATE `tblsiteconfig` SET `_sitetitle`='$sitetitle',`_siteemail`='$siteemail',`_timezone`='$timezone', `_customheader`='$header', `_customfooter`='$footer',  `_customcss`='$css'  WHERE `_id` = 1";
     }
     $query = mysqli_query($conn, $sql);
     if ($query) {

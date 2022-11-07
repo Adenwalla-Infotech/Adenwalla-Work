@@ -37,7 +37,7 @@
         </div>
       </li>
     <?php } ?>
-    
+
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#ui-ticket" aria-expanded="false" aria-controls="ui-basic">
         <i class="mdi mdi-ticket-account menu-icon"></i>
@@ -52,22 +52,48 @@
       </div>
     </li>
     <?php if ($_SESSION['userType'] == 2) { ?>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#ui-category" aria-expanded="false" aria-controls="ui-basic">
+          <i class="mdi mdi-source-branch menu-icon"></i>
+          <span class="menu-title">Category</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="ui-category">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="add-category">Add Parent</a></li>
+            <li class="nav-item"> <a class="nav-link" href="add-subcategory">Add Child</a></li>
+            <li class="nav-item"> <a class="nav-link" href="manage-category">Manage Parent</a></li>
+            <li class="nav-item"> <a class="nav-link" href="manage-subcategory">Manage Child</a></li>
+          </ul>
+        </div>
+      </li>
+    <?php } ?>
+
+
+    <?php
+
+    $userId = $_SESSION['userId'];
+
+    ?>
     <li class="nav-item">
-      <a class="nav-link" data-toggle="collapse" href="#ui-category" aria-expanded="false" aria-controls="ui-basic">
-      <i class="mdi mdi-source-branch menu-icon"></i>
-        <span class="menu-title">Category</span>
-        <i class="menu-arrow"></i> 
+      <a class="nav-link" data-toggle="collapse" href="#user-settings.php?id=<?php echo $userId; ?>" aria-expanded="false" aria-controls="ui-basic">
+        <i class="mdi mdi-source-branch menu-icon"></i>
+        <span class="menu-title">Profile</span>
+        <i class="menu-arrow"></i>
       </a>
-      <div class="collapse" id="ui-category">
+      <div class="collapse" id="user-settings.php?id=<?php echo $userId; ?>">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="add-category">Add Parent</a></li>
-          <li class="nav-item"> <a class="nav-link" href="add-subcategory">Add Child</a></li>
-          <li class="nav-item"> <a class="nav-link" href="manage-category">Manage Parent</a></li>
-          <li class="nav-item"> <a class="nav-link" href="manage-subcategory">Manage Child</a></li>
+          <li class="nav-item"> <a class="nav-link" href="user-settings.php">Edit Profile</a></li>
         </ul>
       </div>
     </li>
-    <?php } ?>
+    <?php
+
+
+
+    ?>
+
+
 
   </ul>
 </nav>

@@ -25,6 +25,7 @@ if(isset($_POST['submit'])){
     $siteemail = $_POST['siteemail'];
     $timezone = $_POST['timezone'];
     $header = $_POST['header'];
+    $footer = $_POST['footer'];
     $css = $_POST['css'];
     $logonewfile = null;
     $reslogonewfile = null;
@@ -65,7 +66,7 @@ if(isset($_POST['submit'])){
             move_uploaded_file($_FILES["favicon"]["tmp_name"],"../uploads/images/".$faviconnewfile);
         }
     }
-    _savesiteconfig($sitetitle,$siteemail,$timezone,$header,$css,$logonewfile,$reslogonewfile,$faviconnewfile);
+    _savesiteconfig($sitetitle,$siteemail,$timezone,$header,$footer,$css,$logonewfile,$reslogonewfile,$faviconnewfile);
 }
 
 
@@ -253,12 +254,29 @@ if(isset($_POST['submit'])){
                                 <textarea class="form-control" name="css" id="exampleFormControlTextarea1" rows="6"><?php echo _siteconfig('_customcss'); ?></textarea>
                             </div>
                         </div>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">Footer Configuration</h4>
+                    <p class="card-description">
+                    Site settings are the settings for a specific website within your Site. If you'd like to change settings for your Site overall, navigate to the Settings tab in the control panel.
+                    From site settings, you’ll be able to configure the default settings, edit your footer, add header and background images, and more. 
+                    </p>
+                        <div class="row g-3" style="margin-top: 20px;">
+                            <div class="col-6">
+                                <label for="exampleFormControlTextarea1" class="form-label">Footer Codes</label>
+                                <textarea class="form-control" name="footer" id="exampleFormControlTextarea1" rows="6"><?php echo _siteconfig('_customfooter'); ?></textarea>
+                            </div>
+                            <div class="col-6">
+                                <label for="exampleFormControlTextarea1" class="form-label">Footer CSS</label>
+                                <textarea class="form-control"  id="exampleFormControlTextarea1" rows="6"><?php echo _siteconfig('_customcss'); ?></textarea>
+                            </div>
+                        </div>
                         <div class="col-12" style="margin-top: 30px;">
                             <button type="submit" name="submit" style="width: 180px;margin-left: -10px" class="btn btn-primary"><i class="mdi mdi-content-save"></i>&nbsp;&nbsp;Save Settings</button>
                         </div>
-                    </form>
                 </div>
-            </div>
+             </div>
+            </form>
         </div>
         <!-- content-wrapper ends -->
         <!-- partial:partials/_footer.html -->

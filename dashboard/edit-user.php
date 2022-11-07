@@ -92,7 +92,7 @@ if (isset($_POST['submit'])) {
                                 <form method="POST" action="">
                                     <div class="row g-3">
                                         <div class="col">
-                                            <label for="useremail" class="form-label">User Name</label>
+                                            <label for="username" class="form-label">User Name</label>
                                             <input type="text" value="<?php echo _getsingleuser($_id, '_username'); ?>" class="form-control" placeholder="User name" aria-label="user name" id="username" name="username" required>
                                         </div>
                                         <div class="col">
