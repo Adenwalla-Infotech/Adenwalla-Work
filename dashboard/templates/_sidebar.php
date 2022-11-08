@@ -69,31 +69,11 @@
       </li>
     <?php } ?>
 
-
-    <?php
-
-    $userId = $_SESSION['userId'];
-
-    ?>
     <li class="nav-item">
-      <a class="nav-link" data-toggle="collapse" href="#user-settings.php?id=<?php echo $userId; ?>" aria-expanded="false" aria-controls="ui-basic">
-        <i class="mdi mdi-source-branch menu-icon"></i>
-        <span class="menu-title">Profile</span>
-        <i class="menu-arrow"></i>
+      <a class="nav-link" href="edit-profile">
+        <i class="icon-grid menu-icon"></i>
+        <span class="menu-title">Profile Setting</span>
       </a>
-      <div class="collapse" id="user-settings.php?id=<?php echo $userId; ?>">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="user-settings.php">Edit Profile</a></li>
-        </ul>
-      </div>
     </li>
-    <?php
-
-
-
-    ?>
-
-
-
   </ul>
 </nav>

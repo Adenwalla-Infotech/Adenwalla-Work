@@ -1,7 +1,6 @@
 <?php
 
 /* Auth Functions */
-
 function _login($userpassword, $useremail)
 {
     require('_config.php');
@@ -17,9 +16,14 @@ function _login($userpassword, $useremail)
                     $usertype = $data['_usertype'];
                     $userverify = $data['_userverify'];
                     $userid = $data['_id'];
+                    $useremail = $data['_useremail'];
+                    $userphone = $data['_userphone'];
+                    $userpass = $data['_userpassword'];
                 }
                 $_SESSION['isLoggedIn'] = true;
                 $_SESSION['userEmailId'] = $useremail;
+                $_SESSION['userPhoneNo'] = $userphone;
+                $_SESSION['userPassword'] = $userpass;
                 $_SESSION['userType'] = $usertype;
                 $_SESSION['userVerify'] = $userverify;
                 $_SESSION['userId'] = $userid;
@@ -253,20 +257,14 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_username` varchar(255) NOT NULL,
                 `_useremail` varchar(255) NOT NULL,
                 `_userphone` varchar(255) NOT NULL,
-                
-                `_userlongitude` varchar(25) NULL,
-                `_userlatitude` varchar(25) NULL,
-                `_userbio` varchar(255) NULL,
+                `_userlongitude` varchar(50) NULL,
+                `_userlatitude` varchar(50) NULL,
+                `_userbio` varchar(500) NULL,
                 `_userage` varchar(10) NULL,
-                `_usersite` varchar(25) NULL,
-                `_userinstagram` varchar(25) NULL,
-                `_userlinked` varchar(25) NULL,
-                `_usertwitter` varchar(25) NULL,
-
-                
-                `_userdp` varchar(25) NULL,
-
-
+                `_userlocation` varchar(100) NULL,
+                `_userstate` varchar(50) NULL,
+                `_userpin` varchar(50) NULL,
+                `_userdp` varchar(50) NULL,
                 `_usertype` int(11) NOT NULL,
                 `_userstatus` varchar(50) NOT NULL,
                 `_userpassword` varchar(255) NOT NULL,
@@ -747,37 +745,94 @@ function _updateuser($username, $useremail, $usertype, $userphone, $userwebsite,
     }
 }
 
-function _updateProfile(
-    $_id,
-    $username,
-    $useremail,
-    $userpassword,
-    $userphone,
-    $userwebsite,
-    $userage,
-    $userbio,
-    $userinstagram,
-    $userlinkedln, 
-    $usertwitter,
-    $userDp
-)
+function _updateProfile($username, $useremail, $userpassword, $userphone, $userage, $userbio,$location,$userpin,$country)
 {
-
     require('_config.php');
     require('_alert.php');
+    $email =  $_SESSION['userEmailId'];
+    $phone = $_SESSION['userPhoneNo'];
+    $id =  $_SESSION['userId'];
+    if ($phone != $userphone && $email != $useremail) {
+        $sql = "SELECT * FROM `tblusers` WHERE`_useremail` = '$useremail' AND `_userphone` = '$userphone'";
+        $run = true;
+    }
+    if ($phone != $userphone) {
+        $sql = "SELECT * FROM `tblusers` WHERE `_userphone` = '$userphone'";
+        $run = true;
+    }
+    if ($email != $useremail) {
+        $sql = "SELECT * FROM `tblusers` WHERE `_useremail` = '$useremail'";
+        $run = true;
+    } 
+    if($phone == $userphone && $email == $useremail) {
+        $run = false;
+    }
+    if($run){
+        $query = mysqli_query($conn, $sql);
+        if ($query) {
+            $count = mysqli_num_rows($query);
+            if ($count > 0) {
+                $alert = new PHPAlert();
+                $alert->warn("Credential Already in use");
+            }else{
+                $password = $_SESSION['userPassword'];
+                if ($userpassword == $password) {
+                    $encpassword = $userpassword;
+                    $sql = "UPDATE `tblusers` SET `_username`='$username',`_useremail`='$useremail',`_userphone`='$userphone',`_userbio`='$userbio',`_userage`='$userage',`_userlocation`='$location',`_userstate`='$country',`_userpin`='$userpin' WHERE `_id` = $id";
+                    
+                } else {
+                    $encpassword = md5($userpassword);
+                    $sql = "UPDATE `tblusers` SET `_username`='$username',`_useremail`='$useremail',`_userphone`='$userphone',`_userbio`='$userbio',`_userage`='$userage',`_userlocation`='$location',`_userstate`='$country',`_userpin`='$userpin',`_userpassword`='$encpassword' WHERE `_id` = $id";
+                }
 
-    $sql = "UPDATE `tblusers` SET `_username`='$username' , `_useremail`='$useremail' , `_userphone`='$userphone' , `_userpassword`='$userpassword' , `_usersite`='$userwebsite'
-    , `_userage`='$userage' , `_userbio`='$userbio' , `_userinstagram`='$userinstagram' , `_userlinked`='$userlinkedln' , `_usertwitter`='$usertwitter' , `_userdp`='$userDp' WHERE `_id` = $_id";
-   
-   $query = mysqli_query($conn, $sql);
-    if ($query) {
+                $query = mysqli_query($conn, $sql);
+                if ($query) {
+                    $alert = new PHPAlert();
+                    $alert->success("Profile Updated");
+                    $_SESSION['userEmailId'] = $useremail;
+                    $_SESSION['userPhoneNo'] = $userphone;
+                    $_SESSION['userPassword'] = $encpassword;
+                } else {
+                    $alert = new PHPAlert();
+                    $alert->warn("Something went wrong");
+                }
+            }
+        }    
+    }else{
+        $password = $_SESSION['userPassword'];
+        if ($userpassword == $password) {
+            $encpassword = $userpassword;
+            $sql = "UPDATE `tblusers` SET `_username`='$username',`_userbio`='$userbio',`_userage`='$userage',`_userlocation`='$location',`_userstate`='$country',`_userpin`='$userpin' WHERE `_id` = $id";
+        } else {
+            $encpassword = md5($userpassword);
+            $sql = "UPDATE `tblusers` SET `_username`='$username',`_userbio`='$userbio',`_userage`='$userage',`_userlocation`='$location',`_userstate`='$country',`_userpin`='$userpin',`_userpassword`='$encpassword' WHERE `_id` = $id";
+        }
+
+        $query = mysqli_query($conn, $sql);
+        if ($query) {
+            $alert = new PHPAlert();
+            $alert->success("Profile Updated");
+            $_SESSION['userPassword'] = $encpassword;
+        } else {
+            $alert = new PHPAlert();
+            $alert->warn("Something went wrong");
+        }
+    }
+}
+
+function _updatedb($newfile){
+    require('_config.php');
+    require('_alert.php');
+    $id =  $_SESSION['userId'];
+    $sql = "UPDATE `tblusers` SET `_userdp`='$newfile' WHERE `_id` = $id";
+    $query = mysqli_query($conn,$sql);
+    if($query){
         $alert = new PHPAlert();
         $alert->success("Profile Updated");
-    } else {
+    }else{
         $alert = new PHPAlert();
         $alert->warn("Something went wrong");
     }
-
 }
 
 function _getsingleuser($id, $param)
@@ -926,13 +981,13 @@ function _gettickets($ticketid = '', $status = '', $limit = '', $startfrom = '')
     if ($status != '' && $ticketid == '') {
         if ($_SESSION['userType'] == 2) {
             $sql = "SELECT * FROM `tbltickets` WHERE `_status` = '$status'";
-        }else{
+        } else {
             $sql = "SELECT * FROM `tbltickets` WHERE `_status` = '$status' AND `_useremail` = '$user'";
         }
     } else if ($ticketid != '' && $status != '') {
         if ($_SESSION['userType'] == 2) {
             $sql = "SELECT * FROM `tbltickets` WHERE `_id` = '$ticketid'";
-        }else{
+        } else {
             $sql = "SELECT * FROM `tbltickets` WHERE `_id` = '$ticketid'  AND `_useremail` = '$user'";
         }
     } else {
@@ -947,11 +1002,11 @@ function _gettickets($ticketid = '', $status = '', $limit = '', $startfrom = '')
         foreach ($query as $data) { ?>
             <tr>
                 <?php if ($_SESSION['userType'] == 2) { ?>
-                <td><?php echo $data['_id']; ?></td>
+                    <td><?php echo $data['_id']; ?></td>
                 <?php } ?>
                 <td><?php echo $data['_title']; ?></td>
                 <?php if ($_SESSION['userType'] == 2) { ?>
-                <td><?php echo $data['_useremail']; ?></td>
+                    <td><?php echo $data['_useremail']; ?></td>
                 <?php } ?>
                 <td><?php echo $data['_status']; ?></td>
                 <td>
@@ -1235,7 +1290,7 @@ function _getSubCategory($_subcategoryname = '', $categoryId = '', $limit = '', 
         foreach ($query as $data) { ?>
             <tr>
                 <td><?php echo $data['_subcategoryname']; ?></td>
-               
+
                 <td>
 
                     <label class="checkbox-inline form-switch">
@@ -1326,7 +1381,7 @@ function _showCategoryOptions($_categoryID = '')
 {
 
     require('_config.php');
-   
+
 
     if ($_categoryID != '') {
 
@@ -1345,7 +1400,7 @@ function _showCategoryOptions($_categoryID = '')
 
                     if ($_categoryID == $currentId) {
                 ?>
-                        <option value="<?php echo $data['_id']; ?>" selected  > <?php echo $data['_categoryname']; ?> </option>
+                        <option value="<?php echo $data['_id']; ?>" selected> <?php echo $data['_categoryname']; ?> </option>
                     <?php
                     } else {
                     ?>
@@ -1388,4 +1443,3 @@ function _showCategoryOptions($_categoryID = '')
 
 
 ?>
-

@@ -62,13 +62,13 @@ if(isset($_POST['submit'])){
                 <div class="form-group">
                   <input type="text" name="userphone" class="form-control form-control-lg" id="exampleInputEmail1" placeholder="Phone No">
                 </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                   <select name="usertype" class="form-control form-control-lg" id="exampleFormControlSelect2">
                     <option>Account Type</option>
                     <option value="0">Student</option>
                     <option value="1">Teacher</option>
                   </select>
-                </div>
+                </div> -->
                 <div class="form-group">
                   <input type="password" name="userpassword" class="form-control form-control-lg" id="exampleInputPassword1" placeholder="Password">
                 </div>

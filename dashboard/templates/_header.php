@@ -71,25 +71,13 @@
       </li>
       <li class="nav-item nav-profile dropdown">
         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-          <img src="../assets/images/faces/face28.jpg" alt="profile" />
+          <img src="../uploads/profile/<?php echo _getsingleuser($_id, '_userdp'); ?>" alt="profile" />
         </a>
         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-          <?php
-
-          $userId = $_SESSION['userId'];
-          // echo $userId;
-
-          ?>
-          <a class="dropdown-item" href="user-settings.php?id=<?php echo $userId; ?>">
+          <a class="dropdown-item" href="edit-profile">
             <i class="ti-settings text-primary"></i>
             Settings
           </a>
-          <?php
-
-
-
-          ?>
-
           <a class="dropdown-item" href="logout">
             <i class="ti-power-off text-primary"></i>
             Logout
