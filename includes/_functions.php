@@ -257,6 +257,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_username` varchar(255) NOT NULL,
                 `_useremail` varchar(255) NOT NULL,
                 `_userphone` varchar(255) NOT NULL,
+                `_usersite` varchar(255) NOT NULL,
                 `_userlongitude` varchar(50) NULL,
                 `_userlatitude` varchar(50) NULL,
                 `_userbio` varchar(500) NULL,
@@ -364,9 +365,24 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
+            $blog_table = "CREATE TABLE IF NOT EXISTS `tblblog` (
+                `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                `_blogtitle` varchar(50) NOT NULL,
+                `_parmalink` varchar(50) NOT NULL,
+                `_blogdesc` varchar(500) NOT NULL,
+                `_blogcategory` varchar(50) NOT NULL,
+                `_blogsubcategory` varchar(50) NOT NULL,
+                `_blogmetadesc` varchar(150) NOT NULL,
+                `_blogimg` varchar(50) NOT NULL,
+                `_userid` varchar(50) NOT NULL,
+                `_status` varchar(20) NOT NULL,
+                `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                `UpdationDate` datetime NULL ON UPDATE current_timestamp()
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
 
-            $tables = [$admin_table, $sms_config, $email_config, $site_config, $tickets_table, $ticket_comment, $contact_table, $category_table, $subcategory_table];
+
+            $tables = [$admin_table, $sms_config, $email_config, $site_config, $tickets_table, $ticket_comment, $contact_table, $category_table, $subcategory_table, $blog_table];
 
             foreach ($tables as $k => $sql) {
                 $query = @$temp_conn->query($sql);
@@ -548,7 +564,7 @@ function _notifyuser($useremail = '', $userphone = '', $message, $subject = '')
                 $mail->From = $data['_emailaddress'];
                 $mail->FromName = $data['_sendername'];
             }
-            //To address and name
+            //To address and namS
             $mail->addAddress($useremail); //Recipient name is optional
 
             //Address to which recipient will reply
@@ -745,7 +761,7 @@ function _updateuser($username, $useremail, $usertype, $userphone, $isactive, $i
     }
 }
 
-function _updateProfile($username, $useremail, $userpassword, $userphone, $userage, $userbio,$location,$userpin,$country)
+function _updateProfile($username, $useremail, $userpassword, $userphone, $userage, $userbio, $location, $userpin, $country)
 {
     require('_config.php');
     require('_alert.php');
@@ -763,23 +779,22 @@ function _updateProfile($username, $useremail, $userpassword, $userphone, $usera
     if ($email != $useremail) {
         $sql = "SELECT * FROM `tblusers` WHERE `_useremail` = '$useremail'";
         $run = true;
-    } 
-    if($phone == $userphone && $email == $useremail) {
+    }
+    if ($phone == $userphone && $email == $useremail) {
         $run = false;
     }
-    if($run){
+    if ($run) {
         $query = mysqli_query($conn, $sql);
         if ($query) {
             $count = mysqli_num_rows($query);
             if ($count > 0) {
                 $alert = new PHPAlert();
                 $alert->warn("Credential Already in use");
-            }else{
+            } else {
                 $password = $_SESSION['userPassword'];
                 if ($userpassword == $password) {
                     $encpassword = $userpassword;
                     $sql = "UPDATE `tblusers` SET `_username`='$username',`_useremail`='$useremail',`_userphone`='$userphone',`_userbio`='$userbio',`_userage`='$userage',`_userlocation`='$location',`_userstate`='$country',`_userpin`='$userpin' WHERE `_id` = $id";
-                    
                 } else {
                     $encpassword = md5($userpassword);
                     $sql = "UPDATE `tblusers` SET `_username`='$username',`_useremail`='$useremail',`_userphone`='$userphone',`_userbio`='$userbio',`_userage`='$userage',`_userlocation`='$location',`_userstate`='$country',`_userpin`='$userpin',`_userpassword`='$encpassword' WHERE `_id` = $id";
@@ -797,8 +812,8 @@ function _updateProfile($username, $useremail, $userpassword, $userphone, $usera
                     $alert->warn("Something went wrong");
                 }
             }
-        }    
-    }else{
+        }
+    } else {
         $password = $_SESSION['userPassword'];
         if ($userpassword == $password) {
             $encpassword = $userpassword;
@@ -820,16 +835,17 @@ function _updateProfile($username, $useremail, $userpassword, $userphone, $usera
     }
 }
 
-function _updatedb($newfile){
+function _updatedb($newfile)
+{
     require('_config.php');
     require('_alert.php');
     $id =  $_SESSION['userId'];
     $sql = "UPDATE `tblusers` SET `_userdp`='$newfile' WHERE `_id` = $id";
-    $query = mysqli_query($conn,$sql);
-    if($query){
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
         $alert = new PHPAlert();
         $alert->success("Profile Updated");
-    }else{
+    } else {
         $alert = new PHPAlert();
         $alert->warn("Something went wrong");
     }
@@ -1280,7 +1296,7 @@ function _getSubCategory($_subcategoryname = '', $categoryId = '', $limit = '', 
 {
     require('_config.php');
     if ($categoryId != '' && $_subcategoryname == '') {
-        $sql = "SELECT * FROM `tblsubcategory` WHERE `_categoryid` = '$categoryId'";
+        $sql = "SELECT * FROM `tblsubcategory` WHERE `_categoryid` LIKE '%$categoryId%'";
     } else if ($_subcategoryname != '' && $categoryId == '') {
         $sql = "SELECT * FROM `tblsubcategory` WHERE `_subcategoryname` = '$_subcategoryname'";
     } else {
@@ -1386,13 +1402,15 @@ function _showCategoryOptions($_categoryID = '')
 
     if ($_categoryID != '') {
 
-        $sql = "SELECT * FROM `tblcategory` ";
+        $sql = "SELECT * FROM `tblcategory`  ";
 
         $query = mysqli_query($conn, $sql);
         if ($query) {
         ?>
             <label for="categoryId" class="form-label">Select Category</label>
             <select style="height: 46px;" id="categoryId" name="categoryId" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
+
+                <option>Category</option>
 
                 <?php
                 foreach ($query as $data) {
@@ -1425,7 +1443,7 @@ function _showCategoryOptions($_categoryID = '')
         ?>
             <label for="categoryId" class="form-label">Select Category</label>
             <select style="height: 46px;" id="categoryId" name="categoryId" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
-
+                <option>Category</option>
                 <?php
                 foreach ($query as $data) {
                 ?>
@@ -1435,12 +1453,241 @@ function _showCategoryOptions($_categoryID = '')
                 ?>
 
             </select>
-<?php
+        <?php
 
 
         }
     }
 }
+
+function _showSubCategoryOptions($_subcategoryID = '')
+{
+
+    require('_config.php');
+
+
+    if ($_subcategoryID != '') {
+
+        $sql = "SELECT * FROM `tblsubcategory`  ";
+
+        $query = mysqli_query($conn, $sql);
+        if ($query) {
+        ?>
+            <label for="subcategoryId" class="form-label">Select Sub-Category</label>
+            <select style="height: 46px;" id="subcategoryId" name="subcategoryId" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
+
+                <option> Sub Category</option>
+
+
+                <?php
+
+                foreach ($query as $data) {
+
+                    $currentId = $data['_id'];
+
+                    if ($_subcategoryID == $currentId) {
+                        ?>
+                            <option  value="<?php echo $data['_id']; ?>" selected> <?php echo $data['_subcategoryname']; ?> </option>
+                        <?php
+
+                    } 
+                    else {
+                            ?>
+                                <option value="<?php echo $data['_id']; ?>"> <?php echo $data['_subcategoryname']; ?> </option>
+                            <?php
+                    }
+                }
+
+                ?>
+
+            </select>
+        <?php
+
+
+        }
+    } else {
+        $sql = "SELECT * FROM `tblsubcategory`";
+
+        $query = mysqli_query($conn, $sql);
+        if ($query) {
+
+        ?>
+            <label for="subcategoryId" class="form-label">Select Sub-Category</label>
+            <select style="height: 46px;" id="subcategoryId" name="subcategoryId" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
+                <option> Sub Category</option>
+                <?php
+                    foreach ($query as $data) {
+                        ?>
+                            <option  value="<?php echo $data['_id']; ?>"> <?php echo $data['_subcategoryname']; ?> </option>
+                        <?php
+                    }
+                ?>
+
+            </select>
+        <?php
+
+
+        }
+    }
+}
+
+
+function _createBlog($_blogtitle, $_blogdesc, $_blogcategory, $_blogsubcategory, $_blogmetadesc, $_blogimg, $_userid, $_status)
+{
+    require('_config.php');
+    require('_alert.php');
+
+    $sql = "INSERT INTO `tblblog`(`_blogtitle`, `_blogdesc`, `_blogcategory`, `_blogsubcategory`, `_blogmetadesc`,`_blogimg`, `_userid`, `_status`) VALUES ('$_blogtitle','$_blogdesc', '$_blogcategory', '$_blogsubcategory', '$_blogmetadesc','$_blogimg', '$_userid', '$_status')";
+
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+
+
+        $alert = new PHPAlert();
+        $alert->success("Blog Created");
+    }
+}
+
+function _getBlogs($blogtitle = '', $blogcategory = '', $blogsubcategory = '', $startfrom = '', $limit = '')
+{
+
+    require('_config.php');
+
+    if ($blogtitle != '' && $blogcategory == '' && $blogsubcategory == '') {
+        $sql = "SELECT * FROM `tblblog` WHERE `_blogtitle` LIKE '%$blogtitle%' ";
+    } 
+    else if ($blogcategory != '' && $blogsubcategory == '' && $blogtitle == '' ) {
+        $sql = "SELECT * FROM `tblblog` WHERE `_blogcategory`='$blogcategory' ";
+    } 
+    else if ($blogsubcategory != '' && $blogcategory == '' && $blogtitle == '' ) {
+        // echo "hi";
+        $sql = "SELECT * FROM `tblblog` WHERE `_blogsubcategory`=3 ";
+    } 
+    else if ($blogcategory != '' && $blogsubcategory != '' && $blogtitle == '') {
+        $sql = "SELECT * FROM `tblblog` WHERE `_blogcategory`='$blogcategory' AND `_blogsubcategory` = '$blogsubcategory' ";
+    } 
+    else {
+        $sql = "SELECT * FROM `tblblog` ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
+    }
+    
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+
+        foreach ($query as $data) { 
+            
+        ?>
+            <tr>
+                <td><?php echo $data['_blogtitle']; ?></td>
+
+                <td>
+                    <label class="checkbox-inline form-switch">
+                        <?php
+                        if ($data['_status'] == 'true')
+                        { 
+                            ?>
+                            <input disabled role="switch" name="isactive" value="true" checked type="checkbox">
+                            <?php
+                        }
+                        if ($data['_status'] == 'false') 
+                        { 
+                            ?>
+                            <input disabled role="switch" name="isactive" value="false" type="checkbox">
+                            <?php
+                        }
+                        ?>
+                    </label>
+                </td>
+
+                <td>
+                    <?php
+                    $catid = $data['_blogcategory'];
+                    $sql = "SELECT * FROM `tblcategory` WHERE `_id` = $catid";
+                    $query = mysqli_query($conn, $sql);
+                    if ($query) {
+                        foreach ($query as $result) {
+                            echo $result['_categoryname'];
+                        }
+                    }
+                    ?>
+                </td>
+
+                <td>
+                    <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
+                </td>
+
+                <td>
+                    <?php echo date("M j, Y", strtotime($data['UpdationDate'])); ?>
+                </td>
+                <td>
+                    <a href="edit-blog?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
+                    <?php if ($_SESSION['userType'] == 2) { ?>
+                        <a href='manage-blog?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
+                </td>
+
+            <?php
+                    }
+            ?>
+
+            </tr>
+
+        <?php 
+
+        }
+    }
+
+
+    
+}
+
+function updateBlog($_blogtitle, $_blogdesc, $_blogcategory, $_blogsubcategory, $_blogmetadesc, $_blogimg , $_status , $_id){
+
+    require('_config.php');
+    require('_alert.php');
+
+
+    $sql = "UPDATE `tblblog` SET `_blogtitle`='$_blogtitle' , `_blogdesc`='$_blogdesc'  , `_blogcategory`='$_blogcategory'  , `_blogsubcategory`='$_blogsubcategory' , `_blogmetadesc`='$_blogmetadesc' , `_blogimg`='$_blogimg' , `_status`='$_status' WHERE `_id` = $_id";
+
+
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->success("Blog Updated");
+    } else {
+        $alert = new PHPAlert();
+        $alert->warn("Something went wrong");
+    }
+
+}
+
+
+function _getSingleBlog($id, $param)
+{
+    require('_config.php');
+    $sql = "SELECT * FROM `tblblog` WHERE `_id`=$id";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        
+        foreach ($query as $data) {
+            return $data[$param];
+        }
+
+    }
+}
+
+function _deleteBlog($id)
+{
+
+    require('_config.php');
+    require('_alert.php');
+    $sql = "DELETE FROM `tblblog` WHERE `_id` = $id";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->error("Blog Deleted Permanently");
+    }
+}
+
+
 
 
 ?>

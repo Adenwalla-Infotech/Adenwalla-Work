@@ -189,6 +189,7 @@ if(isset($_POST['update'])){
                                                         <div class="col-md-6">
                                                             <label class="small mb-1" for="inputLocation">Country</label>
                                                             <select name="country" name="country" style="height: 45px;" class="form-control">
+                                                                <option value="<?php echo _getsingleuser($_id, '_userstate'); ?>"><?php echo _getsingleuser($_id, '_userstate'); ?></option>
                                                                 <option value="">Choose Country</option>
                                                                 <option value="Afghanistan">Afghanistan</option>
                                                                 <option value="Åland Islands">Åland Islands</option>
