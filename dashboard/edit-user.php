@@ -25,12 +25,6 @@ if (isset($_POST['submit'])) {
     $usertype = $_POST['usertype'];
     $userphone = $_POST['userphone'];
 
-
-    $userwebsite =  $_POST['userwebsite'];
-
-
-
-
     if (isset($_POST['notify'])) {
         $notify = $_POST['notify'];
     } else {
@@ -47,7 +41,7 @@ if (isset($_POST['submit'])) {
         $isverified = false;
     }
 
-    _updateuser($username, $useremail, $usertype, $userphone, $userwebsite,  $isactive, $isverified, $_id);
+    _updateuser($username, $useremail, $usertype, $userphone, $isactive, $isverified, $_id);
 }
 
 ?>
@@ -131,10 +125,10 @@ if (isset($_POST['submit'])) {
                                             <input type="text" class="form-control" placeholder="IP Location" aria-label="user location" id="userlocation" name="userlocation">
                                         </div>
 
-                                        <div class="col">
+                                        <!-- <div class="col">
                                             <label for="userwebsite" class="form-label"> User Website</label>
                                             <input type="text" value="<?php echo _getsingleuser($_id, '_usersite'); ?>" class="form-control" placeholder="User Website" aria-label="user website" name="userwebsite">
-                                        </div>
+                                        </div> -->
 
 
                                     </div>

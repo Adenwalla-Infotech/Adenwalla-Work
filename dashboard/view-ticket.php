@@ -16,7 +16,7 @@ if(!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['isL
 
 require('../includes/_functions.php'); 
 
-$_id = $_GET['id'];
+$_ticid = $_GET['id'];
 
 
 if(isset($_POST['submit'])){
@@ -30,7 +30,7 @@ if(isset($_POST['submit'])){
         move_uploaded_file($_FILES["file"]["tmp_name"],"../uploads/tickets/".$image);
     }
  
-    _saveticketres($_id,$message,$image,$email);
+    _saveticketres($_ticid,$message,$image,$email);
 }
 
 if(isset($_POST['statustype'])){
@@ -44,7 +44,7 @@ if(isset($_POST['statustype'])){
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Edit <?php echo _getsingleuser($_id,'_username'); ?> | <?php echo _siteconfig('_sitetitle'); ?></title>
+  <title>View <?php echo _getsinglticket($_ticid,'_title'); ?> | <?php echo _siteconfig('_sitetitle'); ?></title>
   <!-- plugins:css -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@mdi/font@6.9.96/css/materialdesignicons.min.css">
   <link rel="stylesheet" href="../assets/vendors/feather/feather.css">
@@ -95,13 +95,13 @@ if(isset($_POST['statustype'])){
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-8">
-                            <h4 class="card-title"><?php echo _getsinglticket($_id,'_title'); ?></h4>
+                            <h4 class="card-title"><?php echo _getsinglticket($_ticid,'_title'); ?></h4>
                         </div>
                         <div class="col-lg-4">
                             <form action="" method="post">
                                 <select style="height: 36px;" name="statustype" class="form-control form-control-lg"  id="exampleFormControlSelect2"  onchange="this.form.submit()" required>
                                     <?php 
-                                        $type = _getsinglticket($_id,'_status');
+                                        $type = _getsinglticket($_ticid,'_status');
                                         echo $type;
                                         if($type=='open'){?><option value="Open" selected>Open</option><?php }
                                         if($type=='pending'){?><option value="Pending" selected>Pending</option><?php }
@@ -118,30 +118,30 @@ if(isset($_POST['statustype'])){
                     </div>
                   <hr>
                   <p class="card-description">
-                    <?php echo _getsinglticket($_id,'_message'); ?>
+                    <?php echo _getsinglticket($_ticid,'_message'); ?>
                   </p>
                   <hr>
                     <div class="row">
                         <div class="col-lg-3" style="margin-bottom: 5px;">
-                            <i style="font-size: 18px" class="mdi mdi-calendar text-lg text-primary"></i>&nbsp;&nbsp;<?php echo date("F j, Y", strtotime(_getsinglticket($_id,'CreationDate'))); ?>
+                            <i style="font-size: 18px" class="mdi mdi-calendar text-lg text-primary"></i>&nbsp;&nbsp;<?php echo date("F j, Y", strtotime(_getsinglticket($_ticid,'CreationDate'))); ?>
                         </div>
                         <div class="col-lg-3" style="margin-bottom: 5px;">
-                            <i style="font-size: 18px" class="mdi mdi-account-circle text-primary"></i>&nbsp;&nbsp;<?php echo _getsinglticket($_id,'_useremail'); ?>
+                            <i style="font-size: 18px" class="mdi mdi-account-circle text-primary"></i>&nbsp;&nbsp;<span style="font-size: 14px"> <?php echo _getsinglticket($_ticid,'_useremail'); ?></span>
                         </div>
                         <div class="col-lg-3">
                         <a type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
                         <i style="font-size: 18px" class="mdi mdi-reply text-primary"></i>&nbsp;&nbsp;Leave Reply
                         </a>
                         </div>
-                        <?php if(_getsinglticket($_id,'_image') != ''){ ?>
+                        <?php if(_getsinglticket($_ticid,'_image') != ''){ ?>
                         <div class="col-lg-3">
-                            <a href="../uploads/tickets/<?php echo _getsinglticket($_id,'_image'); ?>"><i style="font-size: 18px" class="mdi mdi-cloud-download text-primary"></i>&nbsp;&nbsp;Download Attachment</a>
+                            <a href="../uploads/tickets/<?php echo _getsinglticket($_ticid,'_image'); ?>"><i style="font-size: 18px" class="mdi mdi-cloud-download text-primary"></i>&nbsp;&nbsp;Download Attachment</a>
                         </div>
                         <?php } ?>
                     </div>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <?php echo _getticketres($_id); ?>
+                    <?php echo _getticketres($_ticid); ?>
                 </ul>    
             </div>
         </div>

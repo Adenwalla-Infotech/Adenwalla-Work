@@ -71,7 +71,7 @@
 
     <li class="nav-item">
       <a class="nav-link" href="edit-profile">
-        <i class="icon-grid menu-icon"></i>
+        <i class="ti-settings menu-icon"></i>
         <span class="menu-title">Profile Setting</span>
       </a>
     </li>

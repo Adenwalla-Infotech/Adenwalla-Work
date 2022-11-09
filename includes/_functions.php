@@ -728,13 +728,13 @@ function _deleteuser($id)
     }
 }
 
-function _updateuser($username, $useremail, $usertype, $userphone, $userwebsite,  $isactive, $isverified, $_id)
+function _updateuser($username, $useremail, $usertype, $userphone, $isactive, $isverified, $_id)
 {
     require('_config.php');
     require('_alert.php');
 
     $sql = "UPDATE `tblusers` SET `_username`='$username' , `_useremail`='$useremail' , `_userphone`='$userphone' 
-    , `_usersite`='$userwebsite' , `_usertype`='$usertype' , `_userstatus`='$isactive' , `_userverify`='$isverified' WHERE `_id` = $_id";
+    , `_usertype`='$usertype' , `_userstatus`='$isactive' , `_userverify`='$isverified' WHERE `_id` = $_id";
     $query = mysqli_query($conn, $sql);
     if ($query) {
         $alert = new PHPAlert();
@@ -1051,6 +1051,7 @@ function _updateticket($filter, $param, $id)
 
 function _getsinglticket($id, $param)
 {
+    // $id = 2;
     require('_config.php');
     $sql = "SELECT * FROM `tbltickets` WHERE `_id` = $id";
     $query = mysqli_query($conn, $sql);
