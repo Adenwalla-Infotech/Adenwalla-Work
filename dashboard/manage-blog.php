@@ -68,7 +68,7 @@ $start_from = ($page - 1) * $record_per_page;
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Manage Blogs</h4>
+                                <h4 class="card-title">Manage Posts (All Blog Posts)</h4>
                                 <p class="card-description">
                                     Web Help Desk uses tickets to manage service requests. These tickets can be initiated through email, created in the application, and imported from another application. Techs, admins, and clients can also manage tickets through email or through the application in a web browser.
                                 </p>
@@ -111,26 +111,22 @@ $start_from = ($page - 1) * $record_per_page;
                                                 <tbody style="text-align: left;margin-left: 30px">
                                                     <?php
                                                     if (isset($_POST['search'])) {
-
-                                                        $blogtitle = $_POST['blogtitle'];
-                                                        $_blogcategory = $_POST['categoryId'];
-                                                        $_blogsubcategory = $_POST['subcategoryId'];
-
-                                                        if ($blogtitle) {
-                                                            _getBlogs($blogtitle, '', '', $start_from, $record_per_page);
-                                                        } 
-                                                        else if ($_blogcategory != '' && $_blogsubcategory == '') {
-                                                            _getBlogs('', $_blogcategory, '', $start_from, $record_per_page);
-                                                        } 
-                                                        else if ($_blogsubcategory != '' && $_blogcategory == '' ) {
-                                                            _getBlogs('', '', $_blogsubcategory, $start_from, $record_per_page);
-                                                        } 
-                                                        else if ($_blogcategory != '' && $_blogsubcategory != '') {
-                                                            _getBlogs('', $_blogcategory, $_blogsubcategory, $start_from, $record_per_page);
-                                                        } 
-                                                        else {
-                                                            _getBlogs('', '', '', $start_from, $record_per_page);
+                                                        if(isset($_POST['blogtitle'])){
+                                                            $blogtitle = $_POST['blogtitle'];
+                                                        }else{
+                                                            $blogtitle = null;
                                                         }
+                                                        if(isset($_POST['categoryId'])){
+                                                            $_blogcategory = $_POST['categoryId'];
+                                                        }else{
+                                                            $_blogcategory = null;
+                                                        }
+                                                        if(isset($_POST['subcategoryId'])){
+                                                            $_blogsubcategory = $_POST['subcategoryId'];
+                                                        }else{
+                                                            $_blogsubcategory = null;
+                                                        }
+                                                        _getBlogs($blogtitle,$_blogcategory,$_blogsubcategory);
                                                     }
                                                     if (!isset($_POST['search'])) {
                                                         _getBlogs('', '', '', $start_from, $record_per_page);

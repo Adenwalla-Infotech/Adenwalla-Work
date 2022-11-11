@@ -313,6 +313,16 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
+            $payment_config = "CREATE TABLE IF NOT EXISTS `tblpaymentconfig` (
+                `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                `_suppliername` varchar(50) NOT NULL,
+                `_apikey` varchar(100) NOT NULL,
+                `_companyname` varchar(100) NOT NULL,
+                `_supplierstatus` varchar(50) NOT NULL,
+                `CreationDate` datetime NOT NULL DEFAULT current_timestamp(),
+                `UpdationDate` datetime NULL ON UPDATE current_timestamp()
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+
             $tickets_table = "CREATE TABLE IF NOT EXISTS `tbltickets` (
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
                 `_title` varchar(255) NOT NULL,
@@ -367,13 +377,13 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
 
             $blog_table = "CREATE TABLE IF NOT EXISTS `tblblog` (
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
-                `_blogtitle` varchar(50) NOT NULL,
-                `_parmalink` varchar(50) NOT NULL,
-                `_blogdesc` varchar(500) NOT NULL,
+                `_blogtitle` varchar(255) NOT NULL,
+                `_parmalink` varchar(255) NOT NULL,
+                `_blogdesc` text NOT NULL,
                 `_blogcategory` varchar(50) NOT NULL,
                 `_blogsubcategory` varchar(50) NOT NULL,
-                `_blogmetadesc` varchar(150) NOT NULL,
-                `_blogimg` varchar(50) NOT NULL,
+                `_blogmetadesc` varchar(250) NOT NULL,
+                `_blogimg` varchar(100) NOT NULL,
                 `_userid` varchar(50) NOT NULL,
                 `_status` varchar(20) NOT NULL,
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -382,7 +392,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
 
 
 
-            $tables = [$admin_table, $sms_config, $email_config, $site_config, $tickets_table, $ticket_comment, $contact_table, $category_table, $subcategory_table, $blog_table];
+            $tables = [$admin_table, $sms_config, $email_config, $site_config, $payment_config, $tickets_table, $ticket_comment, $contact_table, $category_table, $subcategory_table, $blog_table];
 
             foreach ($tables as $k => $sql) {
                 $query = @$temp_conn->query($sql);
@@ -403,7 +413,9 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
 
                 $site_data = "INSERT INTO `tblsiteconfig`(`_sitetitle`, `_siteemail`, `_timezone`, `_sitelogo`, `_sitereslogo`, `_favicon`) VALUES ('Site Title', 'info@yoursite.com', 'Asia/Calcutta', 'uploadimage.png', 'uploadimage.png', 'uploadimage.png')";
 
-                $data = [$admin_data, $sms_data, $email_data, $site_data];
+                $payment_data = "INSERT INTO `tblpaymentconfig`(`_suppliername`, `_apikey`, `_companyname`, `_supplierstatus`) VALUES ('Razorpay','12345678901234567890','Adenwalla & Co.','true')";
+
+                $data = [$admin_data, $sms_data, $email_data, $site_data, $payment_data];
 
                 foreach ($data as $k => $sql) {
                     $query = @$temp_conn->query($sql);
@@ -969,6 +981,32 @@ function _savesiteconfig($sitetitle, $siteemail, $timezone, $header, $footer, $c
     }
 }
 
+function _paymentconfig($param){
+    require('_config.php');
+    $sql = "SELECT * FROM `tblpaymentconfig`";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        foreach ($query as $data) {
+            return $data[$param];
+        }
+    }
+}
+
+function _savepaymentconfig($suppliername, $apikey, $companyname, $isactive)
+{
+    require('_config.php');
+    require('_alert.php');
+    $sql = "UPDATE `tblpaymentconfig` SET `_suppliername`='$suppliername',`_apikey`='$apikey',`_companyname`='$companyname',`_supplierstatus`='$isactive' WHERE `_id` = 1";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->success("Settings Saved");
+    } else {
+        $alert = new PHPAlert();
+        $alert->warn("Something went wrong");
+    }
+}
+
 /* Ticket Functions */
 
 function _saveticket($subject, $category, $status, $image, $user, $message)
@@ -1115,11 +1153,9 @@ function _getticketres($id)
 }
 
 
-// 
-// Category Functions
-// 
 
-/// ADD CATEGORY
+// Category Functions
+
 function _createCategory($categoryname, $categoryDesc, $isactive)
 {
 
@@ -1155,9 +1191,6 @@ function _createCategory($categoryname, $categoryDesc, $isactive)
         $alert->warn("All Feilds are Required");
     }
 }
-
-
-/// Get CATEGORY
 
 function _getCategory($_categoryname = '', $status = '', $limit = '', $startfrom = '')
 {
@@ -1199,8 +1232,6 @@ function _getCategory($_categoryname = '', $status = '', $limit = '', $startfrom
     }
 }
 
-
-// Get Single Category
 function _getSingleCategory($id, $param)
 {
     require('_config.php');
@@ -1213,7 +1244,6 @@ function _getSingleCategory($id, $param)
     }
 }
 
-// Update Category
 function _updateCategory($_categoryname, $categoryDesc, $isactive, $_id)
 {
 
@@ -1232,7 +1262,6 @@ function _updateCategory($_categoryname, $categoryDesc, $isactive, $_id)
     }
 }
 
-// Delete Category
 function _deleteCategory($id)
 {
 
@@ -1246,13 +1275,6 @@ function _deleteCategory($id)
     }
 }
 
-// 
-// Sub Category Functions
-// 
-
-
-
-/// ADD Sub CATEGORY
 function _createSubCategory($subCategoryname, $categoryId, $subCategoryDesc, $isactive)
 {
 
@@ -1288,9 +1310,6 @@ function _createSubCategory($subCategoryname, $categoryId, $subCategoryDesc, $is
         $alert->warn("All Feilds are Required");
     }
 }
-
-
-/// Get CATEGORY
 
 function _getSubCategory($_subcategoryname = '', $categoryId = '', $limit = '', $startfrom = '')
 {
@@ -1345,8 +1364,6 @@ function _getSubCategory($_subcategoryname = '', $categoryId = '', $limit = '', 
     }
 }
 
-
-// Get Single Category
 function _getSingleSubCategory($id, $param)
 {
     require('_config.php');
@@ -1359,7 +1376,6 @@ function _getSingleSubCategory($id, $param)
     }
 }
 
-// Update Category
 function _updateSubCategory($subCategoryname, $categoryId, $subCategoryDesc, $isactive, $_id)
 {
 
@@ -1380,7 +1396,6 @@ function _updateSubCategory($subCategoryname, $categoryId, $subCategoryDesc, $is
     }
 }
 
-// Delete Category
 function _deleteSubCategory($id)
 {
 
@@ -1408,7 +1423,7 @@ function _showCategoryOptions($_categoryID = '')
         if ($query) {
         ?>
             <label for="categoryId" class="form-label">Select Category</label>
-            <select style="height: 46px;" id="categoryId" name="categoryId" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
+            <select style="height: 40px;" id="categoryId" name="categoryId" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
 
                 <option>Category</option>
 
@@ -1436,14 +1451,11 @@ function _showCategoryOptions($_categoryID = '')
         }
     } else {
         $sql = "SELECT * FROM `tblcategory`";
-
         $query = mysqli_query($conn, $sql);
-        if ($query) {
-
-        ?>
+        if ($query) {?>
             <label for="categoryId" class="form-label">Select Category</label>
-            <select style="height: 46px;" id="categoryId" name="categoryId" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
-                <option>Category</option>
+            <select style="height: 46px;" id="categoryId" name="categoryId" class="form-control form-control-lg" id="exampleFormControlSelect2" >
+                <option value=''>Select Category</option>
                 <?php
                 foreach ($query as $data) {
                 ?>
@@ -1454,8 +1466,6 @@ function _showCategoryOptions($_categoryID = '')
 
             </select>
         <?php
-
-
         }
     }
 }
@@ -1474,7 +1484,7 @@ function _showSubCategoryOptions($_subcategoryID = '')
         if ($query) {
         ?>
             <label for="subcategoryId" class="form-label">Select Sub-Category</label>
-            <select style="height: 46px;" id="subcategoryId" name="subcategoryId" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
+            <select style="height: 40px;" id="subcategoryId" name="subcategoryId" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
 
                 <option> Sub Category</option>
 
@@ -1513,8 +1523,8 @@ function _showSubCategoryOptions($_subcategoryID = '')
 
         ?>
             <label for="subcategoryId" class="form-label">Select Sub-Category</label>
-            <select style="height: 46px;" id="subcategoryId" name="subcategoryId" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
-                <option> Sub Category</option>
+            <select style="height: 46px;" id="subcategoryId" name="subcategoryId" class="form-control form-control-lg" id="exampleFormControlSelect2">
+                <option value=''> Sub Category</option>
                 <?php
                     foreach ($query as $data) {
                         ?>
@@ -1524,13 +1534,15 @@ function _showSubCategoryOptions($_subcategoryID = '')
                 ?>
 
             </select>
-        <?php
+        <?php 
 
 
         }
     }
 }
 
+
+// All Blog Function 
 
 function _createBlog($_blogtitle, $_blogdesc, $_blogcategory, $_blogsubcategory, $_blogmetadesc, $_blogimg, $_userid, $_status)
 {
@@ -1550,35 +1562,30 @@ function _createBlog($_blogtitle, $_blogdesc, $_blogcategory, $_blogsubcategory,
 
 function _getBlogs($blogtitle = '', $blogcategory = '', $blogsubcategory = '', $startfrom = '', $limit = '')
 {
-
     require('_config.php');
-
-    if ($blogtitle != '' && $blogcategory == '' && $blogsubcategory == '') {
+    if ($blogtitle) {
         $sql = "SELECT * FROM `tblblog` WHERE `_blogtitle` LIKE '%$blogtitle%' ";
     } 
-    else if ($blogcategory != '' && $blogsubcategory == '' && $blogtitle == '' ) {
+    if ($blogcategory && !$blogsubcategory && !$blogtitle) {
         $sql = "SELECT * FROM `tblblog` WHERE `_blogcategory`='$blogcategory' ";
     } 
-    else if ($blogsubcategory != '' && $blogcategory == '' && $blogtitle == '' ) {
-        // echo "hi";
-        $sql = "SELECT * FROM `tblblog` WHERE `_blogsubcategory`=3 ";
+    if ($blogsubcategory != '' && $blogcategory == '' && $blogtitle == '' ) {
+        $sql = "SELECT * FROM `tblblog` WHERE `_blogsubcategory`='$blogsubcategory' ";
     } 
-    else if ($blogcategory != '' && $blogsubcategory != '' && $blogtitle == '') {
+    if ($blogcategory && $blogsubcategory) {
         $sql = "SELECT * FROM `tblblog` WHERE `_blogcategory`='$blogcategory' AND `_blogsubcategory` = '$blogsubcategory' ";
     } 
-    else {
+    if(!$blogcategory && !$blogsubcategory && !$blogtitle) {
         $sql = "SELECT * FROM `tblblog` ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
     }
     
     $query = mysqli_query($conn, $sql);
     if ($query) {
 
-        foreach ($query as $data) { 
-            
+        foreach ($query as $data) {      
         ?>
             <tr>
                 <td><?php echo $data['_blogtitle']; ?></td>
-
                 <td>
                     <label class="checkbox-inline form-switch">
                         <?php
@@ -1588,7 +1595,7 @@ function _getBlogs($blogtitle = '', $blogcategory = '', $blogsubcategory = '', $
                             <input disabled role="switch" name="isactive" value="true" checked type="checkbox">
                             <?php
                         }
-                        if ($data['_status'] == 'false') 
+                        if (!$data['_status']) 
                         { 
                             ?>
                             <input disabled role="switch" name="isactive" value="false" type="checkbox">
@@ -1597,7 +1604,6 @@ function _getBlogs($blogtitle = '', $blogcategory = '', $blogsubcategory = '', $
                         ?>
                     </label>
                 </td>
-
                 <td>
                     <?php
                     $catid = $data['_blogcategory'];
@@ -1610,11 +1616,9 @@ function _getBlogs($blogtitle = '', $blogcategory = '', $blogsubcategory = '', $
                     }
                     ?>
                 </td>
-
                 <td>
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
                 </td>
-
                 <td>
                     <?php echo date("M j, Y", strtotime($data['UpdationDate'])); ?>
                 </td>
@@ -1623,7 +1627,6 @@ function _getBlogs($blogtitle = '', $blogcategory = '', $blogsubcategory = '', $
                     <?php if ($_SESSION['userType'] == 2) { ?>
                         <a href='manage-blog?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
                 </td>
-
             <?php
                     }
             ?>
@@ -1646,7 +1649,6 @@ function updateBlog($_blogtitle, $_blogdesc, $_blogcategory, $_blogsubcategory, 
 
 
     $sql = "UPDATE `tblblog` SET `_blogtitle`='$_blogtitle' , `_blogdesc`='$_blogdesc'  , `_blogcategory`='$_blogcategory'  , `_blogsubcategory`='$_blogsubcategory' , `_blogmetadesc`='$_blogmetadesc' , `_blogimg`='$_blogimg' , `_status`='$_status' WHERE `_id` = $_id";
-
 
     $query = mysqli_query($conn, $sql);
     if ($query) {
@@ -1686,8 +1688,6 @@ function _deleteBlog($id)
         $alert->error("Blog Deleted Permanently");
     }
 }
-
-
 
 
 ?>

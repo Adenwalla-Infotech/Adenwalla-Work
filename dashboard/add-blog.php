@@ -98,7 +98,7 @@ if (isset($_POST['submit'])) {
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Create Blog</h4>
+                                <h4 class="card-title">Add Post (New Blog Post)</h4>
                                 <p class="card-description">
                                     If you can't find a solution to your problems in our knowledgebase, you can submit a ticket by selecting the appropriate department below & subject below. Tickets can also be created by simply sending an email. Ticket responses can also be created by replying to the same email.
                                 </p>
@@ -123,7 +123,7 @@ if (isset($_POST['submit'])) {
                                         </div>
 
                                         <div class="col-lg-6" style="margin-bottom: 20px;">
-                                            <label for="formFile" class="form-label">Blog Image</label>
+                                            <label for="formFile" class="form-label">Featured Image</label>
                                             <input class="form-control" name="file" type="file" id="formFile" required>
                                         </div>
                                     </div>
@@ -135,7 +135,7 @@ if (isset($_POST['submit'])) {
 
                                         <div class="col" style="margin: 15px 0  15px 10px;">
                                             <label class="checkbox-inline">
-                                                <input name="_status" value="false" type="checkbox"> &nbsp; Is Active
+                                                <input name="_status" type="checkbox"> &nbsp; Is Active
                                             </label>
                                         </div>
 
@@ -152,8 +152,8 @@ if (isset($_POST['submit'])) {
 
                                     <div class="row g-3">
                                         <div class="col" style="margin-top: 30px;">
-                                            <label for="_blogmetadesc" class="form-label">Blog Meta Description</label>
-                                            <textarea name="_blogmetadesc" id="_blogmetadesc" class="form-control">...</textarea>
+                                            <label for="_blogmetadesc" class="form-label">Meta Description</label>
+                                            <textarea name="_blogmetadesc" rows="5" class="form-control"></textarea>
                                         </div>
                                     </div>
 

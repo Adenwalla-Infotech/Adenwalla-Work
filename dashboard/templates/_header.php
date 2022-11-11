@@ -1,5 +1,5 @@
 <?php 
-$_id =  $_SESSION['userId'];
+$_userid =  $_SESSION['userId'];
 ?>
 <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
   <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
@@ -74,7 +74,7 @@ $_id =  $_SESSION['userId'];
       </li>
       <li class="nav-item nav-profile dropdown">
         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-          <img src="../uploads/profile/" alt="profile" />
+          <img src="../uploads/profile/<?php echo _getsingleuser($_userid, '_userdp'); ?>" alt="profile" />
         </a>
         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
           <a class="dropdown-item" href="edit-profile">
