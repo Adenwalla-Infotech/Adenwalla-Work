@@ -254,10 +254,10 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
 
             $admin_table = "CREATE TABLE IF NOT EXISTS `tblusers` (
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
-                `_username` varchar(255) NOT NULL,
-                `_useremail` varchar(255) NOT NULL,
-                `_userphone` varchar(255) NOT NULL,
-                `_usersite` varchar(255) NOT NULL,
+                `_username` varchar(255) NULL,
+                `_useremail` varchar(255) NULL,
+                `_userphone` varchar(255) NULL,
+                `_usersite` varchar(255) NULL,
                 `_userlongitude` varchar(50) NULL,
                 `_userlatitude` varchar(50) NULL,
                 `_userbio` varchar(500) NULL,
@@ -266,11 +266,11 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_userstate` varchar(50) NULL,
                 `_userpin` varchar(50) NULL,
                 `_userdp` varchar(50) NULL,
-                `_usertype` int(11) NOT NULL,
-                `_userstatus` varchar(50) NOT NULL,
-                `_userpassword` varchar(255) NOT NULL,
+                `_usertype` int(11) NULL,
+                `_userstatus` varchar(50) NULL,
+                `_userpassword` varchar(255) NULL,
                 `_userotp` int(100) NULL,
-                `_userverify` varchar(50) NOT NULL,
+                `_userverify` varchar(50) NULL,
                 `CreationDate` datetime NOT NULL DEFAULT current_timestamp(),
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
