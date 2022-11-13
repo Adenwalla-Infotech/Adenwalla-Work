@@ -498,7 +498,7 @@ if (isset($_POST['pay'])) {
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-<form action="process.php" method="post">
+<form action="success" method="post">
     <script>
         var options = {
             "key": "<?php echo _paymentconfig('_apikey'); ?>", // Enter the Key ID generated from the Dashboard
@@ -509,7 +509,6 @@ if (isset($_POST['pay'])) {
             "image": "http://localhost/Adenwalla-Infotech/moniqart-development/uploads/images/logo.png",
             // "order_id": "OD<?php echo rand(111111, 999999)?>", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
             "handler": function (response){
-                swal("Good job!", "Payment Successfull!", "success"); 
                 document.getElementById('transpay').click();
             },
             "prefill": {
