@@ -91,25 +91,19 @@
     <?php } ?>
     <?php if ($_SESSION['userType'] == 2) { ?>
       <li class="nav-item">
-      <a class="nav-link" href="manage-currency">
-        <i class="mdi mdi-currency-eur menu-icon"></i>
-        <span class="menu-title">Currency Markup</span>
-      </a>
-    </li>
-    <?php } ?>
-    <?php if ($_SESSION['userType'] == 2) { ?>
-      <li class="nav-item">
-      <a class="nav-link" href="manage-tax">
-        <i class="mdi mdi-database menu-icon"></i>
-        <span class="menu-title">Tax Markup</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="manage-coupon">
-        <i class="mdi mdi-wallet-giftcard menu-icon"></i>
-        <span class="menu-title">Offer Coupon</span>
-      </a>
-    </li>
+        <a class="nav-link" data-toggle="collapse" href="#ui-markups" aria-expanded="false" aria-controls="ui-basic">
+          <i class="mdi mdi-database menu-icon"></i>
+          <span class="menu-title">All Markups</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="ui-markups">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="manage-currency">Currency Markup</a></li>
+            <li class="nav-item"> <a class="nav-link" href="manage-tax">Tax Markup</a></li>
+            <li class="nav-item"> <a class="nav-link" href="manage-coupon">Offer Coupon</a></li>
+          </ul>
+        </div>
+      </li>
     <?php } ?>
   </ul>
 </nav>
