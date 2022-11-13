@@ -15,7 +15,7 @@ if(isset($_POST['submit'])){
     $userphone = $_POST['userphone'];
     $userpassword = $_POST['userpassword'];
     $useremail = $_POST['useremail'];
-    _signup($userpassword, $useremail, $username, $usertype, $userphone);
+    _signup($userpassword, $useremail, $username, $userphone);
 }
 
 ?>

@@ -46,7 +46,7 @@ function _login($userpassword, $useremail)
     }
 }
 
-function _signup($userpassword, $useremail, $username, $usertype, $userphone)
+function _signup($userpassword, $useremail, $username, $userphone)
 {
     require('_config.php');
     require('_alert.php');
@@ -61,7 +61,7 @@ function _signup($userpassword, $useremail, $username, $usertype, $userphone)
                 $alert = new PHPAlert();
                 $alert->warn("User Already Exists");
             } else {
-                $sql = "INSERT INTO `tblusers`(`_username`, `_useremail`, `_userphone`, `_usertype`, `_userstatus`, `_userpassword`, `_userotp`, `_userverify`) VALUES ('$username','$useremail', '$userphone','$usertype', 'true', '$enc_password', '$userotp', 'false')";
+                $sql = "INSERT INTO `tblusers`(`_username`, `_useremail`, `_userphone`, `_usertype`, `_userstatus`, `_userpassword`, `_userotp`, `_userverify`) VALUES ('$username','$useremail', '$userphone','0', 'true', '$enc_password', '$userotp', 'false')";
 
                 $query = mysqli_query($conn, $sql);
                 if ($query) {
