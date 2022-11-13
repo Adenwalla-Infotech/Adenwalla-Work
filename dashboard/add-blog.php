@@ -27,7 +27,13 @@ if (isset($_POST['submit'])) {
     $_blogcategory = $_POST['categoryId'];
     $_blogsubcategory = $_POST['subcategoryId'];
     $_blogmetadesc = $_POST['_blogmetadesc'];
-    $_status = $_POST['_status'];
+
+    if (isset($_POST['_status'])) {
+        $_status = 'true';
+      }
+      else{
+        $_status = false;
+      } 
 
     $_userid = $_SESSION['userId'];
 
