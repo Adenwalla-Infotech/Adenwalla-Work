@@ -126,7 +126,7 @@ if (isset($_POST['pay'])) {
 <body>
     <div class="container-scroller">
 
-        <?php include('templates/_header.php'); ?>
+        <!-- <?php include('templates/_header.php'); ?> -->
 
         <!-- partial -->
         <div class="container-fluid page-body-wrapper">
@@ -431,21 +431,26 @@ if (isset($_POST['pay'])) {
                                                 <!-- Form Row-->
                                                 <div class="row">
                                                     <div class="col-lg-12">
-                                                        <h5>Sub Total</h5> <input class="form-control" name="amount" type="text" readonly value="<?php echo $currency;?>&nbsp;<?php echo $getamount;?>">    
+                                                        <h5>Sub Total</h5> <input class="form-control" name="amount" type="text" readonly value="<?php echo $currency;?>&nbsp;<?php echo round($getamount,2);?>">    
                                                     </div>
                                                     <div class="col-lg-12">
                                                         <?php echo _gettaxes();?>
                                                         <hr style="margin-top: 30px;" class="solid">
                                                     </div>
                                                     <div class="col-lg-12" style="margin-top: 20px;">
-                                                        <h5>Total Amount (To Pay)</h5> <input class="form-control" name="amount" type="text" readonly value="<?php echo $currency;?>&nbsp;<?php echo _gettotal($getamount,$currency,$applydiscount); ?>">     
+                                                        <h5>Total Amount (To Pay)</h5> <input class="form-control" name="amount" type="text" readonly value="<?php echo $currency;?>&nbsp;<?php echo round(_gettotal($getamount,$currency,$applydiscount),2); ?>">     
                                                     </div>
                                                     <div class="col-lg-12">
-                                                        <?php if($couponcode){ ?>
+                                                        <?php if($couponcode && $applydiscount){ ?>
                                                             <h5 style="margin-top:10px">Coupon Code</h5>
                                                             <input type="text" value="<?php echo $couponcode; ?>" readonly name="coupon" placeholder="Coupon Code" class="form-control">
                                                             <p style="margin-top: 5px;">Redeemed Successfully<a href="" style="float:right">Reset Coupon</a></p>
-                                                        <?php }if(!$couponcode && $showcoupon){ ?>
+                                                        <?php }if(!$applydiscount && $couponcode){ ?>
+                                                            <h5 style="margin-top:10px">Coupon Code</h5>
+                                                            <input type="text" name="coupon" value="<?php echo $couponcode; ?>" readonly placeholder="Coupon Code" class="form-control">
+                                                            <p style="margin-top: 5px;color:red">Invalid Coupon<a href="" style="float:right">Reset Coupon</a></p>
+                                                        <?php }?>
+                                                        <?php if($showcoupon && !$couponcode){ ?>
                                                             <h5 style="margin-top:10px">Coupon Code</h5>
                                                             <input type="text" name="coupon" placeholder="Coupon Code" class="form-control">
                                                         <?php }?>
@@ -459,7 +464,7 @@ if (isset($_POST['pay'])) {
                                                     <?php }?>
                                                     <?php if($_SESSION['paybtn']){?>
                                                         <div class="col-12" style="padding: 0px">
-                                                            <button name="pay" id="rzp-button1" class="btn btn-success" style="margin-top: 30px;width:95%" type="button">Pay&nbsp;&nbsp;<?php echo $currency;?>&nbsp;<?php echo _gettotal($getamount,$currency,$applydiscount);?></button>
+                                                            <button name="pay" id="rzp-button1" class="btn btn-success" style="margin-top: 30px;width:95%" type="button">Pay&nbsp;&nbsp;<?php echo $currency;?>&nbsp;<?php echo round(_gettotal($getamount,$currency,$applydiscount),2);?></button>
                                                     </div>
                                                     <?php }?>
                                                 </div>

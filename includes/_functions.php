@@ -2008,7 +2008,7 @@ function _validatecoupon($amount,$coupon,$currency){
     $query = mysqli_query($conn,$sql);
     if($query){
         $count = mysqli_num_rows($query);
-        if($count == 1){
+        if($count >= 1){
             foreach($query as $data){
                 $vamount = $data['_conamount'];
                 $vcondition = $data['_couponcondition'];
@@ -2018,8 +2018,8 @@ function _validatecoupon($amount,$coupon,$currency){
                 $coupontype = $data['_coupontype'];
                 $vcurrency = $data['_couponcurrency'];
             }
-            $amount = _conversion($amount,$currency);
             $vamount = _conversion($vamount,$currency);
+            echo $vamount;
             if($vusage < $vlimit){
                 if($vcondition == 'less'){
                     if($amount < $vamount){
@@ -2039,8 +2039,7 @@ function _validatecoupon($amount,$coupon,$currency){
                             return $discount;
                         }
                     }else{
-                        $alert = new PHPAlert();
-                        $alert->warn("Coupon Not Applicable");
+                        return null;
                     }
                 }
                 if($vcondition == 'more'){
@@ -2050,7 +2049,7 @@ function _validatecoupon($amount,$coupon,$currency){
                             return $discount;
                         }
                         if($coupontype == 'Fixed'){
-                            $discount = _conversion($vdiscount,$vcurrency);
+                            $discount = _conversion($vdiscount,$currency);
                             return $discount;
                         }
                         if($coupontype == 'Uncertain'){
@@ -2061,17 +2060,14 @@ function _validatecoupon($amount,$coupon,$currency){
                             return $discount;
                         }
                     }else{
-                        $alert = new PHPAlert();
-                        $alert->warn("Coupon Not Applicable");
+                        return null;
                     }
                 }
             }else{
-                $alert = new PHPAlert();
-                $alert->warn("Coupon Limit Consumed");
+                return null;
             }
         }else{
-            $alert = new PHPAlert();
-            $alert->warn("Coupon not Found");
+            return null;
         }
     }
 }
