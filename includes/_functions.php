@@ -300,15 +300,15 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
 
             $site_config = "CREATE TABLE IF NOT EXISTS `tblsiteconfig` (
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
-                `_sitetitle` varchar(50) NOT NULL,
-                `_siteemail` varchar(50) NOT NULL,
-                `_timezone` varchar(50) NOT NULL,
-                `_customheader` text NOT NULL,
-                `_customfooter` text NOT NULL,
-                `_customcss` text NOT NULL,
-                `_sitelogo` varchar(100) NOT NULL,
-                `_sitereslogo` varchar(100) NOT NULL,
-                `_favicon` varchar(100) NOT NULL,
+                `_sitetitle` varchar(50) NULL,
+                `_siteemail` varchar(50) NULL,
+                `_timezone` varchar(50) NULL,
+                `_customheader` text NULL,
+                `_customfooter` text NULL,
+                `_customcss` text NULL,
+                `_sitelogo` varchar(100) NULL,
+                `_sitereslogo` varchar(100) NULL,
+                `_favicon` varchar(100) NULL,
                 `CreationDate` datetime NOT NULL DEFAULT current_timestamp(),
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
