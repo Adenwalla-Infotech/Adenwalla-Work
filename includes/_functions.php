@@ -1602,11 +1602,13 @@ function _createBlog($_blogtitle, $_blogdesc, $_blogcategory, $_blogsubcategory,
     require('_alert.php');
 
     $sql = "INSERT INTO `tblblog`(`_blogtitle`, `_parmalink`, `_blogdesc`, `_blogcategory`, `_blogsubcategory`, `_blogmetadesc`,`_blogimg`, `_userid`, `_status`) VALUES ('$_blogtitle', '$_blogtitle','$_blogdesc', '$_blogcategory', '$_blogsubcategory', '$_blogmetadesc','$_blogimg', '$_userid', '$_status')";
-    echo $sql;
     $query = mysqli_query($conn, $sql);
     if ($query) {
         $alert = new PHPAlert();
         $alert->success("Blog Created");
+    }else{
+        $alert = new PHPAlert();
+        $alert->warn("Blog Failed");
     }
 }
 
