@@ -35,7 +35,7 @@ if(isset($_POST['submit'])){
 
 if(isset($_POST['statustype'])){
     $status = $_POST['statustype'];
-    _updateticket('_status',$status,$_id);
+    _updateticket('_status',$status,$_ticid);
 }
 
 ?>
@@ -103,14 +103,14 @@ if(isset($_POST['statustype'])){
                                     <?php 
                                         $type = _getsinglticket($_ticid,'_status');
                                         echo $type;
-                                        if($type=='open'){?><option value="Open" selected>Open</option><?php }
-                                        if($type=='pending'){?><option value="Pending" selected>Pending</option><?php }
-                                        if($type=='resolved'){?><option value="Resolved" selected>Resolved</option><?php }
-                                        if($type=='closed'){?><option value="Closed" selected>Closed</option><?php }
-                                        if($type!='open'){?><option value="Open">Open</option><?php }
-                                        if($type!='pending'){?><option value="Pending">Pending</option><?php }
-                                        if($type!='resolved'){?><option value="Resolved">Resolved</option><?php }
-                                        if($type!='closed'){?><option value="Closed">Closed</option><?php }
+                                        if($type=='open'){?><option value="open" selected>Open</option><?php }
+                                        if($type=='pending'){?><option value="pending" selected>Pending</option><?php }
+                                        if($type=='resolved'){?><option value="resolved" selected>Resolved</option><?php }
+                                        if($type=='closed'){?><option value="closed" selected>Closed</option><?php }
+                                        if($type!='open'){?><option value="open">Open</option><?php }
+                                        if($type!='pending'){?><option value="pending">Pending</option><?php }
+                                        if($type!='resolved'){?><option value="resolved">Resolved</option><?php }
+                                        if($type!='closed'){?><option value="closed">Closed</option><?php }
                                     ?>
                                 </select>
                             </form>
