@@ -2019,7 +2019,6 @@ function _validatecoupon($amount,$coupon,$currency){
                 $vcurrency = $data['_couponcurrency'];
             }
             $vamount = _conversion($vamount,$currency);
-            echo $vamount;
             if($vusage < $vlimit){
                 if($vcondition == 'less'){
                     if($amount < $vamount){
