@@ -126,7 +126,7 @@ if (isset($_POST['pay'])) {
 <body>
     <div class="container-scroller">
 
-        <!-- <?php include('templates/_header.php'); ?> -->
+        <?php include('templates/_header.php'); ?>
 
         <!-- partial -->
         <div class="container-fluid page-body-wrapper">
