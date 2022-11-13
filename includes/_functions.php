@@ -364,7 +364,6 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
-
             $subcategory_table = "CREATE TABLE IF NOT EXISTS `tblsubcategory` (
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
                 `_subcategoryname` varchar(50) NOT NULL,
@@ -390,9 +389,62 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
+            $currency_table = "CREATE TABLE IF NOT EXISTS `tblcurrency` (
+                `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                `_basecurrency` varchar(255) NOT NULL,
+                `_conversioncurrency` text NOT NULL,
+                `_price` varchar(255) NULL,
+                `_status` varchar(50) NOT NULL DEFAULT 'open',
+                `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                `UpdationDate` datetime NULL ON UPDATE current_timestamp()
+            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
 
+            $tax_table = "CREATE TABLE IF NOT EXISTS `tbltaxes` (
+                `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                `_taxname` varchar(255) NOT NULL,
+                `_taxtype` text NOT NULL,
+                `_taxamount` varchar(255) NULL,
+                `_taxcurrency` varchar(255) NULL,
+                `_status` varchar(50) NOT NULL DEFAULT 'true',
+                `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                `UpdationDate` datetime NULL ON UPDATE current_timestamp()
+            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
 
-            $tables = [$admin_table, $sms_config, $email_config, $site_config, $payment_config, $tickets_table, $ticket_comment, $contact_table, $category_table, $subcategory_table, $blog_table];
+            $payment_trans = "CREATE TABLE IF NOT EXISTS `tblpayment` (
+                `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                `_useremail` varchar(255) NOT NULL,
+                `_amount` varchar(255) NULL,
+                `_currency` varchar(255) NOT NULL,
+                `_status` varchar(255) NOT NULL,
+                `_couponcode` varchar(255) NOT NULL,
+                `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                `UpdationDate` datetime NULL ON UPDATE current_timestamp()
+            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
+
+            $coupon_table = "CREATE TABLE IF NOT EXISTS `tblcoupon` (
+                `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                `_couponname` varchar(255) NOT NULL,
+                `_coupontype` text NOT NULL,
+                `_couponamount` varchar(255) NULL,
+                `_couponcurrency` varchar(255) NULL,
+                `_couponcondition` varchar(255) NULL,
+                `_conamount` varchar(255) NULL,
+                `_maxusage` varchar(255) NOT NULL,
+                `_totaluse` varchar(255) NOT NULL,
+                `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                `UpdationDate` datetime NULL ON UPDATE current_timestamp()
+            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
+
+            $coupon_trans = "CREATE TABLE IF NOT EXISTS `tblcoupontrans` (
+                `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                `_couponname` varchar(255) NOT NULL,
+                `_couponamount` varchar(255) NULL,
+                `_useremail` varchar(255) NOT NULL,
+                `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                `UpdationDate` datetime NULL ON UPDATE current_timestamp()
+            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
+
+            $tables = [$admin_table, $sms_config, $email_config, $site_config, $payment_config, $tickets_table, $ticket_comment, $contact_table, $category_table, $subcategory_table, $blog_table,$currency_table,$tax_table,$payment_trans,$coupon_table,$coupon_trans];
 
             foreach ($tables as $k => $sql) {
                 $query = @$temp_conn->query($sql);
@@ -454,7 +506,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
 
 /* User Functions */
 
-function _createuser($username, $useremail, $usertype, $userphone, $userwebsite,  $isactive, $isverified, $notify)
+function _createuser($username, $useremail, $usertype, $userphone, $isactive, $isverified, $notify)
 {
     require('_config.php');
     require('_alert.php');
@@ -471,7 +523,7 @@ function _createuser($username, $useremail, $usertype, $userphone, $userwebsite,
                 $alert = new PHPAlert();
                 $alert->warn("User Already Exists");
             } else {
-                $sql = "INSERT INTO `tblusers`(`_username`, `_useremail`, `_userphone`, `_usertype`, `_userstatus`,`_usersite`, `_userotp`, `_userverify`) VALUES ('$username','$useremail', '$userphone', '$usertype', '$isactive','$userwebsite', '$userotp', '$isverified')";
+                $sql = "INSERT INTO `tblusers`(`_username`, `_useremail`, `_userphone`, `_usertype`, `_userstatus`, `_userotp`, `_userverify`) VALUES ('$username','$useremail', '$userphone', '$usertype', '$isactive', '$userotp', '$isverified')";
 
                 $query = mysqli_query($conn, $sql);
                 if ($query) {
@@ -1553,8 +1605,6 @@ function _createBlog($_blogtitle, $_blogdesc, $_blogcategory, $_blogsubcategory,
 
     $query = mysqli_query($conn, $sql);
     if ($query) {
-
-
         $alert = new PHPAlert();
         $alert->success("Blog Created");
     }
@@ -1689,5 +1739,369 @@ function _deleteBlog($id)
     }
 }
 
+
+// currency Functions
+
+function _createmarkup($base,$conversion,$price,$status){
+    require('_config.php');
+    require('_alert.php');
+    $sql = "INSERT INTO `tblcurrency`(`_basecurrency`, `_conversioncurrency`, `_price`, `_status`) VALUES ('$base','$conversion','$price','$status')";
+    $query = mysqli_query($conn,$sql);
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->success("Markup Created");
+    }else{
+        $alert = new PHPAlert();
+        $alert->warn("Markup Failed");
+    }
+}
+
+function _getmarkup($conversion = '', $status = '', $limit = '', $startfrom = '')
+{
+    require('_config.php');
+    $user =  $_SESSION['userEmailId'];
+    if ($status != '' && $conversion == '') {
+        $sql = "SELECT * FROM `tblcurrency` WHERE `_status` = '$status'";
+    } else if ($conversion != '' && $status != '') {
+        $sql = "SELECT * FROM `tblcurrency` WHERE `_conversioncurrency` = '$conversion'";
+    } else {
+        $sql = "SELECT * FROM `tblcurrency` ORDER BY `CreationDate` DESC LIMIT $startfrom, $limit";
+    }
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        foreach ($query as $data) { ?>
+            <tr>
+                <td><?php echo $data['_basecurrency']; ?></td>
+                <td><?php echo $data['_conversioncurrency']; ?></td>
+                <td><?php echo $data['_price']; ?></td>
+                <td>
+                    <label class="checkbox-inline form-switch">
+                        <?php
+                        if ($data['_status'] == 'true')
+                        { 
+                            ?>
+                            <input disabled role="switch" name="isactive" value="true" checked type="checkbox">
+                            <?php
+                        }
+                        if (!$data['_status']) 
+                        { 
+                            ?>
+                            <input disabled role="switch" name="isactive" value="false" type="checkbox">
+                            <?php
+                        }
+                        ?>
+                    </label>
+                </td>
+                <td>
+                    <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
+                </td>
+                <td>
+                    <a href='manage-currency?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
+                </td>
+            </tr>
+        <?php }
+    }
+}
+
+function _conversion($amount,$currency){
+    require('_config.php');
+    $sql = "SELECT * FROM `tblcurrency` WHERE `_conversioncurrency` = '$currency'";
+    $query = mysqli_query($conn,$sql);
+    if($query){
+        foreach($query as $data){
+            $price = $data['_price'];
+        }
+        return $amount * $price;
+    }
+}
+
+function _deletemarkup($id)
+{
+
+    require('_config.php');
+    require('_alert.php');
+    $sql = "DELETE FROM `tblcurrency` WHERE `_id` = $id";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->error("Markup Deleted Permanently");
+    }
+}
+
+
+// Tax Functions
+
+function _createtaxmarkup($name,$type,$currency,$amount,$status){
+    require('_config.php');
+    require('_alert.php');
+    $sql = "INSERT INTO `tbltaxes`(`_taxname`, `_taxtype`, `_taxamount`,  `_taxcurrency`, `_status`) VALUES ('$name','$type','$amount', '$currency','$status')";
+    $query = mysqli_query($conn,$sql);
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->success("Markup Created");
+    }else{
+        $alert = new PHPAlert();
+        $alert->warn("Markup Failed");
+    }
+}
+
+function _gettaxmarkup($name = '', $status = '', $limit = '', $startfrom = '')
+{
+    require('_config.php');
+    $user =  $_SESSION['userEmailId'];
+    if ($status != '' && $name == '') {
+        $sql = "SELECT * FROM `tbltaxes` WHERE `_status` = '$status'";
+    } else if ($name != '' && $status != '') {
+        $sql = "SELECT * FROM `tbltaxes` WHERE `_taxname` = '$name'";
+    } else {
+        $sql = "SELECT * FROM `tbltaxes` ORDER BY `CreationDate` DESC LIMIT $startfrom, $limit";
+    }
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        foreach ($query as $data) { ?>
+            <tr>
+                <td><?php echo $data['_taxname']; ?></td>
+                <td><?php echo $data['_taxtype']; ?></td>
+                <td><?php echo $data['_taxamount']; ?></td>
+                <td>
+                    <label class="checkbox-inline form-switch">
+                        <?php
+                        if ($data['_status'] == 'true')
+                        { 
+                            ?>
+                            <input disabled role="switch" name="isactive" value="true" checked type="checkbox">
+                            <?php
+                        }
+                        if (!$data['_status']) 
+                        { 
+                            ?>
+                            <input disabled role="switch" name="isactive" value="false" type="checkbox">
+                            <?php
+                        }
+                        ?>
+                    </label>
+                </td>
+                <td>
+                    <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
+                </td>
+                <td>
+                    <a href='manage-tax?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
+                </td>
+            </tr>
+        <?php }
+    }
+}
+
+function _deletetax($id)
+{
+    require('_config.php');
+    require('_alert.php');
+    $sql = "DELETE FROM `tbltaxes` WHERE `_id` = $id";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->error("Tax Deleted Permanently");
+    }
+}
+
+function _gettaxes(){
+    require('_config.php');
+    $sql = "SELECT * FROM `tbltaxes` WHERE `_status` = 'true'";
+    $query = mysqli_query($conn,$sql);
+    if($query){
+        foreach($query as $data){ ?>
+            <h5 style="margin-top:10px"><?php echo $data['_taxname'];?></h5>
+            <?php if($data['_taxtype'] == 'Variable'){ ?>
+                <input class="form-control" name="amount" type="text" readonly value="<?php echo $data['_taxamount'];?>%">  
+            <?php }else{
+                ?><input class="form-control" name="amount" type="text" readonly value="<?php echo $data['_taxcurrency'];?>&nbsp;<?php echo $data['_taxamount'];?>">
+            <?php } ?>
+            
+        <?php }
+    }
+}
+
+function _gettotal($sub,$currency,$discount){
+    require('_config.php');
+    $sql = "SELECT * FROM `tbltaxes` WHERE `_status` = 'true'";
+    $query = mysqli_query($conn,$sql);
+    if($query){
+        $tax = array();
+        foreach($query as $data){
+            if($data['_taxtype'] == 'Variable'){
+                $tax[] = ($data['_taxamount'] / 100) * $sub;
+            }else{
+                $tax[] = _conversion($data['_taxamount'],$currency);
+            }
+        }
+        $final = $sub - $discount;
+        $arrtotal = $final + array_sum($tax);
+        return $arrtotal;
+    }
+}
+
+
+// Coupon Functions 
+
+function _createcoupon($name,$type,$amount,$condition,$conamount,$validity,$currency){
+    require('_config.php');
+    require('_alert.php');
+    $sql = "INSERT INTO `tblcoupon`(`_couponname`, `_coupontype`, `_couponamount`, `_couponcurrency`,`_couponcondition`, `_conamount`, `_maxusage`, `_totaluse`) VALUES ('$name','$type','$amount', '$currency','$condition','$conamount','$validity',0)";
+    $query = mysqli_query($conn,$sql);
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->success("Coupon Created");
+    }else{
+        $alert = new PHPAlert();
+        $alert->warn("Coupon Failed");
+    }
+}
+
+function _getcoupon($name = '', $type = '', $limit = '', $startfrom = '')
+{
+    require('_config.php');
+    if ($type != '' && $name == '') {
+        $sql = "SELECT * FROM `tblcoupon` WHERE `_coupontype` = '$type'";
+    } else if ($name != '' && $type != '') {
+        $sql = "SELECT * FROM `tblcoupon` WHERE `_couponname` LIKE '%$name%'";
+    } else {
+        $sql = "SELECT * FROM `tblcoupon` ORDER BY `CreationDate` DESC LIMIT $startfrom, $limit";
+    }
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        foreach ($query as $data) { ?>
+            <tr>
+                <td><?php echo $data['_couponname']; ?></td>
+                <td><?php echo $data['_coupontype']; ?></td>
+                <td><?php echo $data['_couponamount']; ?></td>
+                <td><?php echo $data['_couponcondition']; ?></td>
+                <td><?php echo $data['_conamount']; ?></td>
+                <td><?php echo $data['_maxusage']; ?></td>
+                <td><?php echo $data['_totaluse']; ?></td>
+                <td>
+                    <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
+                </td>
+                <td>
+                    <a href='manage-coupon?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
+                </td>
+            </tr>
+        <?php }
+    }
+}
+
+function _deletecoupon($id)
+{
+    require('_config.php');
+    require('_alert.php');
+    $sql = "DELETE FROM `tblcoupon` WHERE `_id` = $id";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->error("Tax Deleted Permanently");
+    }
+}
+
+function _validatecoupon($amount,$coupon,$currency){
+    require('_config.php');
+    require('_alert.php');
+    $sql = "SELECT * FROM `tblcoupon` WHERE `_couponname` = '$coupon'";
+    $query = mysqli_query($conn,$sql);
+    if($query){
+        $count = mysqli_num_rows($query);
+        if($count == 1){
+            foreach($query as $data){
+                $vamount = $data['_conamount'];
+                $vcondition = $data['_couponcondition'];
+                $vlimit = $data['_maxusage'];
+                $vusage = $data['_totaluse'];
+                $vdiscount = $data['_couponamount'];
+                $coupontype = $data['_coupontype'];
+                $vcurrency = $data['_couponcurrency'];
+            }
+            $amount = _conversion($amount,$currency);
+            $vamount = _conversion($vamount,$currency);
+            if($vusage < $vlimit){
+                if($vcondition == 'less'){
+                    if($amount < $vamount){
+                        if($coupontype == 'Variable'){
+                            $discount = ($vdiscount / 100) * $amount;
+                            return $discount;
+                        }
+                        if($coupontype == 'Fixed'){
+                            $discount = _conversion($vdiscount,$currency);
+                            return $discount;
+                        }
+                        if($coupontype == 'Uncertain'){
+                            $numbers = range(0,$vdiscount);
+                            shuffle($numbers);
+                            $famount = array_slice($numbers, 0, 1);
+                            $discount = _conversion($famount[0],$currency);
+                            return $discount;
+                        }
+                    }else{
+                        $alert = new PHPAlert();
+                        $alert->warn("Coupon Not Applicable");
+                    }
+                }
+                if($vcondition == 'more'){
+                    if($amount >= $vamount){
+                        if($coupontype == 'Variable'){
+                            $discount = ($vdiscount / 100) * $amount;
+                            return $discount;
+                        }
+                        if($coupontype == 'Fixed'){
+                            $discount = _conversion($vdiscount,$vcurrency);
+                            return $discount;
+                        }
+                        if($coupontype == 'Uncertain'){
+                            $numbers = range(30,$vdiscount);
+                            shuffle($numbers);
+                            $famount = array_slice($numbers, 0, 1);
+                            $discount = _conversion($famount[0],$currency);
+                            return $discount;
+                        }
+                    }else{
+                        $alert = new PHPAlert();
+                        $alert->warn("Coupon Not Applicable");
+                    }
+                }
+            }else{
+                $alert = new PHPAlert();
+                $alert->warn("Coupon Limit Consumed");
+            }
+        }else{
+            $alert = new PHPAlert();
+            $alert->warn("Coupon not Found");
+        }
+    }
+}
+
+
+// Transaction Functions
+
+function _payment($amount,$currency,$coupon=''){
+    require('_config.php');
+    $useremail = $_SESSION['userEmailId'];
+    $sql = "INSERT INTO `tblpayment`(`_useremail`, `_amount`, `_currency`, `_status`, `_couponcode`) VALUES ('$useremail','$amount','$currency','pending','$coupon')";
+    $query = mysqli_query($conn,$sql);
+    if($query){
+        $sql = "SELECT MAX(id) FROM `tblpayment`";
+        $query = mysqli_query($conn,$query);
+        if($query){
+            foreach($query as $data){
+                return $data['_id'];
+            }
+        }
+    }
+}
+
+function _updatepayment($id,$status){
+    require('_config.php');
+    $sql = "UPDATE `tblpayment` SET `_status`='$status' WHERE `_id` = $id";
+    $query = mysqli_query($conn,$sql);
+    if($query){
+        2 + 2;
+    }
+}
 
 ?>

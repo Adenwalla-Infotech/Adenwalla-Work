@@ -89,5 +89,27 @@
         </div>
       </li>
     <?php } ?>
+    <?php if ($_SESSION['userType'] == 2) { ?>
+      <li class="nav-item">
+      <a class="nav-link" href="manage-currency">
+        <i class="mdi mdi-currency-eur menu-icon"></i>
+        <span class="menu-title">Currency Markup</span>
+      </a>
+    </li>
+    <?php } ?>
+    <?php if ($_SESSION['userType'] == 2) { ?>
+      <li class="nav-item">
+      <a class="nav-link" href="manage-tax">
+        <i class="mdi mdi-database menu-icon"></i>
+        <span class="menu-title">Tax Markup</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="manage-coupon">
+        <i class="mdi mdi-wallet-giftcard menu-icon"></i>
+        <span class="menu-title">Offer Coupon</span>
+      </a>
+    </li>
+    <?php } ?>
   </ul>
 </nav>

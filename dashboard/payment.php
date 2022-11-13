@@ -17,35 +17,38 @@ if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['is
 require('../includes/_functions.php');
 
 $_id =  $_SESSION['userId'];
-$getamount = $_GET['amount'];
+$getprice = $_GET['amount'];
+$currency = $_GET['currency'];
+$getamount = _conversion($getprice,$currency);
+
+$_SESSION['paybtn'] = '';
+
+$showcoupon = true;
+
+
+if(!isset($applydiscount)){
+    $applydiscount = 0;
+    $couponcode = '';
+}
+
 
 if (isset($_POST['pay'])) {
+    if($_POST['coupon']){
+        $couponcode = $_POST['coupon'];
+        $applydiscount = _validatecoupon($getamount,$_POST['coupon'],$currency);
+    }else{
+        $showcoupon = false;
+    }
     $username = $_POST['username'];
     $useremail = $_POST['useremail'];
     $userphone = $_POST['userphone'];
     $location = $_POST['location'];
     $pincode = $_POST['pincode'];
     $country = $_POST['country'];
-    $amount = $_POST['amount'];
-    $currency = 'INR';
+    $amount = _gettotal($getamount,$currency,$applydiscount);
+    $_SESSION['paybtn'] = true;
+    // $transid = _payment($amount,$currency,$couponcode);
 }
-
-// if(isset($_POST['update'])){
-//     if($_FILES["userdp"]["name"] != ''){
-//         $file=$_FILES["userdp"]["name"];
-//         $extension = substr($file,strlen($file)-4,strlen($file));
-//         $allowed_extensions = array(".jpg",".jpeg",".png",".gif");
-//         // Validation for allowed extensions .in_array() function searches an array for a specific value.
-//         if(!in_array($extension,$allowed_extensions))
-//         {
-//         echo "<script>alert('Invalid format. Only jpg / jpeg/ png /gif format allowed');</script>";
-//         }else{
-//             $newfile=md5($file).$extension;
-//             move_uploaded_file($_FILES["userdp"]["tmp_name"],"../uploads/profile/".$newfile);
-//             _updatedb($newfile);
-//         }
-//     }
-// }
 
 ?>
 <!DOCTYPE html>
@@ -131,20 +134,19 @@ if (isset($_POST['pay'])) {
             <!-- partial -->
             <div class="main-panel">
                 <div class="content-wrapper">
+                    <form action="" method="POST">
                         <div class="col-12 grid-margin stretch-card">
                             <div class="container-xl">
                                 <div class="row">
-                                <div class="col-xl-12">
-                                        <form action="" method="post" enctype="multipart/form-data">
+                                    <div class="col-lg-8">
                                         <!-- Account details card-->
                                         <div class="card mb-4">
                                             <div class="card-header">Payment Completion (Online Payment)</div>
                                             <div class="card-body">
-                                                <form action="" method="POST">
                                                     <!-- Form Group (username)-->
                                                     <div class="row mb-3">
                                                         <div class="col-lg-4">
-                                                            <label class="small mb-1" for="inputEmailAddress">Username (Name will appear on the Invoice)</label>
+                                                            <label class="small mb-1" for="inputEmailAddress">Username (Name on the Invoice)</label>
                                                             <input class="form-control" id="inputEmailAddress" type="text" name="username" placeholder="Enter your username" value="<?php echo _getsingleuser($_id, '_username'); ?>">
                                                         </div>
                                                         <div class="col-lg-4">
@@ -419,17 +421,52 @@ if (isset($_POST['pay'])) {
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <!-- Form Row-->
-                                                    <div class="row gx-3 mb-3" style="margin-top: 40px;">
-                                                        <div class="col-lg-3">
-                                                            <h5>Total Amount (To Pay)</h5> <input class="form-control" name="amount" type="number" value="<?php echo $getamount;?>" >                                                    
-                                                        </div>
-                                                    </div>
-                                                    <!-- Save changes button-->
-                                                    <button name="pay" id="rzp-button1" class="btn btn-primary" style="margin-top: 10px;" type="submit"><i class="mdi mdi-currency-inr"></i>&nbsp;&nbsp;Pay</button>
                                             </div>
                                         </div>
-                                        </form>
+                                    </div>
+                                    <div class="col-lg-4">
+                                    <div class="card mb-4">
+                                        <div class="card-header">Amount Confirmation</div>
+                                            <div class="card-body">
+                                                <!-- Form Row-->
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <h5>Sub Total</h5> <input class="form-control" name="amount" type="text" readonly value="<?php echo $currency;?>&nbsp;<?php echo $getamount;?>">    
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <?php echo _gettaxes();?>
+                                                        <hr style="margin-top: 30px;" class="solid">
+                                                    </div>
+                                                    <div class="col-lg-12" style="margin-top: 20px;">
+                                                        <h5>Total Amount (To Pay)</h5> <input class="form-control" name="amount" type="text" readonly value="<?php echo $currency;?>&nbsp;<?php echo _gettotal($getamount,$currency,$applydiscount); ?>">     
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <?php if($couponcode){ ?>
+                                                            <h5 style="margin-top:10px">Coupon Code</h5>
+                                                            <input type="text" value="<?php echo $couponcode; ?>" readonly name="coupon" placeholder="Coupon Code" class="form-control">
+                                                            <p style="margin-top: 5px;">Redeemed Successfully<a href="" style="float:right">Reset Coupon</a></p>
+                                                        <?php }if(!$couponcode && $showcoupon){ ?>
+                                                            <h5 style="margin-top:10px">Coupon Code</h5>
+                                                            <input type="text" name="coupon" placeholder="Coupon Code" class="form-control">
+                                                        <?php }?>
+                                                    </div>
+                                                </div>
+                                                <div class="row" style="margin-left: 0px;">
+                                                    <?php if(!$_SESSION['paybtn']){?>
+                                                        <div class="col-12" style="padding: 0px;">
+                                                        <button name="pay" class="btn btn-primary" style="margin-top: 30px;width:95%" type="submit"><svg xmlns="http://www.w3.org/2000/svg" style="width: 15px;" fill="white" viewBox="0 0 512 512"><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg>&nbsp;&nbsp;Continue</button>
+                                                    </div>
+                                                    <?php }?>
+                                                    <?php if($_SESSION['paybtn']){?>
+                                                        <div class="col-12" style="padding: 0px">
+                                                            <button name="pay" id="rzp-button1" class="btn btn-success" style="margin-top: 30px;width:95%" type="button">Pay&nbsp;&nbsp;<?php echo $currency;?>&nbsp;<?php echo _gettotal($getamount,$currency,$applydiscount);?></button>
+                                                    </div>
+                                                    <?php }?>
+                                                </div>
+                                                    <!-- Save changes button-->
+                                                    
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -446,6 +483,8 @@ if (isset($_POST['pay'])) {
 <script src="../assets/vendors/js/vendor.bundle.base.js"></script>
 <!-- endinject -->
 <!-- Plugin js for this page -->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <!-- End plugin js for this page -->
 <!-- inject:js -->
 <script src="../assets/js/off-canvas.js"></script>
@@ -464,16 +503,14 @@ if (isset($_POST['pay'])) {
 <script>
 var options = {
     "key": "<?php echo _paymentconfig('_apikey'); ?>", // Enter the Key ID generated from the Dashboard
-    "amount": "<?php echo $amount; ?>", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "amount": "<?php echo ceil($amount * 100);?>", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
     "currency": "<?php echo $currency; ?>",
     "name": "<?php echo _paymentconfig('_companyname'); ?>",
     "description": "Payment for your Purchase",
     "image": "http://localhost/Adenwalla-Infotech/moniqart-development/uploads/images/logo.png",
     // "order_id": "OD<?php echo rand(111111, 999999)?>", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
     "handler": function (response){
-        alert(response.razorpay_payment_id);
-        alert(response.razorpay_order_id);
-        alert(response.razorpay_signature)
+        swal("Good job!", "Payment Successfull!", "success");
     },
     "prefill": {
         "name": "<?php echo $username; ?>",
@@ -489,13 +526,7 @@ var options = {
 };
 var rzp1 = new Razorpay(options);
 rzp1.on('payment.failed', function (response){
-        alert(response.error.code);
-        alert(response.error.description);
-        alert(response.error.source);
-        alert(response.error.step);
-        alert(response.error.reason);
-        alert(response.error.metadata.order_id);
-        alert(response.error.metadata.payment_id);
+    swal ( "Oops" ,  `${response.error.description}` ,  "error" )
 });
 document.getElementById('rzp-button1').onclick = function(e){
     rzp1.open();

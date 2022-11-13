@@ -26,10 +26,6 @@ if (isset($_POST['submit'])) {
     $usertype = $_POST['usertype'];
     $userphone = $_POST['userphone'];
 
-    $userwebsite =  $_POST['userwebsite'];
-
-
-
     if (isset($_POST['notify'])) {
         $notify = $_POST['notify'];
     } else {
@@ -46,7 +42,7 @@ if (isset($_POST['submit'])) {
         $isverified = false;
     }
 
-    _createuser(  $username , $useremail, $usertype, $userphone, $userwebsite,  $isactive, $isverified, $notify);
+    _createuser(  $username , $useremail, $usertype, $userphone, $isactive, $isverified, $notify);
 }
 
 ?>
@@ -130,12 +126,6 @@ if (isset($_POST['submit'])) {
                                             <label for="userlocation" class="form-label">User Location</label>
                                             <input type="text" class="form-control" placeholder="IP Location" aria-label="user location" id="userlocation" name="userlocation">
                                         </div> -->
-
-
-                                        <div class="col">
-                                            <label for="userwebsite" class="form-label">User Website</label>
-                                            <input type="text" class="form-control" placeholder="User Website" aria-label="user website" id="userwebsite" name="userwebsite">
-                                        </div>
 
                                     </div>
 
