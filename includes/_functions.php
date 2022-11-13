@@ -2081,15 +2081,16 @@ function _payment($amount,$currency,$coupon=''){
     $useremail = $_SESSION['userEmailId'];
     $sql = "INSERT INTO `tblpayment`(`_useremail`, `_amount`, `_currency`, `_status`, `_couponcode`) VALUES ('$useremail','$amount','$currency','pending','$coupon')";
     $query = mysqli_query($conn,$sql);
-    if($query){
-        $sql = "SELECT MAX(id) FROM `tblpayment`";
-        $query = mysqli_query($conn,$query);
-        if($query){
-            foreach($query as $data){
-                return $data['_id'];
-            }
-        }
-    }
+    return mysqli_insert_id($conn);
+    // if($query){
+    //     $sql = "SELECT MAX(id) FROM `tblpayment`";
+    //     $query = mysqli_query($conn,$query);
+    //     if($query){
+    //         foreach($query as $data){
+    //             return $data['_id'];
+    //         }
+    //     }
+    // }
 }
 
 function _updatepayment($id,$status){
@@ -2097,7 +2098,7 @@ function _updatepayment($id,$status){
     $sql = "UPDATE `tblpayment` SET `_status`='$status' WHERE `_id` = $id";
     $query = mysqli_query($conn,$sql);
     if($query){
-        2 + 2;
+        return 'done';
     }
 }
 

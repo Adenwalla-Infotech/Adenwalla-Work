@@ -22,7 +22,7 @@ $currency = $_GET['currency'];
 $getamount = _conversion($getprice,$currency);
 
 $_SESSION['paybtn'] = '';
-
+$_SESSION['transid'] = '';
 $showcoupon = true;
 
 
@@ -47,7 +47,7 @@ if (isset($_POST['pay'])) {
     $country = $_POST['country'];
     $amount = _gettotal($getamount,$currency,$applydiscount);
     $_SESSION['paybtn'] = true;
-    // $transid = _payment($amount,$currency,$couponcode);
+    $_SESSION['transid'] = _payment($amount,$currency,$couponcode);
 }
 
 ?>
@@ -467,9 +467,7 @@ if (isset($_POST['pay'])) {
                                                             <button name="pay" id="rzp-button1" class="btn btn-success" style="margin-top: 30px;width:95%" type="button">Pay&nbsp;&nbsp;<?php echo $currency;?>&nbsp;<?php echo round(_gettotal($getamount,$currency,$applydiscount),2);?></button>
                                                     </div>
                                                     <?php }?>
-                                                </div>
-                                                    <!-- Save changes button-->
-                                                    
+                                                </div>    
                                             </div>
                                         </div>
                                     </div>
@@ -498,45 +496,45 @@ if (isset($_POST['pay'])) {
 <script src="../assets/js/settings.js"></script>
 <script src="../assets/js/todolist.js"></script>
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
-
-<script>
-    function selectDP(){
-        document.getElementById('userdp').click();
-    }
-</script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script>
-var options = {
-    "key": "<?php echo _paymentconfig('_apikey'); ?>", // Enter the Key ID generated from the Dashboard
-    "amount": "<?php echo ceil($amount * 100);?>", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-    "currency": "<?php echo $currency; ?>",
-    "name": "<?php echo _paymentconfig('_companyname'); ?>",
-    "description": "Payment for your Purchase",
-    "image": "http://localhost/Adenwalla-Infotech/moniqart-development/uploads/images/logo.png",
-    // "order_id": "OD<?php echo rand(111111, 999999)?>", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-    "handler": function (response){
-        swal("Good job!", "Payment Successfull!", "success");
-    },
-    "prefill": {
-        "name": "<?php echo $username; ?>",
-        "email": "<?php echo $useremail; ?>",
-        "contact": "<?php echo $userphone; ?>"
-    },
-    "notes": {
-        "address": "Razorpay Corporate Office"
-    },
-    "theme": {
-        "color": "#4B49AC"
-    }
-};
-var rzp1 = new Razorpay(options);
-rzp1.on('payment.failed', function (response){
-    swal ( "Oops" ,  `${response.error.description}` ,  "error" )
-});
-document.getElementById('rzp-button1').onclick = function(e){
-    rzp1.open();
-    e.preventDefault();
-}
-</script>
+
+<form action="process.php" method="post">
+    <script>
+        var options = {
+            "key": "<?php echo _paymentconfig('_apikey'); ?>", // Enter the Key ID generated from the Dashboard
+            "amount": "<?php echo ceil($amount * 100);?>", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "currency": "<?php echo $currency; ?>",
+            "name": "<?php echo _paymentconfig('_companyname'); ?>",
+            "description": "Payment for your Purchase",
+            "image": "http://localhost/Adenwalla-Infotech/moniqart-development/uploads/images/logo.png",
+            // "order_id": "OD<?php echo rand(111111, 999999)?>", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "handler": function (response){
+                swal("Good job!", "Payment Successfull!", "success"); 
+                document.getElementById('transpay').click();
+            },
+            "prefill": {
+                "name": "<?php echo $username; ?>",
+                "email": "<?php echo $useremail; ?>",
+                "contact": "<?php echo $userphone; ?>"
+            },
+            "notes": {
+                "address": "Razorpay Corporate Office"
+            },
+            "theme": {
+                "color": "#4B49AC"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+
+        rzp1.on('payment.failed', function (response){
+            window.location.href = "failed";
+        });
+        document.getElementById('rzp-button1').onclick = function(e){
+            rzp1.open();  
+            // e.preventDefault();
+        }
+    </script>
+    <button id="transpay" type="submit" name="payment" hidden></button>
+</form>
 
 </html>
