@@ -109,10 +109,10 @@ if(isset($_POST['submit'])){
                                 <label for="formFile" class="form-label">Select Status</label>
                                 <select style="height: 46px;" name="status" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
                                     <option>Ticket Status</option>
-                                    <option value="Open">Open</option>
-                                    <option value="Pending">Pending</option>
-                                    <option value="Resolved">Resolved</option>
-                                    <option value="Closed">Closed</option>
+                                    <option value="open">Open</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="resolved">Resolved</option>
+                                    <option value="closed">Closed</option>
                                 </select>
                             </div>
                             <div class="col-lg-6" style="margin-bottom: 20px;">

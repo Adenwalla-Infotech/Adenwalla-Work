@@ -159,17 +159,18 @@ if(isset($_POST['update'])){
                                         </div>
                                     </div>
                                     <div class="col-xl-8">
-                                        <form action="" method="post" enctype="multipart/form-data">
+                                        <form action="" method="post" class="needs-validation" novalidate  enctype="multipart/form-data">
                                         <!-- Account details card-->
                                         <div class="card mb-4">
                                             <div class="card-header">Account Details</div>
                                             <div class="card-body">
-                                                <form>
+                                                <form  >
                                                     <!-- Form Group (username)-->
                                                     <div class="row mb-3">
                                                         <div class="col-lg-12">
                                                             <label class="small mb-1" for="inputEmailAddress">Username (Name will appear on the site to other users)</label>
                                                             <input class="form-control" id="inputEmailAddress" type="text" name="username" placeholder="Enter your username" value="<?php echo _getsingleuser($_id, '_username'); ?>">
+                                                            <div class="invalid-feedback">Please type correct username</div> 
                                                         </div>
                                                     </div>
                                                     <div class="row gx-3 mb-3">
@@ -177,11 +178,13 @@ if(isset($_POST['update'])){
                                                         <div class="col-md-6">
                                                             <label class="small mb-1" for="inputLocation">Address</label>
                                                             <input class="form-control" id="inputLocation" type="text" name="location" placeholder="Enter your location" value="<?php echo _getsingleuser($_id, '_userlocation'); ?>">
+                                                            <div class="invalid-feedback">Please type correct address</div> 
                                                         </div>
                                                         <!-- Form Group (Pincode)-->
                                                         <div class="col-md-6">
                                                             <label class="small mb-1" for="inputLocation">Pincode</label>
-                                                            <input class="form-control" id="inputLocation" type="text" name="pincode" placeholder="Enter your pincode" value="<?php echo _getsingleuser($_id, '_userpin'); ?>">
+                                                            <input class="form-control" id="inputLocation" type="text" name="pincode" placeholder="Enter your pincode" pattern="[0-9]{6}" maxlength="6" value="<?php echo _getsingleuser($_id, '_userpin'); ?>">
+                                                            <div class="invalid-feedback">Please type correct Pincode</div> 
                                                         </div>
                                                     </div>
                                                     <!-- Form Row-->
@@ -436,28 +439,33 @@ if(isset($_POST['update'])){
                                                                 <option value="Zambia">Zambia</option>
                                                                 <option value="Zimbabwe">Zimbabwe</option>
                                                             </select>
+                                                            <div class="invalid-feedback">Please Select correct country</div> 
                                                         </div>
                                                         <div class="col-lg-6">
                                                             <label class="small mb-1" for="inputEmailAddress">Password</label>
                                                             <input class="form-control" id="inputEmailAddress" name="userpassword" type="password" placeholder="Enter your password" value="<?php echo _getsingleuser($_id, '_userpassword'); ?>">
+                                                            <div class="invalid-feedback">Please type correct password</div> 
                                                         </div>
                                                     </div>
                                                     <div class="row mb-3">
                                                         <div class="col-lg-12">
                                                             <label class="small mb-1" for="inputEmailAddress">Email address</label>
                                                             <input class="form-control" id="inputEmailAddress" type="email" placeholder="Enter your email address" name="useremail" value="<?php echo _getsingleuser($_id, '_useremail'); ?>">
+                                                            <div class="invalid-feedback">Please type correct email</div> 
                                                         </div>
                                                     </div>
                                                     <div class="row gx-3 mb-3">
                                                          <!-- Form Group (phone number)-->
                                                          <div class="col-md-6">
                                                             <label class="small mb-1" for="inputPhone">Phone number</label>
-                                                            <input class="form-control" id="inputPhone" type="tel" name="userphone" placeholder="Enter your phone number" value="<?php echo _getsingleuser($_id, '_userphone'); ?>">
+                                                            <input class="form-control" id="inputPhone" type="tel" name="userphone" placeholder="Enter your phone number" value="<?php echo _getsingleuser($_id, '_userphone'); ?>" pattern="[1-9]{1}[0-9]{9}">
+                                                            <div class="invalid-feedback">Please type correct Phone Number</div> 
                                                         </div>
                                                         <!-- Form Group (birthday)-->
                                                         <div class="col-md-6">
                                                             <label class="small mb-1" for="inputBirthday">Birthday</label>
                                                             <input class="form-control" id="inputBirthday" type="date" name="userage" placeholder="Enter your birthday" value="<?php echo _getsingleuser($_id, '_userage'); ?>">
+                                                            <div class="invalid-feedback">Please select proper birthdate</div> 
                                                         </div>
                                                     </div>
                                                     <div class="row gx-3 mb-3">
@@ -483,6 +491,8 @@ if(isset($_POST['update'])){
             <!-- page-body-wrapper ends -->
         </div>
         <div class="container"></div>
+        <script src="../includes/_validation.js"></script>
+
 </body>
 <script src="../assets/vendors/js/vendor.bundle.base.js"></script>
 <!-- endinject -->

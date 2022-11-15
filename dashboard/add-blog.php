@@ -30,10 +30,9 @@ if (isset($_POST['submit'])) {
 
     if (isset($_POST['_status'])) {
         $_status = 'true';
-      }
-      else{
+    } else {
         $_status = false;
-      } 
+    }
 
     $_userid = $_SESSION['userId'];
 
@@ -108,29 +107,31 @@ if (isset($_POST['submit'])) {
                                 <p class="card-description">
                                     If you can't find a solution to your problems in our knowledgebase, you can submit a ticket by selecting the appropriate department below & subject below. Tickets can also be created by simply sending an email. Ticket responses can also be created by replying to the same email.
                                 </p>
-                                <form method="POST" action="" enctype="multipart/form-data">
+                                <form method="POST" action="" enctype="multipart/form-data" class="needs-validation" novalidate>
                                     <div class="row g-3">
                                         <div class="col-lg-6" style="margin-bottom: 20px;">
                                             <label for="formFile" class="form-label">Blog Title</label>
                                             <input type="text" class="form-control" placeholder="Blog Title" aria-label="Blog Title" name="_blogtitle" required>
+                                            <div class="invalid-feedback">Blog Title Needed</div>
                                         </div>
 
                                         <div class="col-lg-6" style="margin-bottom: 20px;">
-                                                <?php _showCategoryOptions() ?>
-                                           
+                                            <?php _showCategoryOptions() ?>
+
                                         </div>
                                     </div>
 
                                     <div class="row g-3">
 
                                         <div class="col-lg-6" style="margin-bottom: 20px;">
-                                             <?php _showSubCategoryOptions() ?>
-                                            
+                                            <?php _showSubCategoryOptions() ?>
+
                                         </div>
 
                                         <div class="col-lg-6" style="margin-bottom: 20px;">
                                             <label for="formFile" class="form-label">Featured Image</label>
                                             <input class="form-control" name="file" type="file" id="formFile" required>
+                                            <div class="invalid-feedback">Featured Image Required</div>
                                         </div>
                                     </div>
 
@@ -141,7 +142,7 @@ if (isset($_POST['submit'])) {
 
                                         <div class="col" style="margin: 15px 0  15px 10px;">
                                             <label class="checkbox-inline">
-                                                <input name="_status" type="checkbox"> &nbsp; Is Active
+                                                <input name="_status" type="checkbox"  > &nbsp; Is Active
                                             </label>
                                         </div>
 
@@ -151,7 +152,9 @@ if (isset($_POST['submit'])) {
 
                                     <div class="row g-3">
                                         <div class="col">
-                                            <textarea name="_blogdesc" id="mytextarea">Blog Description</textarea>
+                                            <label for="mytextarea" class="form-label">Blog Description</label>
+                                            <textarea name="_blogdesc" id="mytextarea" minlength="20" required ></textarea>
+                                            <div class="invalid-feedback">Blog Description Required (More than 20 Words) </div>
                                         </div>
                                     </div>
 
@@ -159,7 +162,8 @@ if (isset($_POST['submit'])) {
                                     <div class="row g-3">
                                         <div class="col" style="margin-top: 30px;">
                                             <label for="_blogmetadesc" class="form-label">Meta Description</label>
-                                            <textarea name="_blogmetadesc" rows="5" class="form-control"></textarea>
+                                            <textarea name="_blogmetadesc" rows="5" minlength="5" class="form-control" required></textarea>
+                                            <div class="invalid-feedback">Blog Meta Description Required (More than 10 Words) </div>
                                         </div>
                                     </div>
 
@@ -180,6 +184,8 @@ if (isset($_POST['submit'])) {
             <!-- page-body-wrapper ends -->
         </div>
         <div class="container"></div>
+        <script src="../includes/_validation.js"></script>
+
 </body>
 <script src="../assets/vendors/js/vendor.bundle.base.js"></script>
 <!-- endinject -->

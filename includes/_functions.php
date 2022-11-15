@@ -444,7 +444,29 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
 
-            $tables = [$admin_table, $sms_config, $email_config, $site_config, $payment_config, $tickets_table, $ticket_comment, $contact_table, $category_table, $subcategory_table, $blog_table,$currency_table,$tax_table,$payment_trans,$coupon_table,$coupon_trans];
+            $membership_table = "CREATE TABLE IF NOT EXISTS `tblmembership` (
+                `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                `_membershipname` varchar(255) NOT NULL,
+                `_membershipdesc` varchar(255) NOT NULL,
+                `_status` varchar(255) NOT NULL,
+                `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                `UpdationDate` datetime NULL ON UPDATE current_timestamp()
+            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
+
+            $membership_pricing_table = "CREATE TABLE IF NOT EXISTS `tblmembershippricing` (
+                `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                `_membershipid` varchar(55) NOT NULL,
+                `_duration` varchar(55) NOT NULL,
+                `_benefit` varchar(55) NOT NULL, 
+                `_benefittype` varchar(55) NOT NULL, 
+                `_benefitcurrency` varchar(55) NOT NULL,
+                `_price` varchar(55) NOT NULL,
+                `_status` varchar(55) NOT NULL,
+                `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                `UpdationDate` datetime NULL ON UPDATE current_timestamp()
+            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
+
+            $tables = [$admin_table, $sms_config, $email_config, $site_config, $payment_config, $tickets_table, $ticket_comment, $contact_table, $category_table, $subcategory_table, $blog_table, $currency_table, $tax_table, $payment_trans, $coupon_table, $coupon_trans, $membership_table, $membership_pricing_table];
 
             foreach ($tables as $k => $sql) {
                 $query = @$temp_conn->query($sql);
@@ -1033,7 +1055,8 @@ function _savesiteconfig($sitetitle, $siteemail, $timezone, $header, $footer, $c
     }
 }
 
-function _paymentconfig($param){
+function _paymentconfig($param)
+{
     require('_config.php');
     $sql = "SELECT * FROM `tblpaymentconfig`";
     $query = mysqli_query($conn, $sql);
@@ -1504,9 +1527,9 @@ function _showCategoryOptions($_categoryID = '')
     } else {
         $sql = "SELECT * FROM `tblcategory`";
         $query = mysqli_query($conn, $sql);
-        if ($query) {?>
+        if ($query) { ?>
             <label for="categoryId" class="form-label">Select Category</label>
-            <select style="height: 46px;" id="categoryId" name="categoryId" class="form-control form-control-lg" id="exampleFormControlSelect2" >
+            <select style="height: 46px;" id="categoryId" name="categoryId" class="form-control form-control-lg" id="exampleFormControlSelect2">
                 <option value=''>Select Category</option>
                 <?php
                 foreach ($query as $data) {
@@ -1548,15 +1571,14 @@ function _showSubCategoryOptions($_subcategoryID = '')
                     $currentId = $data['_id'];
 
                     if ($_subcategoryID == $currentId) {
-                        ?>
-                            <option  value="<?php echo $data['_id']; ?>" selected> <?php echo $data['_subcategoryname']; ?> </option>
-                        <?php
+                ?>
+                        <option value="<?php echo $data['_id']; ?>" selected> <?php echo $data['_subcategoryname']; ?> </option>
+                    <?php
 
-                    } 
-                    else {
-                            ?>
-                                <option value="<?php echo $data['_id']; ?>"> <?php echo $data['_subcategoryname']; ?> </option>
-                            <?php
+                    } else {
+                    ?>
+                        <option value="<?php echo $data['_id']; ?>"> <?php echo $data['_subcategoryname']; ?> </option>
+                <?php
                     }
                 }
 
@@ -1578,15 +1600,15 @@ function _showSubCategoryOptions($_subcategoryID = '')
             <select style="height: 46px;" id="subcategoryId" name="subcategoryId" class="form-control form-control-lg" id="exampleFormControlSelect2">
                 <option value=''> Sub Category</option>
                 <?php
-                    foreach ($query as $data) {
-                        ?>
-                            <option  value="<?php echo $data['_id']; ?>"> <?php echo $data['_subcategoryname']; ?> </option>
-                        <?php
-                    }
+                foreach ($query as $data) {
+                ?>
+                    <option value="<?php echo $data['_id']; ?>"> <?php echo $data['_subcategoryname']; ?> </option>
+                <?php
+                }
                 ?>
 
             </select>
-        <?php 
+        <?php
 
 
         }
@@ -1617,41 +1639,39 @@ function _getBlogs($blogtitle = '', $blogcategory = '', $blogsubcategory = '', $
     require('_config.php');
     if ($blogtitle) {
         $sql = "SELECT * FROM `tblblog` WHERE `_blogtitle` LIKE '%$blogtitle%' ";
-    } 
+    }
     if ($blogcategory && !$blogsubcategory && !$blogtitle) {
         $sql = "SELECT * FROM `tblblog` WHERE `_blogcategory`='$blogcategory' ";
-    } 
-    if ($blogsubcategory != '' && $blogcategory == '' && $blogtitle == '' ) {
+    }
+    if ($blogsubcategory != '' && $blogcategory == '' && $blogtitle == '') {
         $sql = "SELECT * FROM `tblblog` WHERE `_blogsubcategory`='$blogsubcategory' ";
-    } 
+    }
     if ($blogcategory && $blogsubcategory) {
         $sql = "SELECT * FROM `tblblog` WHERE `_blogcategory`='$blogcategory' AND `_blogsubcategory` = '$blogsubcategory' ";
-    } 
-    if(!$blogcategory && !$blogsubcategory && !$blogtitle) {
+    }
+    if (!$blogcategory && !$blogsubcategory && !$blogtitle) {
         $sql = "SELECT * FROM `tblblog` ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
     }
-    
+
     $query = mysqli_query($conn, $sql);
     if ($query) {
 
-        foreach ($query as $data) {      
+        foreach ($query as $data) {
         ?>
             <tr>
                 <td><?php echo $data['_blogtitle']; ?></td>
                 <td>
                     <label class="checkbox-inline form-switch">
                         <?php
-                        if ($data['_status'] == 'true')
-                        { 
-                            ?>
+                        if ($data['_status'] == 'true') {
+                        ?>
                             <input disabled role="switch" name="isactive" value="true" checked type="checkbox">
-                            <?php
+                        <?php
                         }
-                        if (!$data['_status']) 
-                        { 
-                            ?>
+                        if (!$data['_status']) {
+                        ?>
                             <input disabled role="switch" name="isactive" value="false" type="checkbox">
-                            <?php
+                        <?php
                         }
                         ?>
                     </label>
@@ -1685,16 +1705,14 @@ function _getBlogs($blogtitle = '', $blogcategory = '', $blogsubcategory = '', $
 
             </tr>
 
-        <?php 
+        <?php
 
         }
     }
-
-
-    
 }
 
-function updateBlog($_blogtitle, $_blogdesc, $_blogcategory, $_blogsubcategory, $_blogmetadesc, $_blogimg , $_status , $_id){
+function updateBlog($_blogtitle, $_blogdesc, $_blogcategory, $_blogsubcategory, $_blogmetadesc, $_blogimg, $_status, $_id)
+{
 
     require('_config.php');
     require('_alert.php');
@@ -1710,7 +1728,6 @@ function updateBlog($_blogtitle, $_blogdesc, $_blogcategory, $_blogsubcategory, 
         $alert = new PHPAlert();
         $alert->warn("Something went wrong");
     }
-
 }
 
 
@@ -1720,11 +1737,10 @@ function _getSingleBlog($id, $param)
     $sql = "SELECT * FROM `tblblog` WHERE `_id`=$id";
     $query = mysqli_query($conn, $sql);
     if ($query) {
-        
+
         foreach ($query as $data) {
             return $data[$param];
         }
-
     }
 }
 
@@ -1744,15 +1760,16 @@ function _deleteBlog($id)
 
 // currency Functions
 
-function _createmarkup($base,$conversion,$price,$status){
+function _createmarkup($base, $conversion, $price, $status)
+{
     require('_config.php');
     require('_alert.php');
     $sql = "INSERT INTO `tblcurrency`(`_basecurrency`, `_conversioncurrency`, `_price`, `_status`) VALUES ('$base','$conversion','$price','$status')";
-    $query = mysqli_query($conn,$sql);
+    $query = mysqli_query($conn, $sql);
     if ($query) {
         $alert = new PHPAlert();
         $alert->success("Markup Created");
-    }else{
+    } else {
         $alert = new PHPAlert();
         $alert->warn("Markup Failed");
     }
@@ -1779,17 +1796,15 @@ function _getmarkup($conversion = '', $status = '', $limit = '', $startfrom = ''
                 <td>
                     <label class="checkbox-inline form-switch">
                         <?php
-                        if ($data['_status'] == 'true')
-                        { 
-                            ?>
+                        if ($data['_status'] == 'true') {
+                        ?>
                             <input disabled role="switch" name="isactive" value="true" checked type="checkbox">
-                            <?php
+                        <?php
                         }
-                        if (!$data['_status']) 
-                        { 
-                            ?>
+                        if (!$data['_status']) {
+                        ?>
                             <input disabled role="switch" name="isactive" value="false" type="checkbox">
-                            <?php
+                        <?php
                         }
                         ?>
                     </label>
@@ -1805,12 +1820,13 @@ function _getmarkup($conversion = '', $status = '', $limit = '', $startfrom = ''
     }
 }
 
-function _conversion($amount,$currency){
+function _conversion($amount, $currency)
+{
     require('_config.php');
     $sql = "SELECT * FROM `tblcurrency` WHERE `_conversioncurrency` = '$currency'";
-    $query = mysqli_query($conn,$sql);
-    if($query){
-        foreach($query as $data){
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        foreach ($query as $data) {
             $price = $data['_price'];
         }
         return $amount * $price;
@@ -1833,15 +1849,16 @@ function _deletemarkup($id)
 
 // Tax Functions
 
-function _createtaxmarkup($name,$type,$currency,$amount,$status){
+function _createtaxmarkup($name, $type, $currency, $amount, $status)
+{
     require('_config.php');
     require('_alert.php');
     $sql = "INSERT INTO `tbltaxes`(`_taxname`, `_taxtype`, `_taxamount`,  `_taxcurrency`, `_status`) VALUES ('$name','$type','$amount', '$currency','$status')";
-    $query = mysqli_query($conn,$sql);
+    $query = mysqli_query($conn, $sql);
     if ($query) {
         $alert = new PHPAlert();
         $alert->success("Markup Created");
-    }else{
+    } else {
         $alert = new PHPAlert();
         $alert->warn("Markup Failed");
     }
@@ -1868,17 +1885,15 @@ function _gettaxmarkup($name = '', $status = '', $limit = '', $startfrom = '')
                 <td>
                     <label class="checkbox-inline form-switch">
                         <?php
-                        if ($data['_status'] == 'true')
-                        { 
-                            ?>
+                        if ($data['_status'] == 'true') {
+                        ?>
                             <input disabled role="switch" name="isactive" value="true" checked type="checkbox">
-                            <?php
+                        <?php
                         }
-                        if (!$data['_status']) 
-                        { 
-                            ?>
+                        if (!$data['_status']) {
+                        ?>
                             <input disabled role="switch" name="isactive" value="false" type="checkbox">
-                            <?php
+                        <?php
                         }
                         ?>
                     </label>
@@ -1906,37 +1921,46 @@ function _deletetax($id)
     }
 }
 
-function _gettaxes(){
+function _gettaxes()
+{
     require('_config.php');
     $sql = "SELECT * FROM `tbltaxes` WHERE `_status` = 'true'";
-    $query = mysqli_query($conn,$sql);
-    if($query){
-        foreach($query as $data){ ?>
-            <h5 style="margin-top:10px"><?php echo $data['_taxname'];?></h5>
-            <?php if($data['_taxtype'] == 'Variable'){ ?>
-                <input class="form-control" name="amount" type="text" readonly value="<?php echo $data['_taxamount'];?>%">  
-            <?php }else{
-                ?><input class="form-control" name="amount" type="text" readonly value="<?php echo $data['_taxcurrency'];?>&nbsp;<?php echo $data['_taxamount'];?>">
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        foreach ($query as $data) { ?>
+            <h5 style="margin-top:10px"><?php echo $data['_taxname']; ?></h5>
+            <?php if ($data['_taxtype'] == 'Variable') { ?>
+                <input class="form-control" name="amount" type="text" readonly value="<?php echo $data['_taxamount']; ?>%">
+            <?php } else {
+            ?><input class="form-control" name="amount" type="text" readonly value="<?php echo $data['_taxcurrency']; ?>&nbsp;<?php echo $data['_taxamount']; ?>">
             <?php } ?>
-            
+
         <?php }
     }
 }
 
-function _gettotal($sub,$currency,$discount){
+function _gettotal($sub, $currency, $discount)
+{
     require('_config.php');
     $sql = "SELECT * FROM `tbltaxes` WHERE `_status` = 'true'";
-    $query = mysqli_query($conn,$sql);
-    if($query){
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
         $tax = array();
-        foreach($query as $data){
-            if($data['_taxtype'] == 'Variable'){
+        foreach ($query as $data) {
+            if ($data['_taxtype'] == 'Variable') {
                 $tax[] = ($data['_taxamount'] / 100) * $sub;
-            }else{
-                $tax[] = _conversion($data['_taxamount'],$currency);
+            } else {
+                $tax[] = _conversion($data['_taxamount'], $currency);
             }
         }
-        $final = $sub - $discount;
+
+        // get user email id
+        // check membership avaiable
+
+        // $ discount = memberpricing
+
+        $final = $sub - $discount; // if not put it in else
+
         $arrtotal = $final + array_sum($tax);
         return $arrtotal;
     }
@@ -1945,15 +1969,16 @@ function _gettotal($sub,$currency,$discount){
 
 // Coupon Functions 
 
-function _createcoupon($name,$type,$amount,$condition,$conamount,$validity,$currency){
+function _createcoupon($name, $type, $amount, $condition, $conamount, $validity, $currency)
+{
     require('_config.php');
     require('_alert.php');
     $sql = "INSERT INTO `tblcoupon`(`_couponname`, `_coupontype`, `_couponamount`, `_couponcurrency`,`_couponcondition`, `_conamount`, `_maxusage`, `_totaluse`) VALUES ('$name','$type','$amount', '$currency','$condition','$conamount','$validity',0)";
-    $query = mysqli_query($conn,$sql);
+    $query = mysqli_query($conn, $sql);
     if ($query) {
         $alert = new PHPAlert();
         $alert->success("Coupon Created");
-    }else{
+    } else {
         $alert = new PHPAlert();
         $alert->warn("Coupon Failed");
     }
@@ -2003,15 +2028,16 @@ function _deletecoupon($id)
     }
 }
 
-function _validatecoupon($amount,$coupon,$currency){
+function _validatecoupon($amount, $coupon, $currency)
+{
     require('_config.php');
     require('_alert.php');
     $sql = "SELECT * FROM `tblcoupon` WHERE `_couponname` = '$coupon'";
-    $query = mysqli_query($conn,$sql);
-    if($query){
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
         $count = mysqli_num_rows($query);
-        if($count >= 1){
-            foreach($query as $data){
+        if ($count >= 1) {
+            foreach ($query as $data) {
                 $vamount = $data['_conamount'];
                 $vcondition = $data['_couponcondition'];
                 $vlimit = $data['_maxusage'];
@@ -2020,54 +2046,54 @@ function _validatecoupon($amount,$coupon,$currency){
                 $coupontype = $data['_coupontype'];
                 $vcurrency = $data['_couponcurrency'];
             }
-            $vamount = _conversion($vamount,$currency);
-            if($vusage < $vlimit){
-                if($vcondition == 'less'){
-                    if($amount < $vamount){
-                        if($coupontype == 'Variable'){
+            $vamount = _conversion($vamount, $currency);
+            if ($vusage < $vlimit) {
+                if ($vcondition == 'less') {
+                    if ($amount < $vamount) {
+                        if ($coupontype == 'Variable') {
                             $discount = ($vdiscount / 100) * $amount;
                             return $discount;
                         }
-                        if($coupontype == 'Fixed'){
-                            $discount = _conversion($vdiscount,$currency);
+                        if ($coupontype == 'Fixed') {
+                            $discount = _conversion($vdiscount, $currency);
                             return $discount;
                         }
-                        if($coupontype == 'Uncertain'){
-                            $numbers = range(0,$vdiscount);
+                        if ($coupontype == 'Uncertain') {
+                            $numbers = range(0, $vdiscount);
                             shuffle($numbers);
                             $famount = array_slice($numbers, 0, 1);
-                            $discount = _conversion($famount[0],$currency);
+                            $discount = _conversion($famount[0], $currency);
                             return $discount;
                         }
-                    }else{
+                    } else {
                         return null;
                     }
                 }
-                if($vcondition == 'more'){
-                    if($amount >= $vamount){
-                        if($coupontype == 'Variable'){
+                if ($vcondition == 'more') {
+                    if ($amount >= $vamount) {
+                        if ($coupontype == 'Variable') {
                             $discount = ($vdiscount / 100) * $amount;
                             return $discount;
                         }
-                        if($coupontype == 'Fixed'){
-                            $discount = _conversion($vdiscount,$currency);
+                        if ($coupontype == 'Fixed') {
+                            $discount = _conversion($vdiscount, $currency);
                             return $discount;
                         }
-                        if($coupontype == 'Uncertain'){
-                            $numbers = range(30,$vdiscount);
+                        if ($coupontype == 'Uncertain') {
+                            $numbers = range(30, $vdiscount);
                             shuffle($numbers);
                             $famount = array_slice($numbers, 0, 1);
-                            $discount = _conversion($famount[0],$currency);
+                            $discount = _conversion($famount[0], $currency);
                             return $discount;
                         }
-                    }else{
+                    } else {
                         return null;
                     }
                 }
-            }else{
+            } else {
                 return null;
             }
-        }else{
+        } else {
             return null;
         }
     }
@@ -2076,30 +2102,249 @@ function _validatecoupon($amount,$coupon,$currency){
 
 // Transaction Functions
 
-function _payment($amount,$currency,$coupon=''){
+function _payment($amount, $currency, $coupon = '')
+{
     require('_config.php');
     $useremail = $_SESSION['userEmailId'];
     $sql = "INSERT INTO `tblpayment`(`_useremail`, `_amount`, `_currency`, `_status`, `_couponcode`) VALUES ('$useremail','$amount','$currency','pending','$coupon')";
-    $query = mysqli_query($conn,$sql);
-    return mysqli_insert_id($conn);
-    // if($query){
-    //     $sql = "SELECT MAX(id) FROM `tblpayment`";
-    //     $query = mysqli_query($conn,$query);
-    //     if($query){
-    //         foreach($query as $data){
-    //             return $data['_id'];
-    //         }
-    //     }
-    // }
-}
-
-function _updatepayment($id,$status){
-    require('_config.php');
-    $sql = "UPDATE `tblpayment` SET `_status`='$status' WHERE `_id` = $id";
-    $query = mysqli_query($conn,$sql);
-    if($query){
-        return 'done';
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $sql = "SELECT MAX(id) FROM `tblpayment`";
+        $query = mysqli_query($conn, $query);
+        if ($query) {
+            foreach ($query as $data) {
+                return $data['_id'];
+            }
+        }
     }
 }
+
+function _updatepayment($id, $status)
+{
+    require('_config.php');
+    $sql = "UPDATE `tblpayment` SET `_status`='$status' WHERE `_id` = $id";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        2 + 2;
+    }
+}
+
+
+
+
+// Membership Module
+
+
+function _createMembership($membershipname, $membershipdesc, $status)
+{
+
+    require('_config.php');
+    require('_alert.php');
+
+    $sql = "INSERT INTO `tblmembership`(`_membershipname`,`_membershipdesc`,`_status`) VALUES ('$membershipname','$membershipdesc','$status')";
+
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->success("Membership Created");
+    } else {
+        $alert = new PHPAlert();
+        $alert->warn("Creation Failed");
+    }
+}
+
+
+
+function _getMembership($membershipname = '', $limit = '', $startfrom = '')
+{
+    require('_config.php');
+    if ($membershipname != '') {
+        $sql = "SELECT * FROM `tblmembership` WHERE `_membershipname` LIKE '%$membershipname%'";
+    } else {
+        $sql = "SELECT * FROM `tblmembership` ORDER BY `CreationDate` DESC LIMIT $startfrom, $limit";
+    }
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        foreach ($query as $data) { ?>
+            <tr>
+                <td><?php echo $data['_id']; ?></td>
+                <td><?php echo $data['_membershipname']; ?></td>
+                <td><?php echo $data['_status']; ?></td>
+                <td>
+                    <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
+                </td>
+                <td>
+                    <?php echo date("M j, Y", strtotime($data['UpdationDate'])); ?>
+                </td>
+                <td><a href="edit-membership?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
+                    <?php if ($_SESSION['userType'] == 2) { ?>
+                        <a href='manage-membership?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
+                </td>
+            <?php } ?>
+            </tr>
+        <?php }
+    }
+}
+
+
+function _getSingleMembership($id, $param)
+{
+    require('_config.php');
+    $sql = "SELECT * FROM `tblmembership` WHERE `_id` = $id";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        foreach ($query as $data) {
+            return $data[$param];
+        }
+    }
+}
+
+
+
+function _updateMembership($membershipname, $membershipdesc, $status, $_id)
+{
+
+    require('_config.php');
+    require('_alert.php');
+
+
+    $sql = "UPDATE `tblmembership` SET `_membershipname`='$membershipname' , `_membershipdesc`='$membershipdesc' , `_status`='$status' WHERE `_id` = $_id";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->success("Membership Updated");
+    } else {
+        $alert = new PHPAlert();
+        $alert->warn("Something went wrong");
+    }
+}
+
+function _deleteMembership($id)
+{
+    require('_config.php');
+    require('_alert.php');
+
+    $sql = "DELETE FROM `tblmembership` WHERE `_id` = '$id'";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->error("Membership Deleted Permanently");
+    }
+}
+
+
+
+// Membership Pricing
+
+
+
+function _addPricing($membershipid, $duration, $discount, $discounttype, $discountcurrency, $price, $isactive)
+{
+
+    require('_config.php');
+    require('_alert.php');
+
+    $sql = "INSERT INTO `tblmembershippricing`(`_membershipid`,`_duration`,`_benefit`,`_benefittype`,`_benefitcurrency`,`_price`,`_status`) VALUES ('$membershipid','$duration','$discount','$discounttype','$discountcurrency','$price','$isactive')";
+
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->success("Pricing Added");
+    } else {
+        $alert = new PHPAlert();
+        $alert->warn("Pricing Failed");
+    }
+}
+
+function _updatePricing($_id, $duration, $discount, $discounttype, $discountcurrency, $price, $isactive)
+{
+
+    require('_config.php');
+    require('_alert.php');
+
+
+    $sql = "UPDATE `tblmembershippricing` SET `_duration`='$duration' , `_benefit`='$discount' , `_benefittype`='$discounttype' , `_benefitcurrency`='$discountcurrency', `_price`='$price' , `_status`='$isactive' WHERE `_id` = $_id";
+
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->success("Pricing Updated");
+    } else {
+        $alert = new PHPAlert();
+        $alert->warn("Something went wrong");
+    }
+}
+
+
+function _getPricing($id)
+{
+
+    require('_config.php');
+
+    $sql = "SELECT * FROM `tblmembershippricing` WHERE `_membershipid`='$id' ";
+
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        foreach ($query as $data) {
+             ?>
+                <tr>
+                    <td class="row_id" ><?php echo $data['_id']; ?></td>
+                    <td><?php echo $data['_duration']; ?></td>
+                    <td><?php echo $data['_benefit']; ?></td>
+                    <td><?php echo $data['_status']; ?></td>
+                    <td>
+                        <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
+                    </td>
+                    <td>
+                        <?php echo date("M j, Y", strtotime($data['UpdationDate'])); ?>
+                    </td>
+                    <td>
+
+                        <button type="button" class="btn btn-warning btn-sm font-weight-medium auth-form-btn editPricingButton" >
+
+                            <i class="mdi mdi-pencil-box"></i>
+
+                        </button>
+
+                        <button type="button" class="btn btn-light btn-sm font-weight-medium auth-form-btn">
+                        <a href='edit-membership?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
+                        </button>
+                        
+
+                    </td>
+
+              </tr>
+        <?php 
+        }
+    }
+}
+
+function _getSinglePricing($id, $param)
+{
+
+    require('_config.php');
+    $sql = "SELECT * FROM `tblmembershippricing` WHERE `_id` = $id";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        foreach ($query as $data) {
+            return $data[$param];
+        }
+    }
+}
+
+function _deletePricing($id)
+{
+    require('_config.php');
+    require('_alert.php');
+
+    $sql = "DELETE FROM `tblmembershippricing` WHERE `_id` = '$id'";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->error("Membership Pricing Deleted Permanently");
+    }
+}
+
+
 
 ?>

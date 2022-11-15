@@ -83,15 +83,17 @@ if (isset($_POST['submit'])) {
                                 <p class="card-description">
                                     When you edit user account, you must assign access credentials, a user type, and a security password to the user. User type define what actions the user has permission to perform. Security password secures users permission to access. You can create multiple user accounts that include administrative right
                                 </p>
-                                <form method="POST" action="">
+                                <form method="POST" action="" class="needs-validation" novalidate>
                                     <div class="row g-3">
                                         <div class="col">
                                             <label for="username" class="form-label">User Name</label>
                                             <input type="text" value="<?php echo _getsingleuser($_id, '_username'); ?>" class="form-control" placeholder="User name" aria-label="user name" id="username" name="username" required>
+                                            <div class="invalid-feedback">Please type correct username</div>
                                         </div>
                                         <div class="col">
                                             <label for="useremail" class="form-label">User Email</label>
                                             <input type="email" value="<?php echo _getsingleuser($_id, '_useremail'); ?>" class="form-control" placeholder="Email ID" aria-label="Email Id" name="useremail" required>
+                                            <div class="invalid-feedback">Please type correct email</div>
                                         </div>
                                     </div>
 
@@ -110,10 +112,12 @@ if (isset($_POST['submit'])) {
                                                                                                                                                                                                                                                                                                                                                 if ($type != 2) { ?><option value="2">Site Admin</option><?php }
                                                                                                                                                                                                                                                                                                                                                                                                             ?>
                                             </select>
+                                            <div class="invalid-feedback">Please select correct usertype</div>
                                         </div>
                                         <div class="col">
                                             <label for="userphone" class="form-label">User Phone</label>
-                                            <input type="tel" value="<?php echo _getsingleuser($_id, '_userphone'); ?>" class="form-control" placeholder="Phone Number" aria-label="phone" name="userphone" required>
+                                            <input type="tel" value="<?php echo _getsingleuser($_id, '_userphone'); ?>" class="form-control" placeholder="Phone Number" aria-label="phone" name="userphone" pattern="[1-9]{1}[0-9]{9}"  required>
+                                            <div class="invalid-feedback">Please type correct Number</div>
                                         </div>
                                     </div>
 
@@ -171,6 +175,8 @@ if (isset($_POST['submit'])) {
             <!-- page-body-wrapper ends -->
         </div>
         <div class="container"></div>
+        <script src="../includes/_validation.js"></script>
+
 </body>
 <script src="../assets/vendors/js/vendor.bundle.base.js"></script>
 <!-- endinject -->
