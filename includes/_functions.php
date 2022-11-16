@@ -2383,7 +2383,7 @@ function _deletePricing($id, $locationId)
 // Transcations
 
 
-function _getTranscations( $useremail='' , $amount='' , $status='')
+function _getTranscations( $useremail='' , $amount='' , $status='', $startfrom = '', $limit = '')
 {
 
     require('_config.php');
@@ -2398,7 +2398,7 @@ function _getTranscations( $useremail='' , $amount='' , $status='')
         $sql = "SELECT * FROM `tblpayment` WHERE `_status`='$status' ";
     }
     if (!$useremail && !$status && !$amount) {
-        $sql = "SELECT * FROM `tblpayment` ORDER BY `CreationDate` ";
+        $sql = "SELECT * FROM `tblpayment` ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
     }
 
 

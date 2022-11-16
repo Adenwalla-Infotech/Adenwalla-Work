@@ -133,10 +133,10 @@ $start_from = ($page - 1) * $record_per_page;
                               $status = null;
                             }
 
-                            _getTranscations($useremail, $amount, $status);
+                            _getTranscations($useremail, $amount, $status ,'' , '');
                           }
                           if (!isset($_POST['search'])) {
-                            _getTranscations('', '', '');
+                            _getTranscations('', '', '', $start_from ,$record_per_page);
                           }
 
 
