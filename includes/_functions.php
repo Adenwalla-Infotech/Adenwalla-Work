@@ -2383,7 +2383,7 @@ function _deletePricing($id, $locationId)
 // Transcations
 
 
-function _getTranscations( $useremail='' , $amount='' , $status='', $startfrom = '', $limit = '')
+function _getTranscations($useremail = '', $amount = '', $status = '', $startfrom = '', $limit = '')
 {
 
     require('_config.php');
@@ -2391,7 +2391,7 @@ function _getTranscations( $useremail='' , $amount='' , $status='', $startfrom =
     if ($useremail) {
         $sql = "SELECT * FROM `tblpayment` WHERE `_useremail` LIKE '%$useremail%' ";
     }
-    if ($amount && !$useremail && !$status ) {
+    if ($amount && !$useremail && !$status) {
         $sql = "SELECT * FROM `tblpayment` WHERE `_amount`='2000' ";
     }
     if ($status && !$useremail && !$amount) {
@@ -2438,7 +2438,7 @@ function _getTranscations( $useremail='' , $amount='' , $status='', $startfrom =
                     <a href="edit-transcation.php?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
                 </td>
             </tr>
-<?php
+        <?php
         }
     }
 }
@@ -2473,6 +2473,84 @@ function _updateTranscation($_id, $useremail, $amount, $couponcode, $currency,  
     if ($query) {
         $alert = new PHPAlert();
         $alert->success("Transcation Updated");
+    } else {
+        $alert = new PHPAlert();
+        $alert->warn("Something went wrong");
+    }
+}
+
+
+
+function _getCouponTranscation($couponname='', $couponamount='', $startfrom = '', $limit = '')
+{
+
+    require('_config.php');
+
+
+    if ($couponname != '' && $couponamount == '') {
+        $sql = "SELECT * FROM `tblcoupontrans` WHERE `_couponname` LIKE '%$couponname%' ";
+    }
+
+    if ($couponamount != '' && $couponname == '') {
+        $sql = "SELECT * FROM `tblcoupontrans` WHERE `_couponamount` LIKE '%$couponamount%' ";
+    }
+
+    if($couponname == '' && $couponamount == ''){
+        $sql = "SELECT * FROM `tblcoupontrans` ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
+    }
+
+    $query = mysqli_query($conn, $sql);
+
+    if ($query) {
+        foreach ($query as $data) {
+        ?>
+            <tr>
+                <td><?php echo $data['_id']; ?></td>
+                <td><?php echo $data['_couponname']; ?></td>
+                <td><?php echo $data['_couponamount']; ?></td>
+                <td><?php echo $data['_useremail']; ?></td>
+                <td>
+                    <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
+                </td>
+                <td>
+                    <?php echo date("M j, Y", strtotime($data['UpdationDate'])); ?>
+                </td>
+                <td>
+                    <a href="edit-coupon-transcation.php?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
+                </td>
+            </tr>
+<?php
+        }
+    }
+}
+
+
+function _getSingleCouponTranscations($id, $param)
+{
+
+    require('_config.php');
+    $sql = "SELECT * FROM `tblcoupontrans` WHERE `_id` = $id";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        foreach ($query as $data) {
+            return $data[$param];
+        }
+    }
+}
+
+function _updateCouponTranscation($_id, $couponname, $couponamount, $useremail)
+{
+
+    require('_config.php');
+    require('_alert.php');
+
+
+    $sql = "UPDATE `tblcoupontrans` SET `_couponname`='$couponname' , `_couponamount`='$couponamount' , `_useremail`='$useremail' WHERE `_id` = '$_id'";
+
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->success("Coupon Transcation Updated");
     } else {
         $alert = new PHPAlert();
         $alert->warn("Something went wrong");

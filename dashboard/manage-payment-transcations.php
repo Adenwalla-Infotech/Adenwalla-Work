@@ -17,10 +17,6 @@ if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['is
 require('../includes/_functions.php');
 require('../includes/_config.php');
 
-if (isset($_GET['del'])) {
-  $_id = $_GET['id'];
-  _deleteticket($_id);
-}
 
 $record_per_page = 5;
 $page = '';

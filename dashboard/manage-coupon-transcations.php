@@ -17,10 +17,7 @@ if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['is
 require('../includes/_functions.php');
 require('../includes/_config.php');
 
-if (isset($_GET['del'])) {
-  $_id = $_GET['id'];
-  _deleteticket($_id);
-}
+
 
 $record_per_page = 5;
 $page = '';
@@ -38,7 +35,7 @@ $start_from = ($page - 1) * $record_per_page;
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Manage Payment Transactions | <?php echo _siteconfig('_sitetitle'); ?></title>
+  <title>Manage Coupon Transactions | <?php echo _siteconfig('_sitetitle'); ?></title>
   <!-- plugins:css -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@mdi/font@6.9.96/css/materialdesignicons.min.css">
   <link rel="stylesheet" href="../assets/vendors/feather/feather.css">
@@ -66,7 +63,7 @@ $start_from = ($page - 1) * $record_per_page;
           <div class="col-12 grid-margin stretch-card">
             <div class="card">
               <div class="card-body">
-                <h4 class="card-title">Manage Payment Transcations</h4>
+                <h4 class="card-title">Manage Coupon Transcations</h4>
                 <p class="card-description">
                   Web Help Desk uses tickets to manage service requests. These tickets can be initiated through email, created in the application, and imported from another application. Techs, admins, and clients can also manage tickets through email or through the application in a web browser.
                 </p>
@@ -74,17 +71,10 @@ $start_from = ($page - 1) * $record_per_page;
                 <form method="POST" action="">
                   <div class="row">
                     <div class="col-lg-3" style="margin-bottom: 20px;">
-                      <input type="text" class="form-control form-control-sm" name="useremail" placeholder="User email">
+                      <input type="text" class="form-control form-control-sm" name="couponname" placeholder="Coupon Name">
                     </div>
                     <div class="col-lg-3" style="margin-bottom: 20px;">
-                      <input type="text" class="form-control form-control-sm" name="transcationamount" placeholder="Amount">
-                    </div>
-                    <div class="col-lg-3" style="margin-bottom: 20px;">
-                      <select style="height: 40px;" name="status" class="form-control form-control-sm" id="exampleFormControlSelect2" required>
-                        <option>Status</option>
-                        <option value="true">True</option>
-                        <option value="">False</option>
-                      </select>
+                      <input type="text" class="form-control form-control-sm" name="couponamount" placeholder="Coupon Amount">
                     </div>
                     <div class="col-lg-2" style="margin-bottom: 20px;">
                       <button name="search" class="btn btn-block btn-primary btn-sm font-weight-medium auth-form-btn" style="height:40px" name="submit"><i class="mdi mdi-account-search"></i>&nbsp;SEARCH</button>
@@ -100,11 +90,11 @@ $start_from = ($page - 1) * $record_per_page;
                           <tr>
 
                             <th>Id</th>
-                            <th>Useremail</th>
-                            <th>Amount</th>
-                            <th>Currency</th>
-                            <th>Status</th>
-                            <th>Coupon Code</th>
+
+                            <th>Coupon Name</th>
+                            <th>Coupon Amount</th>
+                            <th>User Email</th>
+
                             <th>Created at</th>
                             <th>Updated at</th>
                             <th>Action</th>
@@ -115,28 +105,23 @@ $start_from = ($page - 1) * $record_per_page;
                           <?php
                           if (isset($_POST['search'])) {
 
-                            if (isset($_POST['useremail'])) {
-                              $useremail = $_POST['useremail'];
+                            if (isset($_POST['couponname'])) {
+                              $couponname = $_POST['couponname'];
                             } else {
-                              $useremail = null;
+                              $couponname = null;
                             }
 
-                            if (isset($_POST['transcationamount'])) {
-                              $amount = $_POST['transcationamount'];
+                            if (isset($_POST['couponamount'])) {
+                              $couponamount = $_POST['couponamount'];
                             } else {
-                              $amount = null;
+                              $couponamount = null;
                             }
 
-                            if (isset($_POST['status'])) {
-                              $status = $_POST['status'];
-                            } else {
-                              $status = null;
-                            }
-
-                            _getTranscations($useremail, $amount, $status);
+                            _getCouponTranscation($couponname, $couponamount, '', '');
                           }
+
                           if (!isset($_POST['search'])) {
-                            _getTranscations('', '', '');
+                            _getCouponTranscation('', '' ,$start_from, $record_per_page);
                           }
 
 
@@ -161,16 +146,16 @@ $start_from = ($page - 1) * $record_per_page;
                     $end_loop = $start_loop + 3;
                     if ($page > 1) {
                       echo "<li class='page-item'>
-                        <a href='manage-payment-transcations?page=" . ($page - 1) . "' class='page-link'>Previous</a>
+                        <a href='manage-coupon-transcations?page=" . ($page - 1) . "' class='page-link'>Previous</a>
                       </li>";
                     }
                     for ($i = 1; $i <= $total_pages; $i++) {
                       echo "
-                      <li class='page-item'><a class='page-link' href='manage-payment-transcations?page=" . $i . "'>$i</a></li>";
+                      <li class='page-item'><a class='page-link' href='manage-coupon-transcations?page=" . $i . "'>$i</a></li>";
                     }
                     if ($page <= $end_loop) {
                       echo "<li class='page-item'>
-                        <a class='page-link' href='manage-payment-transcations?page=" . ($page + 1) . "'>Next</a>
+                        <a class='page-link' href='manage-coupon-transcations?page=" . ($page + 1) . "'>Next</a>
                       </li>";
                     } ?>
                   </ul>

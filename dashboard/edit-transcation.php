@@ -249,7 +249,7 @@ if (isset($_POST['submit'])) {
                                     </div>
 
                                     <div class="col-12" style="margin-top: 30px;">
-                                        <button type="submit" name="submit" style="width: 150px;margin-left: -10px" class="btn btn-primary">Update Details</button>
+                                        <button type="submit" name="submit" style="width: 250px;margin-left: -10px" class="btn btn-primary">Update Payment Transaction</button>
                                     </div>
                                 </form>
                             </div>
