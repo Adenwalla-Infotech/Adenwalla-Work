@@ -30,7 +30,7 @@ if (isset($_POST['submit'])) {
     } else {
         $isactive = false;
     }
-    _updateCategory($categoryname,$categoryDesc , $isactive, $_id);
+    _updateCategory($categoryname, $categoryDesc, $isactive, $_id);
 }
 
 ?>
@@ -70,24 +70,26 @@ if (isset($_POST['submit'])) {
                             <div class="card-body">
                                 <h4 class="card-title">Edit Parent (Edit Category)</h4>
                                 <p class="card-description">
-                                Before you start writing about your new topic, it's important to do some research. This will help you to understand the topic better, This will make it easier for you to write about the topic, and it will also make it more likely that people will be interested in reading what you have to say.
+                                    Before you start writing about your new topic, it's important to do some research. This will help you to understand the topic better, This will make it easier for you to write about the topic, and it will also make it more likely that people will be interested in reading what you have to say.
                                 </p>
-                                <form method="POST" action="">
-                                   
+                                <form method="POST" action="" class="needs-validation" novalidate>
+
 
                                     <div class="row g-3">
                                         <div class="col">
                                             <label for="categoryname" class="form-label">Category Name</label>
                                             <input type="text" value="<?php echo _getSingleCategory($_id, '_categoryname'); ?>" class="form-control" placeholder="Category name" aria-label="Category name" id="categoryname" name="categoryname" required>
+                                            <div class="invalid-feedback">Please type correct category name</div>
                                         </div>
-                                       
+
                                         <div class="col">
                                             <label for="categoryDesc" class="form-label">Category Description</label>
                                             <input type="text" value="<?php echo _getSingleCategory($_id, '_categoryDescription'); ?>" class="form-control" placeholder="Category Description" aria-label="Category Description" id="categoryDesc" name="categoryDesc" required>
+                                            <div class="invalid-feedback">Please type correct category description</div>
                                         </div>
                                     </div>
 
-                                   
+
 
                                     <div class="row g-3" style="margin-top: 15px;">
                                         <div class="col" style="margin-top: 10px;">
@@ -119,6 +121,8 @@ if (isset($_POST['submit'])) {
             <!-- page-body-wrapper ends -->
         </div>
         <div class="container"></div>
+        <script src="../includes/_validation.js"></script>
+
 </body>
 <script src="../assets/vendors/js/vendor.bundle.base.js"></script>
 <!-- endinject -->

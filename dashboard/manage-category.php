@@ -21,7 +21,7 @@ session_start();
         if(isset($_GET['del'])){
             $_id = $_GET['id'];
             _deleteCategory($_id);
-          }
+        }
           
 
         $record_per_page = 5;

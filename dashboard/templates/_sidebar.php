@@ -6,6 +6,14 @@
         <span class="menu-title">Dashboard</span>
       </a>
     </li>
+    
+    <li class="nav-item">
+      <a class="nav-link" href="manage-transcations.php">
+        <i class="mdi mdi-cash-100 menu-icon"></i>
+        <span class="menu-title">Transcations</span>
+      </a>
+    </li>
+    
     <li class="nav-item">
       <a class="nav-link" href="edit-profile">
         <i class="ti-settings menu-icon"></i>

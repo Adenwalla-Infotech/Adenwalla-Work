@@ -89,40 +89,45 @@ if(isset($_POST['submit'])){
                   <p class="card-description">
                      If you can't find a solution to your problems in our knowledgebase, you can submit a ticket by selecting the appropriate department below & subject below. Tickets can also be created by simply sending an email. Ticket responses can also be created by replying to the same email.
                   </p>
-                    <form method="POST" action="" enctype="multipart/form-data">
+                    <form method="POST" action="" enctype="multipart/form-data"  class="needs-validation" novalidate>
                         <div class="row g-3">
                             <div class="col-lg-6" style="margin-bottom: 20px;">
                                 <label for="formFile" class="form-label">Tickect Subject</label>
                                 <input type="text" class="form-control" placeholder="Ticket Subject" aria-label="user name" name="subject" required>
+                                <div class="invalid-feedback">Please enter ticket subject correctly</div>
                             </div>
                             <div class="col-lg-6" style="margin-bottom: 20px;">
                                 <label for="formFile" class="form-label">Select Category</label>
                                 <select style="height: 46px;" name="category" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
-                                    <option>Ticket Category</option>
+                                    <option selected disabled value="" >Ticket Category</option>
                                     <option value="0">Help & Support</option>
                                     <option value="1">Sales & Service</option>
                                 </select>
+                                <div class="invalid-feedback">Please select ticket category correctly</div>
                             </div>
                         </div>
                         <div class="row g-3">
                             <div class="col-lg-6" style="margin-bottom: 20px;">
                                 <label for="formFile" class="form-label">Select Status</label>
                                 <select style="height: 46px;" name="status" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
-                                    <option>Ticket Status</option>
+                                    <option selected disabled value="" >Ticket Status</option>
                                     <option value="open">Open</option>
                                     <option value="pending">Pending</option>
                                     <option value="resolved">Resolved</option>
                                     <option value="closed">Closed</option>
                                 </select>
+                                <div class="invalid-feedback">Please select ticket status correctly</div>
                             </div>
                             <div class="col-lg-6" style="margin-bottom: 20px;">
                                 <label for="formFile" class="form-label">Attach File (Optional)</label>
                                 <input class="form-control" name="file" type="file" id="formFile">
+                                <div class="invalid-feedback">Please upload file correctly</div>
                             </div>
                         </div>
                         <div class="row g-3">
                             <div class="col">
                                 <textarea name="message" id="mytextarea">Hello, World!</textarea>
+                                <div class="invalid-feedback">Please enter  description</div>
                             </div>
                         </div>
                         <div class="col-12" style="margin-top: 30px;">
@@ -142,6 +147,9 @@ if(isset($_POST['submit'])){
     <!-- page-body-wrapper ends -->
   </div>
     <div class="container"></div>
+
+    <script src="../includes/_validation.js"></script>
+
 </body>
   <script src="../assets/vendors/js/vendor.bundle.base.js"></script>
   <!-- endinject -->

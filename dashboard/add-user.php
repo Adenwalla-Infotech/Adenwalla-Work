@@ -110,7 +110,7 @@ if (isset($_POST['submit'])) {
                                         <div class="col">
                                             <label for="usertype" class="form-label">Account Type</label>
                                             <select style="height: 46px;" id="usertype" name="usertype" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
-                                                <option>Account Type</option>
+                                                <option   selected disabled value="" >Account Type</option>
                                                 <option value="0">Student</option>
                                                 <option value="1">Teacher</option>
                                                 <option value="2">Site Admin</option>

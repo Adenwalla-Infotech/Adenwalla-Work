@@ -57,12 +57,14 @@ if(isset($_POST['submit'])){
               </div>
               <h4>Hello! let's get started</h4>
               <h6 class="font-weight-light">Sign in to continue.</h6>
-              <form class="pt-3" method="POST" action="">
+              <form class="pt-3 needs-validation" method="POST" action=""   novalidate>
                 <div class="form-group">
-                  <input type="text" name="useremail" class="form-control form-control-lg" id="exampleInputEmail1" placeholder="Email or Phone No">
+                  <input type="text" name="useremail" class="form-control form-control-lg" id="exampleInputEmail1" placeholder="Email or Phone No" required>
+                  <div class="invalid-feedback">Please type correct email</div>
                 </div>
                 <div class="form-group">
-                  <input type="password" name="userpassword" class="form-control form-control-lg" id="exampleInputPassword1" placeholder="Password">
+                  <input type="password" name="userpassword" class="form-control form-control-lg" id="exampleInputPassword1" placeholder="Password" required>
+                  <div class="invalid-feedback">Please type correct password</div>
                 </div>
                 <div class="mt-3">
                   <button class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" name="submit">SIGN IN</button>
@@ -89,6 +91,10 @@ if(isset($_POST['submit'])){
     </div>
     <!-- page-body-wrapper ends -->
   </div>
+
+  <script src="../includes/_validation.js"></script>
+
+
   <!-- container-scroller -->
   <!-- plugins:js -->
   <script src="../assets/vendors/js/vendor.bundle.base.js"></script>

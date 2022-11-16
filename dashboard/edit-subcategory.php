@@ -74,20 +74,22 @@ if (isset($_POST['submit'])) {
                             <div class="card-body">
                                 <h4 class="card-title">Edit Child (Edit Sub-Category)</h4>
                                 <p class="card-description">
-                                Before you start writing about your new topic, it's important to do some research. This will help you to understand the topic better, This will make it easier for you to write about the topic, and it will also make it more likely that people will be interested in reading what you have to say.
+                                    Before you start writing about your new topic, it's important to do some research. This will help you to understand the topic better, This will make it easier for you to write about the topic, and it will also make it more likely that people will be interested in reading what you have to say.
                                 </p>
-                                <form method="POST" action="">
+                                <form method="POST" action="" class="needs-validation" novalidate>
 
 
                                     <div class="row g-3">
                                         <div class="col">
                                             <label for="subcategoryname" class="form-label">Sub Category Name</label>
                                             <input type="text" value="<?php echo _getSingleSubCategory($_id, '_subcategoryname'); ?>" class="form-control" placeholder="Sub Category name" aria-label="Sub Category name" id="subcategoryname" name="subcategoryname" required>
+                                            <div class="invalid-feedback">Please type correct sub-category name</div>
                                         </div>
 
                                         <div class="col">
                                             <label for="subcategoryDesc" class="form-label">Sub Category Description</label>
-                                            <input type="text"  value="<?php echo _getSingleSubCategory($_id, '_subcategorydesc'); ?>" class="form-control" placeholder="Sub Category Description" aria-label="Sub Category description" id="subcategoryDesc" name="subcategoryDesc" required>
+                                            <input type="text" value="<?php echo _getSingleSubCategory($_id, '_subcategorydesc'); ?>" class="form-control" placeholder="Sub Category Description" aria-label="Sub Category description" id="subcategoryDesc" name="subcategoryDesc" required>
+                                            <div class="invalid-feedback">Please type correct sub-category desc</div>
                                         </div>
                                     </div>
 
@@ -106,9 +108,9 @@ if (isset($_POST['submit'])) {
                                         <div class="col">
 
                                             <?php
-                                                $_categoryID = _getSingleSubCategory($_id, '_categoryid');
-                                                // echo $_categoryID;
-                                             _showCategoryOptions($_categoryID)
+                                            $_categoryID = _getSingleSubCategory($_id, '_categoryid');
+                                            // echo $_categoryID;
+                                            _showCategoryOptions($_categoryID)
                                             ?>
                                         </div>
 
@@ -149,6 +151,8 @@ if (isset($_POST['submit'])) {
             <!-- page-body-wrapper ends -->
         </div>
         <div class="container"></div>
+        <script src="../includes/_validation.js"></script>
+
 </body>
 <script src="../assets/vendors/js/vendor.bundle.base.js"></script>
 <!-- endinject -->

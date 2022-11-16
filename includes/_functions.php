@@ -1500,7 +1500,7 @@ function _showCategoryOptions($_categoryID = '')
             <label for="categoryId" class="form-label">Select Category</label>
             <select style="height: 40px;" id="categoryId" name="categoryId" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
 
-                <option>Category</option>
+                <option selected disabled value="">Category</option>
 
                 <?php
                 foreach ($query as $data) {
@@ -1520,6 +1520,7 @@ function _showCategoryOptions($_categoryID = '')
                 ?>
 
             </select>
+            <div class="invalid-feedback">Please select proper category</div>
         <?php
 
 
@@ -1529,8 +1530,8 @@ function _showCategoryOptions($_categoryID = '')
         $query = mysqli_query($conn, $sql);
         if ($query) { ?>
             <label for="categoryId" class="form-label">Select Category</label>
-            <select style="height: 46px;" id="categoryId" name="categoryId" class="form-control form-control-lg" id="exampleFormControlSelect2">
-                <option value=''>Select Category</option>
+            <select style="height: 46px;" id="categoryId" name="categoryId" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
+                <option selected disabled value="">Select Category</option>
                 <?php
                 foreach ($query as $data) {
                 ?>
@@ -1540,6 +1541,7 @@ function _showCategoryOptions($_categoryID = '')
                 ?>
 
             </select>
+            <div class="invalid-feedback">Please select proper sub-category</div>
         <?php
         }
     }
@@ -1561,7 +1563,7 @@ function _showSubCategoryOptions($_subcategoryID = '')
             <label for="subcategoryId" class="form-label">Select Sub-Category</label>
             <select style="height: 40px;" id="subcategoryId" name="subcategoryId" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
 
-                <option> Sub Category</option>
+                <option selected disabled value=""> Sub Category</option>
 
 
                 <?php
@@ -1597,8 +1599,8 @@ function _showSubCategoryOptions($_subcategoryID = '')
 
         ?>
             <label for="subcategoryId" class="form-label">Select Sub-Category</label>
-            <select style="height: 46px;" id="subcategoryId" name="subcategoryId" class="form-control form-control-lg" id="exampleFormControlSelect2">
-                <option value=''> Sub Category</option>
+            <select style="height: 46px;" id="subcategoryId" name="subcategoryId" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
+                <option selected disabled value=""> Sub Category</option>
                 <?php
                 foreach ($query as $data) {
                 ?>
@@ -1628,7 +1630,7 @@ function _createBlog($_blogtitle, $_blogdesc, $_blogcategory, $_blogsubcategory,
     if ($query) {
         $alert = new PHPAlert();
         $alert->success("Blog Created");
-    }else{
+    } else {
         $alert = new PHPAlert();
         $alert->warn("Blog Failed");
     }
@@ -2169,7 +2171,22 @@ function _getMembership($membershipname = '', $limit = '', $startfrom = '')
             <tr>
                 <td><?php echo $data['_id']; ?></td>
                 <td><?php echo $data['_membershipname']; ?></td>
-                <td><?php echo $data['_status']; ?></td>
+                <td>
+                    <label class="checkbox-inline form-switch">
+                        <?php
+                        if ($data['_status'] == 'true') {
+                        ?>
+                            <input disabled role="switch" name="isactive" value="true" checked type="checkbox">
+                        <?php
+                        }
+                        if (!$data['_status']) {
+                        ?>
+                            <input disabled role="switch" name="isactive" value="false" type="checkbox">
+                        <?php
+                        }
+                        ?>
+                    </label>
+                </td>
                 <td>
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
                 </td>
@@ -2263,7 +2280,7 @@ function _updatePricing($_id, $duration, $discount, $discounttype, $discountcurr
     require('_alert.php');
 
 
-    $sql = "UPDATE `tblmembershippricing` SET `_duration`='$duration' , `_benefit`='$discount' , `_benefittype`='$discounttype' , `_benefitcurrency`='$discountcurrency', `_price`='$price' , `_status`='$isactive' WHERE `_id` = $_id";
+    $sql = "UPDATE `tblmembershippricing` SET `_duration`='$duration' , `_benefit`='$discount' , `_benefittype`='$discounttype' , `_benefitcurrency`='$discountcurrency' , `_price`='$price' , `_status`='$isactive' WHERE `_id` = '$_id'";
 
     $query = mysqli_query($conn, $sql);
     if ($query) {
@@ -2276,48 +2293,67 @@ function _updatePricing($_id, $duration, $discount, $discounttype, $discountcurr
 }
 
 
-function _getPricing($id)
+function _getPricing($id, $limit = '', $startfrom = '')
 {
 
     require('_config.php');
 
-    $sql = "SELECT * FROM `tblmembershippricing` WHERE `_membershipid`='$id' ";
+    $sql = "SELECT * FROM `tblmembershippricing` WHERE `_membershipid`='$id' ORDER BY `CreationDate` DESC LIMIT $startfrom, $limit ";
 
     $query = mysqli_query($conn, $sql);
     if ($query) {
         foreach ($query as $data) {
-             ?>
-                <tr>
-                    <td class="row_id" ><?php echo $data['_id']; ?></td>
-                    <td><?php echo $data['_duration']; ?></td>
-                    <td><?php echo $data['_benefit']; ?></td>
-                    <td><?php echo $data['_status']; ?></td>
-                    <td>
-                        <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
-                    </td>
-                    <td>
-                        <?php echo date("M j, Y", strtotime($data['UpdationDate'])); ?>
-                    </td>
-                    <td>
+        ?>
+            <tr>
+                <td class="row_id"><?php echo $data['_id']; ?></td>
+                <td><?php echo $data['_duration']; ?></td>
+                <td><?php echo $data['_benefit']; ?></td>
+                <td><?php echo $data['_benefittype']; ?></td>
+                <td><?php echo $data['_benefitcurrency']; ?></td>
+                <td>
+                    <label class="checkbox-inline form-switch">
+                        <?php
+                        if ($data['_status'] == 'true') {
+                        ?>
+                            <input disabled role="switch" name="isactive" value="true" checked type="checkbox">
+                        <?php
+                        }
+                        if (!$data['_status']) {
+                        ?>
+                            <input disabled role="switch" name="isactive" value="false" type="checkbox">
+                        <?php
+                        }
+                        ?>
+                    </label>
+                </td>
+                <td><?php echo $data['_price']; ?></td>
+                <td>
+                    <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
+                </td>
+                <td>
+                    <?php echo date("M j, Y", strtotime($data['UpdationDate'])); ?>
+                </td>
+                <td>
 
-                        <button type="button" class="btn btn-warning btn-sm font-weight-medium auth-form-btn editPricingButton" >
+                    <button type="button" class="btn btn-warning btn-sm font-weight-medium auth-form-btn editPricingButton">
 
-                            <i class="mdi mdi-pencil-box"></i>
+                        <i class="mdi mdi-pencil-box"></i>
 
-                        </button>
+                    </button>
 
-                        <button type="button" class="btn btn-light btn-sm font-weight-medium auth-form-btn">
-                        <a href='edit-membership?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
-                        </button>
-                        
+                    <button type="button" class="btn btn-light btn-sm font-weight-medium auth-form-btn">
+                        <a href='edit-membership?id=<?php echo $data['_membershipid']; ?>&delid=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
+                    </button>
 
-                    </td>
 
-              </tr>
-        <?php 
+                </td>
+
+            </tr>
+        <?php
         }
     }
 }
+
 
 function _getSinglePricing($id, $param)
 {
@@ -2332,18 +2368,117 @@ function _getSinglePricing($id, $param)
     }
 }
 
-function _deletePricing($id)
+function _deletePricing($id, $locationId)
 {
     require('_config.php');
-    require('_alert.php');
 
     $sql = "DELETE FROM `tblmembershippricing` WHERE `_id` = '$id'";
     $query = mysqli_query($conn, $sql);
     if ($query) {
-        $alert = new PHPAlert();
-        $alert->error("Membership Pricing Deleted Permanently");
+        header("location:edit-membership?id=$locationId");
     }
 }
+
+
+// Transcations
+
+
+function _getTranscations( $useremail='' , $amount='' , $status='')
+{
+
+    require('_config.php');
+
+    if ($useremail) {
+        $sql = "SELECT * FROM `tblpayment` WHERE `_useremail` LIKE '%$useremail%' ";
+    }
+    if ($amount && !$useremail && !$status ) {
+        $sql = "SELECT * FROM `tblpayment` WHERE `_amount`='2000' ";
+    }
+    if ($status && !$useremail && !$amount) {
+        $sql = "SELECT * FROM `tblpayment` WHERE `_status`='$status' ";
+    }
+    if (!$useremail && !$status && !$amount) {
+        $sql = "SELECT * FROM `tblpayment` ORDER BY `CreationDate` ";
+    }
+
+
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        foreach ($query as $data) {
+        ?>
+            <tr>
+                <td><?php echo $data['_id']; ?></td>
+                <td><?php echo $data['_useremail']; ?></td>
+                <td><?php echo $data['_amount']; ?></td>
+                <td><?php echo $data['_currency']; ?></td>
+                <td>
+                    <label class="checkbox-inline form-switch">
+                        <?php
+                        if ($data['_status'] == 'true') {
+                        ?>
+                            <input disabled role="switch" name="isactive" value="true" checked type="checkbox">
+                        <?php
+                        }
+                        if (!$data['_status']) {
+                        ?>
+                            <input disabled role="switch" name="isactive" value="false" type="checkbox">
+                        <?php
+                        }
+                        ?>
+                    </label>
+                </td>
+                <td><?php echo $data['_couponcode']; ?></td>
+                <td>
+                    <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
+                </td>
+                <td>
+                    <?php echo date("M j, Y", strtotime($data['UpdationDate'])); ?>
+                </td>
+                <td>
+                    <a href="edit-transcation.php?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
+                </td>
+            </tr>
+<?php
+        }
+    }
+}
+
+
+
+function _getSingleTranscations($id, $param)
+{
+
+    require('_config.php');
+    $sql = "SELECT * FROM `tblpayment` WHERE `_id` = $id";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        foreach ($query as $data) {
+            return $data[$param];
+        }
+    }
+}
+
+
+
+function _updateTranscation($_id, $useremail, $amount, $couponcode, $currency,  $isactive)
+{
+
+    require('_config.php');
+    require('_alert.php');
+
+
+    $sql = "UPDATE `tblpayment` SET `_useremail`='$useremail' , `_amount`='$amount' , `_currency`='$currency' , `_couponcode`='$couponcode' , `_status`='$isactive' WHERE `_id` = '$_id'";
+
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->success("Transcation Updated");
+    } else {
+        $alert = new PHPAlert();
+        $alert->warn("Something went wrong");
+    }
+}
+
 
 
 

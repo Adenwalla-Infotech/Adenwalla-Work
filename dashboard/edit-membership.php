@@ -32,9 +32,11 @@ if (isset($_POST['submit'])) {
     _updateMembership($membershipname, $membershipdesc, $isactive, $_id);
 }
 
-if (isset($_GET['del'])) {
+
+if(isset($_GET['del'])){
+    $delid = $_GET['delid'];
     $_id = $_GET['id'];
-    _deleteCategory($_id);
+    _deletePricing($delid , $_id);
 }
 
 require('../includes/_config.php');
@@ -67,7 +69,7 @@ if (isset($_POST['addpricing'])) {
 
 if (isset($_POST['editpricing'])) {
 
-    $membershipid = $_id;
+    $pricingId = $_POST['pricingid'];
     $duration = $_POST['duration'];
     $discount = $_POST['discount'];
     $discounttype = $_POST['discounttype'];
@@ -80,7 +82,7 @@ if (isset($_POST['editpricing'])) {
         $isactive = false;
     }
 
-    _addPricing($membershipid, $duration, $discount, $discounttype, $discountcurrency, $price, $isactive);
+    _updatePricing($pricingId , $duration, $discount, $discounttype, $discountcurrency, $price, $isactive);
 }
 
 
@@ -109,7 +111,6 @@ if (isset($_POST['editpricing'])) {
 
 <body>
     <div class="container-scroller">
-        <?php include('templates/_header.php'); ?>
         <!-- partial -->
         <div class="container-fluid page-body-wrapper">
             <?php include('templates/_sidebar.php'); ?>
@@ -123,18 +124,20 @@ if (isset($_POST['editpricing'])) {
                                 <p class="card-description">
                                     Before you start writing about your new topic, it's important to do some research. This will help you to understand the topic better, This will make it easier for you to write about the topic, and it will also make it more likely that people will be interested in reading what you have to say.
                                 </p>
-                                <form method="POST" action="">
+                                <form method="POST" action="" class="needs-validation" novalidate>
 
 
                                     <div class="row g-3">
                                         <div class="col">
                                             <label for="membershipname" class="form-label">Membership Name</label>
                                             <input type="text" value="<?php echo _getSingleMembership($_id, '_membershipname'); ?>" class="form-control" placeholder="Membership name" aria-label="Membership name" id="membershipname" name="membershipname" required>
+                                            <div class="invalid-feedback">Please type correct membership name</div>
                                         </div>
 
                                         <div class="col">
                                             <label for="membershipdesc" class="form-label">Membership Description</label>
                                             <input type="text" value="<?php echo _getSingleMembership($_id, '_membershipdesc'); ?>" class="form-control" placeholder="Membership Description" aria-label="Membership Description" id="membershipdesc" name="membershipdesc" required>
+                                            <div class="invalid-feedback">Please type correct membership desc</div>
                                         </div>
                                     </div>
 
@@ -196,7 +199,10 @@ if (isset($_POST['editpricing'])) {
                                                         <th>Pricing Id</th>
                                                         <th>Duration</th>
                                                         <th>Benefit</th>
+                                                        <th>Benefit Type</th>
+                                                        <th>Benefit Currency</th>
                                                         <th>Status</th>
+                                                        <th>Price</th>
                                                         <th>Created at</th>
                                                         <th>Updated at</th>
                                                         <th>Action</th>
@@ -206,10 +212,10 @@ if (isset($_POST['editpricing'])) {
                                                 <tbody style="text-align: left;margin-left: 30px">
                                                     <?php
                                                     if (isset($_POST['search'])) {
-                                                        _getPricing($_id);
+                                                        _getPricing($_id ,  $record_per_page, $start_from);
                                                     }
                                                     if (!isset($_POST['search'])) {
-                                                        _getPricing($_id);
+                                                        _getPricing($_id ,  $record_per_page, $start_from);
                                                     }
                                                     ?>
                                                 </tbody>
@@ -220,7 +226,7 @@ if (isset($_POST['editpricing'])) {
                                 <nav aria-label="Page navigation example" style="margin-top: 10px;">
                                     <ul class="pagination">
                                         <?php
-                                        $query = mysqli_query($conn, "SELECT * FROM `tblcategory`");
+                                        $query = mysqli_query($conn, "SELECT * FROM `tblmembershippricing`");
                                         $total_records = mysqli_num_rows($query);
                                         $total_pages = ceil($total_records / $record_per_page);
                                         $start_loop = $page;
@@ -231,16 +237,16 @@ if (isset($_POST['editpricing'])) {
                                         $end_loop = $start_loop + 3;
                                         if ($page > 1) {
                                             echo "<li class='page-item'>
-                        <a href='category-manage?page=" . ($page - 1) . "' class='page-link'>Previous</a>
+                        <a href='edit-membership?id=$_id&page=" . ($page - 1) . "' class='page-link'>Previous</a>
                       </li>";
                                         }
                                         for ($i = 1; $i <= $total_pages; $i++) {
                                             echo "
-                      <li class='page-item'><a class='page-link' href='category-manage?page=" . $i . "'>$i</a></li>";
+                      <li class='page-item'><a class='page-link' href='edit-membership?id=$_id&page=" . $i . "'>$i</a></li>";
                                         }
                                         if ($page <= $end_loop) {
                                             echo "<li class='page-item'>
-                        <a class='page-link' href='category-manage?page=" . ($page + 1) . "'>Next</a>
+                        <a class='page-link' href='edit-membership?id=$_id&page=" . ($page + 1) . "'>Next</a>
                       </li>";
                                         } ?>
                                     </ul>
@@ -258,6 +264,8 @@ if (isset($_POST['editpricing'])) {
         </div>
         <div class="container"></div>
 
+        <?php include('templates/_footer.php'); ?>
+
 
 
 
@@ -266,7 +274,7 @@ if (isset($_POST['editpricing'])) {
 
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
-                <form action="" method="post">
+                <form action="" method="post"  class="needs-validation" novalidate>
                     <div class="modal-content" style="padding: 10px;">
                         <div class="modal-header" style="padding: 0px;margin-bottom: 20px;padding-bottom:10px">
                             <h4 class="modal-title fs-5" id="exampleModalLabel">Add Pricing</h4>
@@ -279,34 +287,37 @@ if (isset($_POST['editpricing'])) {
                             <div class="row">
                                 <div class="col-lg-6">
                                     <label for="duration" class="form-label">Duration(Months)</label>
-                                    <select name="duration" id="duration" class="form-control">
+                                    <select name="duration" id="duration" class="form-control" required>
                                         <option selected value="">Select Duration</option>
 
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">6</option>
-                                        <option value="7">7</option>
-                                        <option value="8">8</option>
-                                        <option value="9">9</option>
-                                        <option value="10">10</option>
-                                        <option value="11">11</option>
-                                        <option value="12">12</option>
+                                        <option value="1 month">1 month </option>
+                                        <option value="2 month">2 month </option>
+                                        <option value="3 month">3 month </option>
+                                        <option value="4 month">4 month </option>
+                                        <option value="5 month">5 month </option>
+                                        <option value="6 month">6 month </option>
+                                        <option value="7 month">7 month </option>
+                                        <option value="8 month">8 month </option>
+                                        <option value="9 month">9 month </option>
+                                        <option value="10 month">10 month </option>
+                                        <option value="11 month">11 month </option>
+                                        <option value="12 month">12 month </option>
 
                                     </select>
+                                    <div class="invalid-feedback">Please select correct duration</div>
                                 </div>
                                 <div class="col-lg-6">
                                     <label for="price" class="form-label">Price</label>
-                                    <input type="text" class="form-control" name="price" id="price" placeholder="Price">
+                                    <input type="text" class="form-control" name="price" id="price" placeholder="Price" required>
+                                    <div class="invalid-feedback">Please type correct price</div>
                                 </div>
                             </div>
 
                             <div class="row" style="margin-top: 20px;">
                                 <div class="col-lg-6">
                                     <label for="discount" class="form-label">Discount</label>
-                                    <input type="text" class="form-control" id="discount" name="discount" placeholder="Discount">
+                                    <input type="text" class="form-control" id="discount" name="discount" placeholder="Discount" required>
+                                    <div class="invalid-feedback">Please type correct discount</div>
                                 </div>
 
 
@@ -320,16 +331,18 @@ if (isset($_POST['editpricing'])) {
                             <div class="row" style="margin-top: 20px;">
                                 <div class="col-lg-6">
                                     <label for="discounttype" class="form-label">Discount Type</label>
-                                    <select name="discounttype" id="duration" class="form-control">
-                                        <option selected value="">Discount Type</option>
-                                        <option value="static">Static</option>
-                                        <option value="percentage">Percentage %</option>
+                                    <select name="discounttype" id="duration" class="form-control" required>
+                                        <option selected disabled value="">Discount Type</option>
+                                        <option value="Static">Static</option>
+                                        <option value="Percentage %">Percentage %</option>
                                     </select>
+                                    <div class="invalid-feedback">Please select correct discount type</div>
+
                                 </div>
                                 <div class="col-lg-6">
                                     <label for="discountcurrency" class="form-label">Discount Currency</label>
-                                    <select name="discountcurrency" class="form-control">
-                                        <option selected value="">Select currency</option>
+                                    <select name="discountcurrency" class="form-control" required>
+                                        <option selected disabled value="">Select currency</option>
                                         <option value="USD">America (United States) Dollars – USD</option>
                                         <option value="AFN">Afghanistan Afghanis – AFN</option>
                                         <option value="ALL">Albania Leke – ALL</option>
@@ -454,6 +467,7 @@ if (isset($_POST['editpricing'])) {
                                         <option value="VND">Vietnam Dong – VND</option>
                                         <option value="ZMK">Zambia Kwacha – ZMK</option>
                                     </select>
+                                    <div class="invalid-feedback">Please select correct currency</div>
                                 </div>
                             </div>
 
@@ -475,12 +489,13 @@ if (isset($_POST['editpricing'])) {
 
         <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 
-            <div class="modal-dialog" id="displayData" >
+            <div class="modal-dialog" id="displayData">
 
             </div>
         </div>
 
 
+        <script src="../includes/_validation.js"></script>
 
 
 
