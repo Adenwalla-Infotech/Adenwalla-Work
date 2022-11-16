@@ -6,13 +6,23 @@
         <span class="menu-title">Dashboard</span>
       </a>
     </li>
-    
-    <li class="nav-item">
-      <a class="nav-link" href="manage-transcations.php">
-        <i class="mdi mdi-cash-100 menu-icon"></i>
-        <span class="menu-title">Transcations</span>
-      </a>
-    </li>
+
+    <?php if ($_SESSION['userType'] == 2) { ?>
+      <li class="nav-item">
+          <a class="nav-link" data-toggle="collapse" href="#ui-transactions" aria-expanded="false" aria-controls="ui-basic">
+            <i class="ti-rss menu-icon"></i>
+            <span class="menu-title">Transactions</span>
+            <i class="menu-arrow"></i>
+          </a>
+          <div class="collapse" id="ui-transactions">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item"> <a class="nav-link" href="manage-payment-transcations.php">Payment Record</a></li>
+              <li class="nav-item"> <a class="nav-link" href="manage-coupon-transcations.php">Coupon Record</a></li>
+            </ul>
+          </div>
+      </li>
+    <?php } ?>
+
     
     <li class="nav-item">
       <a class="nav-link" href="edit-profile">

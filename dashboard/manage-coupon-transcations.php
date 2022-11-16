@@ -38,7 +38,7 @@ $start_from = ($page - 1) * $record_per_page;
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Manage Transactions | <?php echo _siteconfig('_sitetitle'); ?></title>
+  <title>Manage Payment Transactions | <?php echo _siteconfig('_sitetitle'); ?></title>
   <!-- plugins:css -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@mdi/font@6.9.96/css/materialdesignicons.min.css">
   <link rel="stylesheet" href="../assets/vendors/feather/feather.css">
@@ -66,7 +66,7 @@ $start_from = ($page - 1) * $record_per_page;
           <div class="col-12 grid-margin stretch-card">
             <div class="card">
               <div class="card-body">
-                <h4 class="card-title">Manage Transcations</h4>
+                <h4 class="card-title">Manage Payment Transcations</h4>
                 <p class="card-description">
                   Web Help Desk uses tickets to manage service requests. These tickets can be initiated through email, created in the application, and imported from another application. Techs, admins, and clients can also manage tickets through email or through the application in a web browser.
                 </p>
@@ -83,7 +83,7 @@ $start_from = ($page - 1) * $record_per_page;
                       <select style="height: 40px;" name="status" class="form-control form-control-sm" id="exampleFormControlSelect2" required>
                         <option>Status</option>
                         <option value="true">True</option>
-                        <option value="<?php echo null; ?>" >False</option>
+                        <option value="">False</option>
                       </select>
                     </div>
                     <div class="col-lg-2" style="margin-bottom: 20px;">
@@ -147,7 +147,34 @@ $start_from = ($page - 1) * $record_per_page;
                     </div>
                   </div>
                 </div>
-           
+                <nav aria-label="Page navigation example" style="margin-top: 30px;">
+                  <ul class="pagination">
+                    <?php
+                    $query = mysqli_query($conn, "SELECT * FROM `tblpayment`");
+                    $total_records = mysqli_num_rows($query);
+                    $total_pages = ceil($total_records / $record_per_page);
+                    $start_loop = $page;
+                    $difference = $total_pages - $page;
+                    if ($difference <= 4) {
+                      $start_loop = $total_pages - 4;
+                    }
+                    $end_loop = $start_loop + 3;
+                    if ($page > 1) {
+                      echo "<li class='page-item'>
+                        <a href='manage-payment-transcations?page=" . ($page - 1) . "' class='page-link'>Previous</a>
+                      </li>";
+                    }
+                    for ($i = 1; $i <= $total_pages; $i++) {
+                      echo "
+                      <li class='page-item'><a class='page-link' href='manage-payment-transcations?page=" . $i . "'>$i</a></li>";
+                    }
+                    if ($page <= $end_loop) {
+                      echo "<li class='page-item'>
+                        <a class='page-link' href='manage-payment-transcations?page=" . ($page + 1) . "'>Next</a>
+                      </li>";
+                    } ?>
+                  </ul>
+                </nav>
               </div>
             </div>
           </div>
