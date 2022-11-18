@@ -75,8 +75,12 @@ if (isset($_POST['edit'])) {
                             
                             <div class="row" style="margin-top: 20px;">
                                 <div class="col-lg-6">
-                                    <label for="id" class="form-label">Discount</label>
-                                    <input type="text" class="form-control" id="id" value="'.$data['_id'].'" name="pricingid" required>
+                                    <label for="discounttype" class="form-label">Discount Type</label>
+                                    <select name="discounttype" id="duration" class="form-control">
+                                        <option selected value="">Discount Type</option>
+                                        <option value="Fixed">Fixed</option>
+                                        <option value="Variable">Percentage</option>
+                                    </select>
                                 </div>
                             </div>
 

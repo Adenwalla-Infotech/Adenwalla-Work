@@ -331,10 +331,10 @@ if (isset($_POST['editpricing'])) {
                             <div class="row" style="margin-top: 20px;">
                                 <div class="col-lg-6">
                                     <label for="discounttype" class="form-label">Discount Type</label>
-                                    <select name="discounttype" id="duration" class="form-control" required>
-                                        <option selected disabled value="">Discount Type</option>
-                                        <option value="Static">Static</option>
-                                        <option value="Percentage %">Percentage %</option>
+                                    <select name="discounttype" id="duration" class="form-control">
+                                        <option selected value="">Discount Type</option>
+                                        <option value="Fixed">Fixed</option>
+                                        <option value="Variable">Percentage</option>
                                     </select>
                                     <div class="invalid-feedback">Please select correct discount type</div>
 

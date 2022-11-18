@@ -258,6 +258,10 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_useremail` varchar(255) NULL,
                 `_userphone` varchar(255) NULL,
                 `_usersite` varchar(255) NULL,
+                `_usermembership` varchar(255) NULL,
+                `_userpricing` varchar(255) NULL,
+                `_usermemstart` datetime NULL,
+                `_usermemsleft` varchar(255) NULL,
                 `_userlongitude` varchar(50) NULL,
                 `_userlatitude` varchar(50) NULL,
                 `_userbio` varchar(500) NULL,
@@ -1956,14 +1960,12 @@ function _gettotal($sub, $currency, $discount)
             }
         }
 
-        // get user email id
-        // check membership avaiable
-
-        // $ discount = memberpricing
-
         $final = $sub - $discount; // if not put it in else
 
         $arrtotal = $final + array_sum($tax);
+        if($arrtotal < 0){
+            $arrtotal = 0;
+        }
         return $arrtotal;
     }
 }
@@ -2111,13 +2113,7 @@ function _payment($amount, $currency, $coupon = '')
     $sql = "INSERT INTO `tblpayment`(`_useremail`, `_amount`, `_currency`, `_status`, `_couponcode`) VALUES ('$useremail','$amount','$currency','pending','$coupon')";
     $query = mysqli_query($conn, $sql);
     if ($query) {
-        $sql = "SELECT MAX(id) FROM `tblpayment`";
-        $query = mysqli_query($conn, $query);
-        if ($query) {
-            foreach ($query as $data) {
-                return $data['_id'];
-            }
-        }
+        return $conn->insert_id;
     }
 }
 
@@ -2125,6 +2121,7 @@ function _updatepayment($id, $status)
 {
     require('_config.php');
     $sql = "UPDATE `tblpayment` SET `_status`='$status' WHERE `_id` = $id";
+    echo $sql;
     $query = mysqli_query($conn, $sql);
     if ($query) {
         2 + 2;
@@ -2249,7 +2246,59 @@ function _deleteMembership($id)
     }
 }
 
+function checkmembership($amount,$currency){
+    require('_config.php');
+    $useremail = $_SESSION['userEmailId'];
+    $sql = "SELECT * FROM `tblusers` WHERE `_useremail` = '$useremail'";
+    $query = mysqli_query($conn,$sql);
+    foreach($query as $data){
+        $membership = $data['_usermembership'];
+        $pricing = $data['_userpricing'];
+    }
+    if($membership){
+        $sql = "SELECT * FROM `tblmembershippricing` WHERE `_id` = $pricing";
+        $query = mysqli_query($conn,$sql);
+        if($query){
+            foreach($query as $data){
+               $type = $data['_benefittype'];
+               $benifit = $data['_benefit'];
+            }
+            if($type == 'Variable'){
+                $discount = ($benifit / 100) * $amount;
+                return $discount;
+            }else{
+                return _conversion($benifit,$currency);
+            }
+        }
+    }else{
+        return false;
+    }
+}
 
+function _allmemberships(){
+    require('_config.php');
+    $sql = "SELECT * FROM `tblmembership` WHERE `_status` = 'true'";
+    $query = mysqli_query($conn,$sql);
+    if($query){
+        foreach($query as $data){ ?>
+            <div class="col-lg-4">
+                    <div class="price-box">
+                        <div class="">
+                        	<div class="price-label basic"><?php echo $data['_membershipname']; ?></div>
+                        	<div class="price">$ 5.99</div>
+                        	<div class="price-info">Per Month, Inlc GST.</div>
+                        </div>
+                        <div class="info">
+                            <ul>
+                                <?php echo $data['_membershipdesc']; ?>
+                            </ul>
+                            <a href="#" class="plan-btn">Join Basic Plan</a>
+                        </div>
+                    </div>
+                </div>
+        <?php }
+    }
+}
 
 // Membership Pricing
 
@@ -2387,17 +2436,17 @@ function _getTranscations($useremail = '', $amount = '', $status = '', $startfro
 {
 
     require('_config.php');
-
-    if ($useremail) {
+    echo $amount;
+    if ($useremail != '') {
         $sql = "SELECT * FROM `tblpayment` WHERE `_useremail` LIKE '%$useremail%' ";
     }
-    if ($amount && !$useremail && !$status) {
-        $sql = "SELECT * FROM `tblpayment` WHERE `_amount`='2000' ";
+    if ($amount != '') {
+        $sql = "SELECT * FROM `tblpayment` WHERE `_amount`='$amount' ";
     }
-    if ($status && !$useremail && !$amount) {
+    if ($status != '' && $useremail =='' && $amount == '') {
         $sql = "SELECT * FROM `tblpayment` WHERE `_status`='$status' ";
     }
-    if (!$useremail && !$status && !$amount) {
+    if ($useremail == '' && $status =='' && $amount == '') {
         $sql = "SELECT * FROM `tblpayment` ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
     }
 
@@ -2406,26 +2455,13 @@ function _getTranscations($useremail = '', $amount = '', $status = '', $startfro
     if ($query) {
         foreach ($query as $data) {
         ?>
-            <tr>
+            <tr style="margin-bottom:-25px">
                 <td><?php echo $data['_id']; ?></td>
                 <td><?php echo $data['_useremail']; ?></td>
                 <td><?php echo $data['_amount']; ?></td>
                 <td><?php echo $data['_currency']; ?></td>
                 <td>
-                    <label class="checkbox-inline form-switch">
-                        <?php
-                        if ($data['_status'] == 'true') {
-                        ?>
-                            <input disabled role="switch" name="isactive" value="true" checked type="checkbox">
-                        <?php
-                        }
-                        if (!$data['_status']) {
-                        ?>
-                            <input disabled role="switch" name="isactive" value="false" type="checkbox">
-                        <?php
-                        }
-                        ?>
-                    </label>
+                    <?php echo $data['_status']; ?>
                 </td>
                 <td><?php echo $data['_couponcode']; ?></td>
                 <td>
@@ -2439,7 +2475,7 @@ function _getTranscations($useremail = '', $amount = '', $status = '', $startfro
                 </td>
             </tr>
         <?php
-        }
+        } ?> <br> <?php
     }
 }
 
