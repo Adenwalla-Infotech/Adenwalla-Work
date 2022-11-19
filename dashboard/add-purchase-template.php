@@ -22,18 +22,12 @@ require('../includes/_functions.php');
 
 if (isset($_POST['submit'])) {
 
-    $membershipname = $_POST['membershipname'];
-    $membershipdesc = $_POST['membershipdesc'];
+    $templateName = '_purchasetemplate';
+    $templateCode = $_POST['purchasecode'];
 
-
-    if (isset($_POST['isactive'])) {
-        $isactive = $_POST['isactive'];
-    } else {
-        $isactive = false;
-    }
-
-    _createMembership($membershipname, $membershipdesc,$isactive);
+    _updateEmailTemplate($templateName, $templateCode);
 }
+
 
 ?>
 <!DOCTYPE html>
@@ -42,7 +36,7 @@ if (isset($_POST['submit'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Add Membership | <?php echo _siteconfig('_sitetitle'); ?></title>
+    <title>Add Purchase Template | <?php echo _siteconfig('_sitetitle'); ?></title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@mdi/font@6.9.96/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../assets/vendors/feather/feather.css">
@@ -51,6 +45,12 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet" href="../assets/vendors/css/vendor.bundle.base.css">
     <!-- endinject -->
     <!-- Plugin css for this page -->
+    <script src="../assets/plugins/tinymce/js/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '#mytextarea'
+        });
+    </script>
     <!-- End plugin css for this page -->
     <!-- inject:css -->
     <link rel="stylesheet" href="../assets/css/vertical-layout-light/style.css">
@@ -70,52 +70,35 @@ if (isset($_POST['submit'])) {
                     <?php if ($_SESSION['forgot_success']) { ?>
                         <div id="liveAlertPlaceholder">
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                <strong>Membership Created!</strong> New Membership created successfully.
+                                <strong>User Created!</strong> New user created successfully.
                             </div>
                         </div>
                     <?php } ?>
+
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Create Membership</h4>
-                                <p class="card-description">
-                                    Before you start writing about your new topic, it's important to do some research. This will help you to understand the topic better, This will make it easier for you to write about the topic, and it will also make it more likely that people will be interested in reading what you have to say.
-                                </p>
-                                <form method="POST" action="" class="needs-validation" novalidate>
+                                <h4 class="card-title">Purchase Template Code</h4>
+                                <form method="POST" action="" enctype="multipart/form-data" class="needs-validation" novalidate>
 
                                     <div class="row g-3">
                                         <div class="col">
-                                            <label for="membershipname" class="form-label">Membership Name</label>
-                                            <input type="text" class="form-control" placeholder="Membership name" aria-label="Membership name" id="membershipname" name="membershipname" required>
-                                            <div class="invalid-feedback">Please type correct membership name</div>
-                                        </div>
-                                        <div class="col">
-                                            <label for="membershipdesc" class="form-label">Membership Description</label>
-                                            <input type="text" class="form-control" placeholder="Membership Description" aria-label="Membership Description" id="membershipdesc" name="membershipdesc" required>
-                                            <div class="invalid-feedback">Please type correct membership desc</div>
+                                            <textarea name="purchasecode" id="mytextarea"><?php echo _getSingleEmailTemplate('_purchasetemplate');  ?></textarea>
+                                            <div class="invalid-feedback">Please enter code</div>
                                         </div>
                                     </div>
-
-                                    <div class="row g-3" style="margin-top: 10px;">
-
-                                        <div class="col" style="margin-top: 10px;">
-                                            <label class="checkbox-inline" style="margin-left: 5px;">
-                                                <input name="isactive" value="true" type="checkbox"> &nbsp; Is Active
-                                            </label>
-                                        </div>
-
-                                    </div>
-
-
                                     <div class="col-12" style="margin-top: 30px;">
-                                        <button type="submit" name="submit" style="width: 200px;margin-left: -10px" class="btn btn-primary">Create Membership</button>
-                                        
+                                        <button type="submit" name="submit" style="width: 150px;margin-left: -10px" class="btn btn-primary">Update</button>
                                     </div>
 
                                 </form>
                             </div>
                         </div>
                     </div>
+
+
+                    
+
                     <!-- content-wrapper ends -->
                     <!-- partial:partials/_footer.html -->
                     <?php include('templates/_footer.php'); ?>
@@ -126,13 +109,13 @@ if (isset($_POST['submit'])) {
             <!-- page-body-wrapper ends -->
         </div>
         <div class="container"></div>
+
         <script src="../includes/_validation.js"></script>
 
 </body>
 <script src="../assets/vendors/js/vendor.bundle.base.js"></script>
 <!-- endinject -->
 <!-- Plugin js for this page -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 <!-- End plugin js for this page -->
 <!-- inject:js -->
 <script src="../assets/js/off-canvas.js"></script>
@@ -143,4 +126,3 @@ if (isset($_POST['submit'])) {
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 
 </html>
-

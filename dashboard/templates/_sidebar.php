@@ -107,36 +107,22 @@
         </div>
       </li>
     <?php } ?>
-    <?php if ($_SESSION['userType'] == 2) { ?>
-      <li class="nav-item">
-        <a class="nav-link" data-toggle="collapse" href="#ui-markups" aria-expanded="false" aria-controls="ui-basic">
-          <i class="mdi mdi-database menu-icon"></i>
-          <span class="menu-title">All Markups</span>
+
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#ui-template" aria-expanded="false" aria-controls="ui-basic">
+          <i class="mdi mdi-security menu-icon"></i>
+          <span class="menu-title">Templates</span>
           <i class="menu-arrow"></i>
         </a>
-        <div class="collapse" id="ui-markups">
+        <div class="collapse" id="ui-template">
           <ul class="nav flex-column sub-menu">
-            <li class="nav-item"> <a class="nav-link" href="manage-currency">Currency Markup</a></li>
-            <li class="nav-item"> <a class="nav-link" href="manage-tax">Fee Markup</a></li>
-            <li class="nav-item"> <a class="nav-link" href="manage-coupon">Offer Coupon</a></li>
+            <li class="nav-item"> <a class="nav-link" href="add-purchase-template.php">Purchase Template</a></li>
+            <li class="nav-item"> <a class="nav-link" href="add-reminder-template.php">Reminder Template</a></li>
+            <li class="nav-item"> <a class="nav-link" href="add-lecture-template.php">Lecture Template</a></li>
+            <li class="nav-item"> <a class="nav-link" href="add-signup-template.php">Signup Template</a></li>
           </ul>
         </div>
       </li>
-    <?php } ?>
-    <?php if ($_SESSION['userType'] == 2) { ?>
-      <li class="nav-item">
-        <a class="nav-link" data-toggle="collapse" href="#ui-membership" aria-expanded="false" aria-controls="ui-basic">
-          <i class="mdi mdi-wallet-membership menu-icon"></i>
-          <span class="menu-title">Membership</span>
-          <i class="menu-arrow"></i>
-        </a>
-        <div class="collapse" id="ui-membership">
-          <ul class="nav flex-column sub-menu">
-            <li class="nav-item"> <a class="nav-link" href="add-membership">Add Membership</a></li>
-            <li class="nav-item"> <a class="nav-link" href="manage-membership">Manage Membership</a></li>
-          </ul>
-        </div>
-      </li>
-    <?php } ?>
+
   </ul>
 </nav>

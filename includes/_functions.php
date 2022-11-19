@@ -444,29 +444,29 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
 
+
             $membership_table = "CREATE TABLE IF NOT EXISTS `tblmembership` (
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
                 `_membershipname` varchar(255) NOT NULL,
                 `_membershipdesc` varchar(255) NOT NULL,
+                `_price` varchar(55) NOT NULL,
+                `_benefit` varchar(55) NOT NULL, 
+                `_benefittype` varchar(55) NOT NULL, 
+                `_duration` varchar(55) NOT NULL,
                 `_status` varchar(255) NOT NULL,
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
 
-            $membership_pricing_table = "CREATE TABLE IF NOT EXISTS `tblmembershippricing` (
+            $templates = "CREATE TABLE IF NOT EXISTS `tblemailtemplates` (
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
-                `_membershipid` varchar(55) NOT NULL,
-                `_duration` varchar(55) NOT NULL,
-                `_benefit` varchar(55) NOT NULL, 
-                `_benefittype` varchar(55) NOT NULL, 
-                `_benefitcurrency` varchar(55) NOT NULL,
-                `_price` varchar(55) NOT NULL,
-                `_status` varchar(55) NOT NULL,
+                `_purchasetemplate` varchar(55) NOT NULL,
+                `_remindertemplate` varchar(55) NOT NULL,
+                `_lecturetemplate` varchar(55) NOT NULL,
+                `_signuptemplate` varchar(55) NOT NULL,
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
-
-            $tables = [$admin_table, $sms_config, $email_config, $site_config, $payment_config, $tickets_table, $ticket_comment, $contact_table, $category_table, $subcategory_table, $blog_table, $currency_table, $tax_table, $payment_trans, $coupon_table, $coupon_trans, $membership_table, $membership_pricing_table];
 
             foreach ($tables as $k => $sql) {
                 $query = @$temp_conn->query($sql);
@@ -489,7 +489,9 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
 
                 $payment_data = "INSERT INTO `tblpaymentconfig`(`_suppliername`, `_apikey`, `_companyname`, `_supplierstatus`) VALUES ('Razorpay','12345678901234567890','Adenwalla & Co.','true')";
 
-                $data = [$admin_data, $sms_data, $email_data, $site_data, $payment_data];
+                $template_data = "INSERT INTO `tblemailtemplates`(`_purchasetemplate`, `_remindertemplate`, `_lecturetemplate`, `_signuptemplate`) VALUES ('Your Html Code','Your Html Code','Your Html Code','Your Html Code')";
+
+                $data = [$admin_data, $sms_data, $email_data, $site_data, $payment_data, $template_data];
 
                 foreach ($data as $k => $sql) {
                     $query = @$temp_conn->query($sql);
@@ -2217,15 +2219,15 @@ function _getSingleMembership($id, $param)
 }
 
 
-
-function _updateMembership($membershipname, $membershipdesc, $status, $_id)
+function _updateMembership($_id,$membershipname, $membershipdesc, $duration, $discount, $discounttype, $price, $isactive)
 {
 
     require('_config.php');
     require('_alert.php');
 
 
-    $sql = "UPDATE `tblmembership` SET `_membershipname`='$membershipname' , `_membershipdesc`='$membershipdesc' , `_status`='$status' WHERE `_id` = $_id";
+    $sql = "UPDATE `tblmembership` SET `_membershipname`='$membershipname' , `_membershipdesc`='$membershipdesc' , `_duration`='$duration' , `_benefit`='$discount' , `_benefittype`='$discounttype' , `_price`='$price' , `_status`='$isactive' WHERE `_id` = $_id";
+
     $query = mysqli_query($conn, $sql);
     if ($query) {
         $alert = new PHPAlert();
@@ -2481,7 +2483,7 @@ function _updateTranscation($_id, $useremail, $amount, $couponcode, $currency,  
 
 
 
-function _getCouponTranscation($couponname='', $couponamount='', $startfrom = '', $limit = '')
+function _getCouponTranscation($couponname = '', $couponamount = '', $startfrom = '', $limit = '')
 {
 
     require('_config.php');
@@ -2495,7 +2497,7 @@ function _getCouponTranscation($couponname='', $couponamount='', $startfrom = ''
         $sql = "SELECT * FROM `tblcoupontrans` WHERE `_couponamount` LIKE '%$couponamount%' ";
     }
 
-    if($couponname == '' && $couponamount == ''){
+    if ($couponname == '' && $couponamount == '') {
         $sql = "SELECT * FROM `tblcoupontrans` ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
     }
 
@@ -2519,7 +2521,7 @@ function _getCouponTranscation($couponname='', $couponamount='', $startfrom = ''
                     <a href="edit-coupon-transcation.php?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
                 </td>
             </tr>
-<?php
+            <?php
         }
     }
 }
@@ -2558,6 +2560,58 @@ function _updateCouponTranscation($_id, $couponname, $couponamount, $useremail)
 }
 
 
+
+function _getproduct($id,$type){
+    require('_config.php');
+    if($type == 'membership'){
+        $sql = "SELECT * FROM `tblmembership` WHERE `_id` = $id";
+        $query = mysqli_query($conn,$sql);
+        if($query){
+            foreach($query as $data){ ?>
+                <li style="border:none;" class="list-group-item d-flex justify-content-between lh-condensed">
+                    <div>
+                        <h6 class="my-0"><?php echo $data['_membershipname']; ?></h6>
+                        <small class="text-muted">Membership Purchase For <?php echo $data['_duration']; ?> Month.</small>
+                    </div>
+                    <span class="text-muted">INR&nbsp;<?php echo $data['_price']; ?></span>
+                </li>
+            <?php }
+        }
+    }
+}
+
+
+function _updateEmailTemplate($templateName, $templateCode)
+{
+
+    require('_config.php');
+
+
+    $sql = "UPDATE `tblemailtemplates` SET `$templateName`='$templateCode' WHERE `_id` = 2 ";
+
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        header("location:");
+    } else {
+        $alert = new PHPAlert();
+        $alert->warn("Something went wrong");
+    }
+}
+
+
+
+function _getSingleEmailTemplate($templateName){
+
+    require('_config.php');
+    $sql = "SELECT * FROM `tblemailtemplates` WHERE `_id` = 2 ";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        foreach ($query as $data) {
+            return $data[$templateName];
+        }
+    }
+
+}
 
 
 ?>

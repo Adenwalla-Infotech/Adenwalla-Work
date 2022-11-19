@@ -14,48 +14,22 @@ if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['is
     }
 }
 
-require('../includes/_functions.php');
+if (isset($_SESSION['forgot_success']) || !isset($_SESSION['forgot_success'])) {
+    $_SESSION['forgot_success'] = false;
+}
+
 
 $_id = $_GET['id'];
 
+require('../includes/_functions.php');
 
 if (isset($_POST['submit'])) {
+
     $membershipname = $_POST['membershipname'];
     $membershipdesc = $_POST['membershipdesc'];
-
-    if (isset($_POST['isactive'])) {
-        $isactive = $_POST['isactive'];
-    } else {
-        $isactive = false;
-    }
-
-    _updateMembership($membershipname, $membershipdesc, $isactive, $_id);
-}
-
-
-if(isset($_GET['del'])){
-    $delid = $_GET['delid'];
-    $_id = $_GET['id'];
-    _deletePricing($delid , $_id);
-}
-
-require('../includes/_config.php');
-$record_per_page = 5;
-$page = '';
-if (isset($_GET["page"])) {
-    $page = $_GET["page"];
-} else {
-    $page = 1;
-}
-$start_from = ($page - 1) * $record_per_page;
-
-if (isset($_POST['addpricing'])) {
-
-    $membershipid = $_id;
     $duration = $_POST['duration'];
     $discount = $_POST['discount'];
     $discounttype = $_POST['discounttype'];
-    $discountcurrency = $_POST['discountcurrency'];
     $price = $_POST['price'];
 
     if (isset($_POST['isactive'])) {
@@ -64,27 +38,8 @@ if (isset($_POST['addpricing'])) {
         $isactive = false;
     }
 
-    _addPricing($membershipid, $duration, $discount, $discounttype, $discountcurrency, $price, $isactive);
+    _updateMembership($_id,$membershipname, $membershipdesc, $duration, $discount, $discounttype, $price, $isactive);
 }
-
-if (isset($_POST['editpricing'])) {
-
-    $pricingId = $_POST['pricingid'];
-    $duration = $_POST['duration'];
-    $discount = $_POST['discount'];
-    $discounttype = $_POST['discounttype'];
-    $discountcurrency = $_POST['discountcurrency'];
-    $price = $_POST['price'];
-
-    if (isset($_POST['isactive'])) {
-        $isactive = $_POST['isactive'];
-    } else {
-        $isactive = false;
-    }
-
-    _updatePricing($pricingId , $duration, $discount, $discounttype, $discountcurrency, $price, $isactive);
-}
-
 
 ?>
 <!DOCTYPE html>
@@ -93,7 +48,7 @@ if (isset($_POST['editpricing'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Edit <?php echo _getSingleMembership($_id, '_membershipname'); ?> | <?php echo _siteconfig('_sitetitle'); ?></title>
+    <title>Edit Membership | <?php echo _getSingleMembership($_id, '_membershipname'); ?></title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@mdi/font@6.9.96/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../assets/vendors/feather/feather.css">
@@ -102,6 +57,12 @@ if (isset($_POST['editpricing'])) {
     <link rel="stylesheet" href="../assets/vendors/css/vendor.bundle.base.css">
     <!-- endinject -->
     <!-- Plugin css for this page -->
+    <script src="../assets/plugins/tinymce/js/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '#mytextarea'
+        });
+    </script>
     <!-- End plugin css for this page -->
     <!-- inject:css -->
     <link rel="stylesheet" href="../assets/css/vertical-layout-light/style.css">
@@ -111,59 +72,120 @@ if (isset($_POST['editpricing'])) {
 
 <body>
     <div class="container-scroller">
+        <?php include('templates/_header.php'); ?>
         <!-- partial -->
         <div class="container-fluid page-body-wrapper">
             <?php include('templates/_sidebar.php'); ?>
             <!-- partial -->
             <div class="main-panel">
                 <div class="content-wrapper">
+                    <?php if ($_SESSION['forgot_success']) { ?>
+                        <div id="liveAlertPlaceholder">
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <strong>Membership Updated!</strong> Membership Updated successfully.
+                            </div>
+                        </div>
+                    <?php } ?>
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Edit Membership</h4>
+                                <h4 class="card-title">Update Membership</h4>
                                 <p class="card-description">
                                     Before you start writing about your new topic, it's important to do some research. This will help you to understand the topic better, This will make it easier for you to write about the topic, and it will also make it more likely that people will be interested in reading what you have to say.
                                 </p>
                                 <form method="POST" action="" class="needs-validation" novalidate>
 
-
                                     <div class="row g-3">
-                                        <div class="col">
+                                        <div class="col-lg-6">
                                             <label for="membershipname" class="form-label">Membership Name</label>
-                                            <input type="text" value="<?php echo _getSingleMembership($_id, '_membershipname'); ?>" class="form-control" placeholder="Membership name" aria-label="Membership name" id="membershipname" name="membershipname" required>
+                                            <input type="text" class="form-control" placeholder="Membership name" value="<?php echo _getSingleMembership($_id, '_membershipname'); ?>" aria-label="Membership name" id="membershipname" name="membershipname" required>
                                             <div class="invalid-feedback">Please type correct membership name</div>
                                         </div>
+                                        <div class="col-lg-6">
+                                            <label for="duration" class="form-label">Duration(Months)</label>
+                                            <select name="duration" id="duration" class="form-control" required>
+                                                <?php
+                                                $duration  = _getSingleMembership($_id, '_duration');
 
-                                        <div class="col">
-                                            <label for="membershipdesc" class="form-label">Membership Description</label>
-                                            <input type="text" value="<?php echo _getSingleMembership($_id, '_membershipdesc'); ?>" class="form-control" placeholder="Membership Description" aria-label="Membership Description" id="membershipdesc" name="membershipdesc" required>
-                                            <div class="invalid-feedback">Please type correct membership desc</div>
+                                                for ($i = 1; $i <= 12; $i++) {
+
+                                                    if ($duration == $i) {
+                                                ?>
+                                                        <option value="<?php echo $duration ?>" selected> <?php echo $duration ?> month </option>
+                                                    <?php
+                                                    } else {
+                                                    ?>
+                                                        <option value="<?php echo $i ?>"> <?php echo $i ?> month </option>
+                                                <?php
+                                                    }
+                                                }
+                                                ?>
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row g-3" style="margin-top: 10px;">
+                                        <div class="col-lg-6">
+                                            <label for="price" class="form-label">Membership Price</label>
+                                            <input type="number" class="form-control" name="price" value="<?php echo _getSingleMembership($_id, '_price'); ?>" id="price" placeholder="Price" required>
+                                            <div class="invalid-feedback">Please type correct price</div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <label for="discounttype" class="form-label">Discount Type</label>
+                                            <select name="discounttype" id="duration" class="form-control">
+
+                                                <?php
+
+                                                $benetype = _getSingleMembership($_id, '_benefittype');
+
+                                                if ($benetype == 'Fixed') {
+                                                ?>
+                                                    <option selected value="Fixed">Fixed</option>
+                                                    <option value="Variable">Percentage</option>
+                                                <?php
+                                                }
+                                                else{
+                                                ?>
+                                                    <option value="Fixed">Fixed</option>
+                                                    <option selected value="Variable">Percentage</option>
+                                                <?php
+                                                }
+
+                                                ?>
+                                            </select>
+                                            <div class="invalid-feedback">Please select correct discount type</div>
                                         </div>
                                     </div>
 
-
-                                    <div class="row g-3" style="margin-top: 15px;">
-                                        <div class="col" style="margin-top: 10px;">
-                                            <label class="checkbox-inline" style="margin-left: 5px;">
+                                    <div class="row g-3" style="margin-top: 10px;">
+                                        <div class="col-lg-6">
+                                            <label for="discount" class="form-label">Discount</label>
+                                            <input type="text" class="form-control" id="discount" name="discount" placeholder="Discount" value="<?php echo _getSingleMembership($_id, '_benefit'); ?>" required>
+                                            <div class="invalid-feedback">Please type correct discount</div>
+                                        </div>
+                                        <div class="col" style="margin-top: 40px;">
+                                            <label class="checkbox-inline" style="margin-left: 20px;">
                                                 <?php
                                                 if (_getSingleMembership($_id, '_status') == true) { ?><input name="isactive" value="true" checked type="checkbox">&nbsp;Is Active<?php }
                                                                                                                                                                                 if (_getSingleMembership($_id, '_status') != true) { ?><input name="isactive" value="true" type="checkbox">&nbsp;Is Active<?php }
-                                                                                                                                                                                                                                                                                                            ?>
+                                                                                                                                                                            ?>
                                             </label>
                                         </div>
                                     </div>
-
-
-
-                                    <div class="col-12" style="margin-top: 30px;">
-                                        <button type="submit" name="submit" style="width: 180px;margin-left: -10px" class="btn btn-primary">Update Membership</button>
-                                        <button type="button" class="btn btn-primary btn-sm font-weight-medium auth-form-btn" style="height:40px; float: right;  " data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="white" style="width: 15px;" viewBox="0 0 448 512">
-                                                <!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) -->
-                                                <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
-                                            </svg>&nbsp;&nbsp;Add Pricing
-                                        </button>
+                                    <div class="row" style="margin-top: 30px;">
+                                        <div class="col">
+                                            <label for="membershipdesc" class="form-label">Membership Description</label>
+                                            <textarea name="membershipdesc" id="mytextarea" style="width:100%" rows="10">
+                                            <?php echo _getSingleMembership($_id, '_membershipdesc'); ?>
+                                        </textarea>
+                                            <div class="invalid-feedback">Please type correct membership desc</div>
+                                        </div>
                                     </div>
+                                    <div class="col-12" style="margin-top: 30px;">
+                                        <button type="submit" name="submit" style="width: 200px;margin-left: -10px" class="btn btn-primary">Update Membership</button>
+
+                                    </div>
+
                                 </form>
                             </div>
                         </div>
@@ -212,10 +234,8 @@ if (isset($_POST['editpricing'])) {
                                                 <tbody style="text-align: left;margin-left: 30px">
                                                     <?php
                                                     if (isset($_POST['search'])) {
-                                                        _getPricing($_id ,  $record_per_page, $start_from);
                                                     }
                                                     if (!isset($_POST['search'])) {
-                                                        _getPricing($_id ,  $record_per_page, $start_from);
                                                     }
                                                     ?>
                                                 </tbody>
@@ -290,18 +310,18 @@ if (isset($_POST['editpricing'])) {
                                     <select name="duration" id="duration" class="form-control" required>
                                         <option selected value="">Select Duration</option>
 
-                                        <option value="1 month">1 month </option>
-                                        <option value="2 month">2 month </option>
-                                        <option value="3 month">3 month </option>
-                                        <option value="4 month">4 month </option>
-                                        <option value="5 month">5 month </option>
-                                        <option value="6 month">6 month </option>
-                                        <option value="7 month">7 month </option>
-                                        <option value="8 month">8 month </option>
-                                        <option value="9 month">9 month </option>
-                                        <option value="10 month">10 month </option>
-                                        <option value="11 month">11 month </option>
-                                        <option value="12 month">12 month </option>
+                                        <option value="1">1 month </option>
+                                        <option value="2">2 month </option>
+                                        <option value="3">3 month </option>
+                                        <option value="4">4 month </option>
+                                        <option value="5">5 month </option>
+                                        <option value="6">6 month </option>
+                                        <option value="7">7 month </option>
+                                        <option value="8">8 month </option>
+                                        <option value="9">9 month </option>
+                                        <option value="10">10 month </option>
+                                        <option value="11">11 month </option>
+                                        <option value="12">12 month </option>
 
                                     </select>
                                     <div class="invalid-feedback">Please select correct duration</div>
@@ -331,10 +351,10 @@ if (isset($_POST['editpricing'])) {
                             <div class="row" style="margin-top: 20px;">
                                 <div class="col-lg-6">
                                     <label for="discounttype" class="form-label">Discount Type</label>
-                                    <select name="discounttype" id="duration" class="form-control" required>
-                                        <option selected disabled value="">Discount Type</option>
-                                        <option value="Static">Static</option>
-                                        <option value="Percentage %">Percentage %</option>
+                                    <select name="discounttype" id="duration" class="form-control">
+                                        <option selected value="">Discount Type</option>
+                                        <option value="Fixed">Fixed</option>
+                                        <option value="Variable">Percentage</option>
                                     </select>
                                     <div class="invalid-feedback">Please select correct discount type</div>
 
@@ -497,8 +517,6 @@ if (isset($_POST['editpricing'])) {
 
         <script src="../includes/_validation.js"></script>
 
-
-
 </body>
 <script src="../assets/vendors/js/vendor.bundle.base.js"></script>
 <!-- endinject -->
@@ -512,32 +530,5 @@ if (isset($_POST['editpricing'])) {
 <script src="../assets/js/settings.js"></script>
 <script src="../assets/js/todolist.js"></script>
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
-<script src="jquery-3.6.0.min.js"></script>
-
-<script>
-    $('.editPricingButton').click(function(e) {
-        e.preventDefault();
-
-        const rowId = $(this).closest('tr').find('.row_id').text();
-
-
-        $.ajax({
-            type: "POST",
-            url: "getEditPricing.php",
-            data: {
-                "edit": true,
-                "value": rowId,
-            },
-
-            success: function(response) {
-                $("#displayData").html(response);
-                $("#editModal").modal("show");
-            }
-        });
-
-
-    });
-</script>
-
 
 </html>
