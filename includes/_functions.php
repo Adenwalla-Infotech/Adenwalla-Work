@@ -259,7 +259,6 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_userphone` varchar(255) NULL,
                 `_usersite` varchar(255) NULL,
                 `_usermembership` varchar(255) NULL,
-                `_userpricing` varchar(255) NULL,
                 `_usermemstart` datetime NULL,
                 `_usermemsleft` varchar(255) NULL,
                 `_userlongitude` varchar(50) NULL,
@@ -452,25 +451,16 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
                 `_membershipname` varchar(255) NOT NULL,
                 `_membershipdesc` varchar(255) NOT NULL,
+                `_price` varchar(55) NOT NULL,
+                `_benefit` varchar(55) NOT NULL, 
+                `_benefittype` varchar(55) NOT NULL, 
+                `_duration` varchar(55) NOT NULL,
                 `_status` varchar(255) NOT NULL,
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
 
-            $membership_pricing_table = "CREATE TABLE IF NOT EXISTS `tblmembershippricing` (
-                `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
-                `_membershipid` varchar(55) NOT NULL,
-                `_duration` varchar(55) NOT NULL,
-                `_benefit` varchar(55) NOT NULL, 
-                `_benefittype` varchar(55) NOT NULL, 
-                `_benefitcurrency` varchar(55) NOT NULL,
-                `_price` varchar(55) NOT NULL,
-                `_status` varchar(55) NOT NULL,
-                `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                `UpdationDate` datetime NULL ON UPDATE current_timestamp()
-            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
-
-            $tables = [$admin_table, $sms_config, $email_config, $site_config, $payment_config, $tickets_table, $ticket_comment, $contact_table, $category_table, $subcategory_table, $blog_table, $currency_table, $tax_table, $payment_trans, $coupon_table, $coupon_trans, $membership_table, $membership_pricing_table];
+            $tables = [$admin_table, $sms_config, $email_config, $site_config, $payment_config, $tickets_table, $ticket_comment, $contact_table, $category_table, $subcategory_table, $blog_table, $currency_table, $tax_table, $payment_trans, $coupon_table, $coupon_trans, $membership_table];
 
             foreach ($tables as $k => $sql) {
                 $query = @$temp_conn->query($sql);
@@ -2121,7 +2111,6 @@ function _updatepayment($id, $status)
 {
     require('_config.php');
     $sql = "UPDATE `tblpayment` SET `_status`='$status' WHERE `_id` = $id";
-    echo $sql;
     $query = mysqli_query($conn, $sql);
     if ($query) {
         2 + 2;
@@ -2134,13 +2123,12 @@ function _updatepayment($id, $status)
 // Membership Module
 
 
-function _createMembership($membershipname, $membershipdesc, $status)
+function _createMembership($membershipname, $membershipdesc, $duration, $discount, $discounttype, $price,$isactive)
 {
-
     require('_config.php');
     require('_alert.php');
 
-    $sql = "INSERT INTO `tblmembership`(`_membershipname`,`_membershipdesc`,`_status`) VALUES ('$membershipname','$membershipdesc','$status')";
+    $sql = "INSERT INTO `tblmembership`(`_membershipname`, `_membershipdesc`, `_price`, `_benefit`, `_benefittype`, `_duration`, `_status`) VALUES ('$membershipname','$membershipdesc','$price','$discount','$discounttype','$duration','$isactive')";
 
     $query = mysqli_query($conn, $sql);
     if ($query) {
@@ -2151,7 +2139,6 @@ function _createMembership($membershipname, $membershipdesc, $status)
         $alert->warn("Creation Failed");
     }
 }
-
 
 
 function _getMembership($membershipname = '', $limit = '', $startfrom = '')
@@ -2214,7 +2201,6 @@ function _getSingleMembership($id, $param)
 }
 
 
-
 function _updateMembership($membershipname, $membershipdesc, $status, $_id)
 {
 
@@ -2253,10 +2239,9 @@ function checkmembership($amount,$currency){
     $query = mysqli_query($conn,$sql);
     foreach($query as $data){
         $membership = $data['_usermembership'];
-        $pricing = $data['_userpricing'];
     }
     if($membership){
-        $sql = "SELECT * FROM `tblmembershippricing` WHERE `_id` = $pricing";
+        $sql = "SELECT * FROM `tblmembership` WHERE `_id` = $membership";
         $query = mysqli_query($conn,$sql);
         if($query){
             foreach($query as $data){
@@ -2285,14 +2270,14 @@ function _allmemberships(){
                     <div class="price-box">
                         <div class="">
                         	<div class="price-label basic"><?php echo $data['_membershipname']; ?></div>
-                        	<div class="price">$ 5.99</div>
-                        	<div class="price-info">Per Month, Inlc GST.</div>
+                        	<div class="price">INR&nbsp;<?php echo $data['_price']; ?></div>
+                        	<div class="price-info">Per Month, For <?php echo $data['_duration']; ?> Month.</div>
                         </div>
                         <div class="info">
                             <ul>
                                 <?php echo $data['_membershipdesc']; ?>
                             </ul>
-                            <a href="#" class="plan-btn">Join Basic Plan</a>
+                            <a href="payment?amount=<?php echo $data['_price']; ?>&currency=INR&prod=membership&id=<?php echo $data['_id']; ?>" style="margin-top:-20px" class="plan-btn">Join Plan</a>
                         </div>
                     </div>
                 </div>
@@ -2300,134 +2285,15 @@ function _allmemberships(){
     }
 }
 
-// Membership Pricing
-
-
-
-function _addPricing($membershipid, $duration, $discount, $discounttype, $discountcurrency, $price, $isactive)
-{
-
+function _purchasememebership($userid,$memberid){
     require('_config.php');
-    require('_alert.php');
-
-    $sql = "INSERT INTO `tblmembershippricing`(`_membershipid`,`_duration`,`_benefit`,`_benefittype`,`_benefitcurrency`,`_price`,`_status`) VALUES ('$membershipid','$duration','$discount','$discounttype','$discountcurrency','$price','$isactive')";
-
-    $query = mysqli_query($conn, $sql);
-    if ($query) {
-        $alert = new PHPAlert();
-        $alert->success("Pricing Added");
-    } else {
-        $alert = new PHPAlert();
-        $alert->warn("Pricing Failed");
-    }
+    $duration = _getSingleMembership($memberid, '_duration');
+    date_default_timezone_set('Africa/Nairobi');
+    $date = strtotime(date('Y-m-d H:i:s'));
+    $enddata =  date("Y-m-d", strtotime("+$duration month", $date))."\n";
+    $sql = "UPDATE `tblusers` SET `_usermembership`='$memberid',`_usermemstart`='$date',`_usermemsleft`='$enddata' WHERE `_id` = $userid";
+    $query = mysqli_query($conn,$sql);
 }
-
-function _updatePricing($_id, $duration, $discount, $discounttype, $discountcurrency, $price, $isactive)
-{
-
-    require('_config.php');
-    require('_alert.php');
-
-
-    $sql = "UPDATE `tblmembershippricing` SET `_duration`='$duration' , `_benefit`='$discount' , `_benefittype`='$discounttype' , `_benefitcurrency`='$discountcurrency' , `_price`='$price' , `_status`='$isactive' WHERE `_id` = '$_id'";
-
-    $query = mysqli_query($conn, $sql);
-    if ($query) {
-        $alert = new PHPAlert();
-        $alert->success("Pricing Updated");
-    } else {
-        $alert = new PHPAlert();
-        $alert->warn("Something went wrong");
-    }
-}
-
-
-function _getPricing($id, $limit = '', $startfrom = '')
-{
-
-    require('_config.php');
-
-    $sql = "SELECT * FROM `tblmembershippricing` WHERE `_membershipid`='$id' ORDER BY `CreationDate` DESC LIMIT $startfrom, $limit ";
-
-    $query = mysqli_query($conn, $sql);
-    if ($query) {
-        foreach ($query as $data) {
-        ?>
-            <tr>
-                <td class="row_id"><?php echo $data['_id']; ?></td>
-                <td><?php echo $data['_duration']; ?></td>
-                <td><?php echo $data['_benefit']; ?></td>
-                <td><?php echo $data['_benefittype']; ?></td>
-                <td><?php echo $data['_benefitcurrency']; ?></td>
-                <td>
-                    <label class="checkbox-inline form-switch">
-                        <?php
-                        if ($data['_status'] == 'true') {
-                        ?>
-                            <input disabled role="switch" name="isactive" value="true" checked type="checkbox">
-                        <?php
-                        }
-                        if (!$data['_status']) {
-                        ?>
-                            <input disabled role="switch" name="isactive" value="false" type="checkbox">
-                        <?php
-                        }
-                        ?>
-                    </label>
-                </td>
-                <td><?php echo $data['_price']; ?></td>
-                <td>
-                    <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
-                </td>
-                <td>
-                    <?php echo date("M j, Y", strtotime($data['UpdationDate'])); ?>
-                </td>
-                <td>
-
-                    <button type="button" class="btn btn-warning btn-sm font-weight-medium auth-form-btn editPricingButton">
-
-                        <i class="mdi mdi-pencil-box"></i>
-
-                    </button>
-
-                    <button type="button" class="btn btn-light btn-sm font-weight-medium auth-form-btn">
-                        <a href='edit-membership?id=<?php echo $data['_membershipid']; ?>&delid=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
-                    </button>
-
-
-                </td>
-
-            </tr>
-        <?php
-        }
-    }
-}
-
-
-function _getSinglePricing($id, $param)
-{
-
-    require('_config.php');
-    $sql = "SELECT * FROM `tblmembershippricing` WHERE `_id` = $id";
-    $query = mysqli_query($conn, $sql);
-    if ($query) {
-        foreach ($query as $data) {
-            return $data[$param];
-        }
-    }
-}
-
-function _deletePricing($id, $locationId)
-{
-    require('_config.php');
-
-    $sql = "DELETE FROM `tblmembershippricing` WHERE `_id` = '$id'";
-    $query = mysqli_query($conn, $sql);
-    if ($query) {
-        header("location:edit-membership?id=$locationId");
-    }
-}
-
 
 // Transcations
 
@@ -2560,7 +2426,6 @@ function _getCouponTranscation($couponname='', $couponamount='', $startfrom = ''
     }
 }
 
-
 function _getSingleCouponTranscations($id, $param)
 {
 
@@ -2594,6 +2459,26 @@ function _updateCouponTranscation($_id, $couponname, $couponamount, $useremail)
 }
 
 
+// Product Functions
+
+function _getproduct($id,$type){
+    require('_config.php');
+    if($type == 'membership'){
+        $sql = "SELECT * FROM `tblmembership` WHERE `_id` = $id";
+        $query = mysqli_query($conn,$sql);
+        if($query){
+            foreach($query as $data){ ?>
+                <li style="border:none;" class="list-group-item d-flex justify-content-between lh-condensed">
+                    <div>
+                        <h6 class="my-0"><?php echo $data['_membershipname']; ?></h6>
+                        <small class="text-muted">Membership Purchase For <?php echo $data['_duration']; ?> Month.</small>
+                    </div>
+                    <span class="text-muted">INR&nbsp;<?php echo $data['_price']; ?></span>
+                </li>
+            <?php }
+        }
+    }
+}
 
 
 ?>

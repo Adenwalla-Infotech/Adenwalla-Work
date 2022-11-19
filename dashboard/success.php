@@ -4,7 +4,19 @@
     
     if(isset($_POST['payment'])){
         $id = $_SESSION['transid'];
-        _updatepayment($id,'success');
+        $userid = $_SESSION['userId'];
+        if(isset($_POST['product'])&& isset($_POST['productid'])){
+            $product = $_POST['product'];
+            $productid = $_POST['productid'];
+            _purchasememebership($userid,$productid);
+            _updatepayment($id,'success');
+        }else{
+            _updatepayment($id,'success');
+        }
+    }else{
+        echo "<script>";
+        echo "window.location.href = 'index'";
+        echo "</script>";
     }
 
 ?>  

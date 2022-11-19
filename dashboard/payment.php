@@ -19,6 +19,13 @@ require('../includes/_functions.php');
 $_id =  $_SESSION['userId'];
 $getprice = $_GET['amount'];
 $currency = $_GET['currency'];
+if(isset($_GET['prod'])&& isset($_GET['id'])){
+    $product = $_GET['prod'];
+    $productid = $_GET['id'];
+}else{
+    $product =null;
+    $productid = null;
+}
 $getamount = _conversion($getprice,$currency);
 
 $_SESSION['paybtn'] = '';
@@ -46,6 +53,7 @@ if (isset($_POST['pay'])) {
         $applydiscount = _validatecoupon($getamount,$_POST['coupon'],$currency);
     }else{
         $showcoupon = false;
+        $couponcode = 'Membership';
         $applydiscount = $memebership;
     }
     $username = $_POST['username'];
@@ -432,6 +440,12 @@ if (isset($_POST['pay'])) {
                                                     </div>
                                             </div>
                                         </div>
+                                        <?php if($product && $productid){ ?>
+                                            <div class="card mb-4">
+                                                <div class="card-header">Confirm Purchase (Products)</div>
+                                                <?php _getproduct($productid,$product); ?>
+                                            </div>
+                                        <?php }?>
                                     </div>
                                     <div class="col-lg-4">
                                     <div class="card mb-4">
@@ -546,6 +560,10 @@ if (isset($_POST['pay'])) {
             // e.preventDefault();
         }
     </script>
+    <?php if($product && $productid){ ?>       
+        <input type="text" name="product" value="<?php echo $product; ?>" style="display: none;">
+        <input type="text" name="productid" value="<?php echo $productid; ?>" style="display: none;">
+    <?php }?>
     <button id="transpay" type="submit" name="payment" hidden></button>
 </form>
 

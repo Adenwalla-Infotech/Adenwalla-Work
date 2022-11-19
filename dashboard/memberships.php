@@ -53,7 +53,7 @@ if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['is
 		    margin-bottom: 25px;
 		}
 		.price-box {
-			box-shadow: 0 0 35px rgba(0, 0, 0, 0.10);
+			/* box-shadow: 0 0 35px rgba(0, 0, 0, 0.10); */
 			padding: 20px;
 			background: #fff;
     		border-radius: 4px;
@@ -96,9 +96,9 @@ if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['is
 		    color: #FF5722;
 		}
 		.price {
-			font-size: 44px;
+			font-size: 24px;
 		    line-height: 44px;
-		    margin: 15px 0 6px;
+		    margin: 5px 0 6px;
 		    font-weight: 900;
 		}
 		.price-info {
@@ -108,6 +108,7 @@ if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['is
 		    color: inherit;
 		    width: 100%;
 		    margin: 0;
+			margin-top: -10px;
 		    color: #989898;
 		}
 		.plan-btn {
@@ -117,7 +118,7 @@ if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['is
 		  padding: 11px 30px;
 		  border: 2px solid #4B49AC;
 		  color: #000;
-		  margin-top: 5px;
+		  margin-top: -10px;
 		  overflow: hidden;
 		  position: relative;
 		  z-index: 1;
@@ -135,7 +136,7 @@ if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['is
 		  content: "";
 		  height: 100%;
 		  width: 100%;
-		  background: #000;
+		  background: #4B49AC;
 		  z-index: -1;
 		  /* transition: all 0.35s ease-in-out; */
 		}
@@ -146,7 +147,7 @@ if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['is
 		.plan-btn:focus {
 			text-decoration: none;
 			color: #fff;
-		    border: 2px solid #000;
+		    border: 2px solid #4B49AC;
 		}
 		@media (max-width: 991px) {
 			.price-box {
@@ -173,7 +174,7 @@ if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['is
       <div class="main-panel">
         <div class="content-wrapper">
             <div class="col-12 grid-margin stretch-card">
-                <?php  _allmemberships(); ?>
+                <?php _allmemberships(); ?>
             </div>
           <!-- content-wrapper ends -->
           <!-- partial:partials/_footer.html -->
@@ -187,6 +188,7 @@ if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['is
     <div class="container"></div>
 </body>
 <script src="../assets/vendors/js/vendor.bundle.base.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
 <!-- endinject -->
 <!-- Plugin js for this page -->
 <!-- End plugin js for this page -->

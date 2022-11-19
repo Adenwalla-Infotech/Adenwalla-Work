@@ -24,7 +24,10 @@ if (isset($_POST['submit'])) {
 
     $membershipname = $_POST['membershipname'];
     $membershipdesc = $_POST['membershipdesc'];
-
+    $duration = $_POST['duration'];
+    $discount = $_POST['discount'];
+    $discounttype = $_POST['discounttype'];
+    $price = $_POST['price'];
 
     if (isset($_POST['isactive'])) {
         $isactive = $_POST['isactive'];
@@ -32,7 +35,7 @@ if (isset($_POST['submit'])) {
         $isactive = false;
     }
 
-    _createMembership($membershipname, $membershipdesc,$isactive);
+    _createMembership($membershipname, $membershipdesc, $duration, $discount, $discounttype, $price,$isactive);
 }
 
 ?>
@@ -51,6 +54,12 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet" href="../assets/vendors/css/vendor.bundle.base.css">
     <!-- endinject -->
     <!-- Plugin css for this page -->
+    <script src="../assets/plugins/tinymce/js/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+      tinymce.init({
+        selector: '#mytextarea'
+      });
+    </script>
     <!-- End plugin css for this page -->
     <!-- inject:css -->
     <link rel="stylesheet" href="../assets/css/vertical-layout-light/style.css">
@@ -84,29 +93,68 @@ if (isset($_POST['submit'])) {
                                 <form method="POST" action="" class="needs-validation" novalidate>
 
                                     <div class="row g-3">
-                                        <div class="col">
+                                        <div class="col-lg-6">
                                             <label for="membershipname" class="form-label">Membership Name</label>
                                             <input type="text" class="form-control" placeholder="Membership name" aria-label="Membership name" id="membershipname" name="membershipname" required>
                                             <div class="invalid-feedback">Please type correct membership name</div>
                                         </div>
-                                        <div class="col">
-                                            <label for="membershipdesc" class="form-label">Membership Description</label>
-                                            <input type="text" class="form-control" placeholder="Membership Description" aria-label="Membership Description" id="membershipdesc" name="membershipdesc" required>
-                                            <div class="invalid-feedback">Please type correct membership desc</div>
+                                        <div class="col-lg-6">
+                                            <label for="duration" class="form-label">Duration(Months)</label>
+                                            <select name="duration" id="duration" class="form-control" required>
+                                                <option selected value="">Select Duration</option>
+
+                                                <option value="1">1 month </option>
+                                                <option value="2">2 month </option>
+                                                <option value="3">3 month </option>
+                                                <option value="4">4 month </option>
+                                                <option value="5">5 month </option>
+                                                <option value="6">6 month </option>
+                                                <option value="7">7 month </option>
+                                                <option value="8">8 month </option>
+                                                <option value="9">9 month </option>
+                                                <option value="10">10 month </option>
+                                                <option value="11">11 month </option>
+                                                <option value="12">12 month </option>
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row g-3" style="margin-top: 10px;">
+                                        <div class="col-lg-6">
+                                            <label for="price" class="form-label">Membership Price</label>
+                                            <input type="number" class="form-control" name="price" id="price" placeholder="Price" required>
+                                            <div class="invalid-feedback">Please type correct price</div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <label for="discounttype" class="form-label">Discount Type</label>
+                                            <select name="discounttype" id="duration" class="form-control">
+                                                <option selected value="">Discount Type</option>
+                                                <option value="Fixed">Fixed</option>
+                                                <option value="Variable">Percentage</option>
+                                            </select>
+                                            <div class="invalid-feedback">Please select correct discount type</div>
                                         </div>
                                     </div>
 
                                     <div class="row g-3" style="margin-top: 10px;">
-
-                                        <div class="col" style="margin-top: 10px;">
+                                        <div class="col-lg-6">
+                                            <label for="discount" class="form-label">Discount</label>
+                                            <input type="text" class="form-control" id="discount" name="discount" placeholder="Discount" required>
+                                            <div class="invalid-feedback">Please type correct discount</div>
+                                        </div>
+                                        <div class="col" style="margin-top: 40px;">
                                             <label class="checkbox-inline" style="margin-left: 5px;">
                                                 <input name="isactive" value="true" type="checkbox"> &nbsp; Is Active
                                             </label>
                                         </div>
-
                                     </div>
-
-
+                                    <div class="row" style="margin-top: 30px;">
+                                        <div class="col">
+                                            <label for="membershipdesc" class="form-label">Membership Description</label>
+                                            <textarea name="membershipdesc" id="mytextarea" style="width:100%" rows="10"></textarea>
+                                            <div class="invalid-feedback">Please type correct membership desc</div>
+                                        </div>
+                                    </div>
                                     <div class="col-12" style="margin-top: 30px;">
                                         <button type="submit" name="submit" style="width: 200px;margin-left: -10px" class="btn btn-primary">Create Membership</button>
                                         

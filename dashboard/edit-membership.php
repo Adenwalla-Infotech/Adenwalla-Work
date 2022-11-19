@@ -36,7 +36,6 @@ if (isset($_POST['submit'])) {
 if(isset($_GET['del'])){
     $delid = $_GET['delid'];
     $_id = $_GET['id'];
-    _deletePricing($delid , $_id);
 }
 
 require('../includes/_config.php');
@@ -64,7 +63,6 @@ if (isset($_POST['addpricing'])) {
         $isactive = false;
     }
 
-    _addPricing($membershipid, $duration, $discount, $discounttype, $discountcurrency, $price, $isactive);
 }
 
 if (isset($_POST['editpricing'])) {
@@ -82,7 +80,6 @@ if (isset($_POST['editpricing'])) {
         $isactive = false;
     }
 
-    _updatePricing($pricingId , $duration, $discount, $discounttype, $discountcurrency, $price, $isactive);
 }
 
 
@@ -212,10 +209,8 @@ if (isset($_POST['editpricing'])) {
                                                 <tbody style="text-align: left;margin-left: 30px">
                                                     <?php
                                                     if (isset($_POST['search'])) {
-                                                        _getPricing($_id ,  $record_per_page, $start_from);
                                                     }
                                                     if (!isset($_POST['search'])) {
-                                                        _getPricing($_id ,  $record_per_page, $start_from);
                                                     }
                                                     ?>
                                                 </tbody>
@@ -290,18 +285,18 @@ if (isset($_POST['editpricing'])) {
                                     <select name="duration" id="duration" class="form-control" required>
                                         <option selected value="">Select Duration</option>
 
-                                        <option value="1 month">1 month </option>
-                                        <option value="2 month">2 month </option>
-                                        <option value="3 month">3 month </option>
-                                        <option value="4 month">4 month </option>
-                                        <option value="5 month">5 month </option>
-                                        <option value="6 month">6 month </option>
-                                        <option value="7 month">7 month </option>
-                                        <option value="8 month">8 month </option>
-                                        <option value="9 month">9 month </option>
-                                        <option value="10 month">10 month </option>
-                                        <option value="11 month">11 month </option>
-                                        <option value="12 month">12 month </option>
+                                        <option value="1">1 month </option>
+                                        <option value="2">2 month </option>
+                                        <option value="3">3 month </option>
+                                        <option value="4">4 month </option>
+                                        <option value="5">5 month </option>
+                                        <option value="6">6 month </option>
+                                        <option value="7">7 month </option>
+                                        <option value="8">8 month </option>
+                                        <option value="9">9 month </option>
+                                        <option value="10">10 month </option>
+                                        <option value="11">11 month </option>
+                                        <option value="12">12 month </option>
 
                                     </select>
                                     <div class="invalid-feedback">Please select correct duration</div>

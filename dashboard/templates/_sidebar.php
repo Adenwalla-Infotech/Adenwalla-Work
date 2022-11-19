@@ -7,13 +7,7 @@
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="edit-profile">
-        <i class="ti-settings menu-icon"></i>
-        <span class="menu-title">Profile Setting</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="membership">
+      <a class="nav-link" href="memberships">
         <i class="mdi mdi-wallet-membership menu-icon"></i>
         <span class="menu-title">Memberships</span>
       </a>
@@ -117,7 +111,7 @@
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#ui-ticket" aria-expanded="false" aria-controls="ui-basic">
         <i class="mdi mdi-ticket-account menu-icon"></i>
-        <span class="menu-title">Tickets</span>
+        <span class="menu-title">Support Ticket</span>
         <i class="menu-arrow"></i>
       </a>
       <div class="collapse" id="ui-ticket">
@@ -126,6 +120,12 @@
           <li class="nav-item"> <a class="nav-link" href="manage-tickets">Manage Tickets</a></li>
         </ul>
       </div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="edit-profile">
+        <i class="ti-settings menu-icon"></i>
+        <span class="menu-title">Profile Setting</span>
+      </a>
     </li>
     <?php if ($_SESSION['userType'] == 2) { ?>
       <li class="nav-item">
