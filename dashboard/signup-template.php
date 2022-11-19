@@ -20,14 +20,15 @@ if (isset($_SESSION['forgot_success']) || !isset($_SESSION['forgot_success'])) {
 
 require('../includes/_functions.php');
 
+
+
 if (isset($_POST['submit'])) {
 
-    $templateName = '_remindertemplate';
-    $templateCode = $_POST['remindercode'];
+    $templateName = '_signuptemplate';
+    $templateCode = $_POST['signupcode'];
 
     _updateEmailTemplate($templateName, $templateCode);
 }
-
 
 
 ?>
@@ -37,7 +38,7 @@ if (isset($_POST['submit'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Add Reminder Template | <?php echo _siteconfig('_sitetitle'); ?></title>
+    <title>Add Purchase Template | <?php echo _siteconfig('_sitetitle'); ?></title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@mdi/font@6.9.96/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../assets/vendors/feather/feather.css">
@@ -71,7 +72,7 @@ if (isset($_POST['submit'])) {
                     <?php if ($_SESSION['forgot_success']) { ?>
                         <div id="liveAlertPlaceholder">
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                <strong>Template Update!</strong>
+                                <strong>Template Update</strong> Template saved successfully.
                             </div>
                         </div>
                     <?php } ?>
@@ -79,12 +80,12 @@ if (isset($_POST['submit'])) {
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Reminder Template Code</h4>
+                                <h4 class="card-title">Signup Template Code</h4>
                                 <form method="POST" action="" enctype="multipart/form-data" class="needs-validation" novalidate>
 
                                     <div class="row g-3">
                                         <div class="col">
-                                            <textarea name="remindercode" id="mytextarea"><?php echo _getSingleEmailTemplate('_remindertemplate');  ?></textarea>
+                                            <textarea name="signupcode" id="mytextarea"><?php echo _getSingleEmailTemplate('_signuptemplate');  ?></textarea>
                                             <div class="invalid-feedback">Please enter code</div>
                                         </div>
                                     </div>
@@ -98,7 +99,7 @@ if (isset($_POST['submit'])) {
                     </div>
 
 
-                    
+
 
                     <!-- content-wrapper ends -->
                     <!-- partial:partials/_footer.html -->
