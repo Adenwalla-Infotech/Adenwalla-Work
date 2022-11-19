@@ -2504,8 +2504,10 @@ function _updateEmailTemplate($templateName, $templateCode)
 
     $sql = "UPDATE `tblemailtemplates` SET `$templateName`='$templateCode' WHERE `_id` = 2 ";
 
+    
     $query = mysqli_query($conn, $sql);
     if ($query) {
+        $_SESSION['forgot_success'] = true;
         header("location:");
     } else {
         $alert = new PHPAlert();

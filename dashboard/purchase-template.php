@@ -70,7 +70,7 @@ if (isset($_POST['submit'])) {
                     <?php if ($_SESSION['forgot_success']) { ?>
                         <div id="liveAlertPlaceholder">
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                <strong>User Created!</strong> New user created successfully.
+                                <strong>Template Update</strong> Template saved successfully.
                             </div>
                         </div>
                     <?php } ?>

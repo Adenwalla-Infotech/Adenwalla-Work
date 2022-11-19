@@ -71,7 +71,7 @@ if (isset($_POST['submit'])) {
                     <?php if ($_SESSION['forgot_success']) { ?>
                         <div id="liveAlertPlaceholder">
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                <strong>Template Update</strong>
+                                <strong>Template Update</strong> Template saved successfully.
                             </div>
                         </div>
                     <?php } ?>
@@ -98,7 +98,7 @@ if (isset($_POST['submit'])) {
                     </div>
 
 
-                    
+
 
                     <!-- content-wrapper ends -->
                     <!-- partial:partials/_footer.html -->

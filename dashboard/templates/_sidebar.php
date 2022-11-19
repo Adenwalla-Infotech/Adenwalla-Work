@@ -22,8 +22,8 @@
         </a>
         <div class="collapse" id="ui-transactions">
           <ul class="nav flex-column sub-menu">
-            <li class="nav-item"> <a class="nav-link" href="manage-payment-transcations.php">Payment Record</a></li>
-            <li class="nav-item"> <a class="nav-link" href="manage-coupon-transcations.php">Coupon Record</a></li>
+            <li class="nav-item"> <a class="nav-link" href="payment-transcations.php">Payment Record</a></li>
+            <li class="nav-item"> <a class="nav-link" href="coupon-transcations.php">Coupon Record</a></li>
           </ul>
         </div>
       </li>
@@ -154,10 +154,10 @@
         </a>
         <div class="collapse" id="ui-template">
           <ul class="nav flex-column sub-menu">
-            <li class="nav-item"> <a class="nav-link" href="add-purchase-template.php">Purchase Template</a></li>
-            <li class="nav-item"> <a class="nav-link" href="add-reminder-template.php">Reminder Template</a></li>
-            <li class="nav-item"> <a class="nav-link" href="add-lecture-template.php">Lecture Template</a></li>
-            <li class="nav-item"> <a class="nav-link" href="add-signup-template.php">Signup Template</a></li>
+            <li class="nav-item"> <a class="nav-link" href="purchase-template.php">Purchase Template</a></li>
+            <li class="nav-item"> <a class="nav-link" href="reminder-template.php">Reminder Template</a></li>
+            <li class="nav-item"> <a class="nav-link" href="lecture-template.php">Lecture Template</a></li>
+            <li class="nav-item"> <a class="nav-link" href="signup-template.php">Signup Template</a></li>
           </ul>
         </div>
       </li>
