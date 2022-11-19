@@ -258,6 +258,9 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_useremail` varchar(255) NULL,
                 `_userphone` varchar(255) NULL,
                 `_usersite` varchar(255) NULL,
+                `_usermembership` varchar(255) NULL,
+                `_usermemstart` datetime NULL,
+                `_usermemsleft` varchar(255) NULL,
                 `_userlongitude` varchar(50) NULL,
                 `_userlatitude` varchar(50) NULL,
                 `_userbio` varchar(500) NULL,
@@ -467,6 +470,8 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
+            
+            $tables = [$admin_table, $sms_config, $email_config, $site_config, $payment_config, $tickets_table, $ticket_comment, $contact_table, $category_table, $subcategory_table, $blog_table, $currency_table, $tax_table, $payment_trans, $coupon_table, $coupon_trans, $membership_table , $templates];
 
             foreach ($tables as $k => $sql) {
                 $query = @$temp_conn->query($sql);
@@ -1958,14 +1963,12 @@ function _gettotal($sub, $currency, $discount)
             }
         }
 
-        // get user email id
-        // check membership avaiable
-
-        // $ discount = memberpricing
-
         $final = $sub - $discount; // if not put it in else
 
         $arrtotal = $final + array_sum($tax);
+        if($arrtotal < 0){
+            $arrtotal = 0;
+        }
         return $arrtotal;
     }
 }
@@ -2113,13 +2116,7 @@ function _payment($amount, $currency, $coupon = '')
     $sql = "INSERT INTO `tblpayment`(`_useremail`, `_amount`, `_currency`, `_status`, `_couponcode`) VALUES ('$useremail','$amount','$currency','pending','$coupon')";
     $query = mysqli_query($conn, $sql);
     if ($query) {
-        $sql = "SELECT MAX(id) FROM `tblpayment`";
-        $query = mysqli_query($conn, $query);
-        if ($query) {
-            foreach ($query as $data) {
-                return $data['_id'];
-            }
-        }
+        return $conn->insert_id;
     }
 }
 
@@ -2139,13 +2136,12 @@ function _updatepayment($id, $status)
 // Membership Module
 
 
-function _createMembership($membershipname, $membershipdesc, $status)
+function _createMembership($membershipname, $membershipdesc, $duration, $discount, $discounttype, $price,$isactive)
 {
-
     require('_config.php');
     require('_alert.php');
 
-    $sql = "INSERT INTO `tblmembership`(`_membershipname`,`_membershipdesc`,`_status`) VALUES ('$membershipname','$membershipdesc','$status')";
+    $sql = "INSERT INTO `tblmembership`(`_membershipname`, `_membershipdesc`, `_price`, `_benefit`, `_benefittype`, `_duration`, `_status`) VALUES ('$membershipname','$membershipdesc','$price','$discount','$discounttype','$duration','$isactive')";
 
     $query = mysqli_query($conn, $sql);
     if ($query) {
@@ -2156,7 +2152,6 @@ function _createMembership($membershipname, $membershipdesc, $status)
         $alert->warn("Creation Failed");
     }
 }
-
 
 
 function _getMembership($membershipname = '', $limit = '', $startfrom = '')
@@ -2251,136 +2246,68 @@ function _deleteMembership($id)
     }
 }
 
-
-
-// Membership Pricing
-
-
-
-function _addPricing($membershipid, $duration, $discount, $discounttype, $discountcurrency, $price, $isactive)
-{
-
+function checkmembership($amount,$currency){
     require('_config.php');
-    require('_alert.php');
-
-    $sql = "INSERT INTO `tblmembershippricing`(`_membershipid`,`_duration`,`_benefit`,`_benefittype`,`_benefitcurrency`,`_price`,`_status`) VALUES ('$membershipid','$duration','$discount','$discounttype','$discountcurrency','$price','$isactive')";
-
-    $query = mysqli_query($conn, $sql);
-    if ($query) {
-        $alert = new PHPAlert();
-        $alert->success("Pricing Added");
-    } else {
-        $alert = new PHPAlert();
-        $alert->warn("Pricing Failed");
+    $useremail = $_SESSION['userEmailId'];
+    $sql = "SELECT * FROM `tblusers` WHERE `_useremail` = '$useremail'";
+    $query = mysqli_query($conn,$sql);
+    foreach($query as $data){
+        $membership = $data['_usermembership'];
     }
-}
-
-function _updatePricing($_id, $duration, $discount, $discounttype, $discountcurrency, $price, $isactive)
-{
-
-    require('_config.php');
-    require('_alert.php');
-
-
-    $sql = "UPDATE `tblmembershippricing` SET `_duration`='$duration' , `_benefit`='$discount' , `_benefittype`='$discounttype' , `_benefitcurrency`='$discountcurrency' , `_price`='$price' , `_status`='$isactive' WHERE `_id` = '$_id'";
-
-    $query = mysqli_query($conn, $sql);
-    if ($query) {
-        $alert = new PHPAlert();
-        $alert->success("Pricing Updated");
-    } else {
-        $alert = new PHPAlert();
-        $alert->warn("Something went wrong");
-    }
-}
-
-
-function _getPricing($id, $limit = '', $startfrom = '')
-{
-
-    require('_config.php');
-
-    $sql = "SELECT * FROM `tblmembershippricing` WHERE `_membershipid`='$id' ORDER BY `CreationDate` DESC LIMIT $startfrom, $limit ";
-
-    $query = mysqli_query($conn, $sql);
-    if ($query) {
-        foreach ($query as $data) {
-        ?>
-            <tr>
-                <td class="row_id"><?php echo $data['_id']; ?></td>
-                <td><?php echo $data['_duration']; ?></td>
-                <td><?php echo $data['_benefit']; ?></td>
-                <td><?php echo $data['_benefittype']; ?></td>
-                <td><?php echo $data['_benefitcurrency']; ?></td>
-                <td>
-                    <label class="checkbox-inline form-switch">
-                        <?php
-                        if ($data['_status'] == 'true') {
-                        ?>
-                            <input disabled role="switch" name="isactive" value="true" checked type="checkbox">
-                        <?php
-                        }
-                        if (!$data['_status']) {
-                        ?>
-                            <input disabled role="switch" name="isactive" value="false" type="checkbox">
-                        <?php
-                        }
-                        ?>
-                    </label>
-                </td>
-                <td><?php echo $data['_price']; ?></td>
-                <td>
-                    <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
-                </td>
-                <td>
-                    <?php echo date("M j, Y", strtotime($data['UpdationDate'])); ?>
-                </td>
-                <td>
-
-                    <button type="button" class="btn btn-warning btn-sm font-weight-medium auth-form-btn editPricingButton">
-
-                        <i class="mdi mdi-pencil-box"></i>
-
-                    </button>
-
-                    <button type="button" class="btn btn-light btn-sm font-weight-medium auth-form-btn">
-                        <a href='edit-membership?id=<?php echo $data['_membershipid']; ?>&delid=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
-                    </button>
-
-
-                </td>
-
-            </tr>
-        <?php
+    if($membership){
+        $sql = "SELECT * FROM `tblmembership` WHERE `_id` = $membership";
+        $query = mysqli_query($conn,$sql);
+        if($query){
+            foreach($query as $data){
+               $type = $data['_benefittype'];
+               $benifit = $data['_benefit'];
+            }
+            if($type == 'Variable'){
+                $discount = ($benifit / 100) * $amount;
+                return $discount;
+            }else{
+                return _conversion($benifit,$currency);
+            }
         }
+    }else{
+        return false;
     }
 }
 
-
-function _getSinglePricing($id, $param)
-{
-
+function _allmemberships(){
     require('_config.php');
-    $sql = "SELECT * FROM `tblmembershippricing` WHERE `_id` = $id";
-    $query = mysqli_query($conn, $sql);
-    if ($query) {
-        foreach ($query as $data) {
-            return $data[$param];
-        }
+    $sql = "SELECT * FROM `tblmembership` WHERE `_status` = 'true'";
+    $query = mysqli_query($conn,$sql);
+    if($query){
+        foreach($query as $data){ ?>
+            <div class="col-lg-4">
+                    <div class="price-box">
+                        <div class="">
+                        	<div class="price-label basic"><?php echo $data['_membershipname']; ?></div>
+                        	<div class="price">INR&nbsp;<?php echo $data['_price']; ?></div>
+                        	<div class="price-info">Per Month, For <?php echo $data['_duration']; ?> Month.</div>
+                        </div>
+                        <div class="info">
+                            <ul>
+                                <?php echo $data['_membershipdesc']; ?>
+                            </ul>
+                            <a href="payment?amount=<?php echo $data['_price']; ?>&currency=INR&prod=membership&id=<?php echo $data['_id']; ?>" style="margin-top:-20px" class="plan-btn">Join Plan</a>
+                        </div>
+                    </div>
+                </div>
+        <?php }
     }
 }
 
-function _deletePricing($id, $locationId)
-{
+function _purchasememebership($userid,$memberid){
     require('_config.php');
-
-    $sql = "DELETE FROM `tblmembershippricing` WHERE `_id` = '$id'";
-    $query = mysqli_query($conn, $sql);
-    if ($query) {
-        header("location:edit-membership?id=$locationId");
-    }
+    $duration = _getSingleMembership($memberid, '_duration');
+    date_default_timezone_set('Africa/Nairobi');
+    $date = strtotime(date('Y-m-d H:i:s'));
+    $enddata =  date("Y-m-d", strtotime("+$duration month", $date))."\n";
+    $sql = "UPDATE `tblusers` SET `_usermembership`='$memberid',`_usermemstart`='$date',`_usermemsleft`='$enddata' WHERE `_id` = $userid";
+    $query = mysqli_query($conn,$sql);
 }
-
 
 // Transcations
 
@@ -2389,17 +2316,17 @@ function _getTranscations($useremail = '', $amount = '', $status = '', $startfro
 {
 
     require('_config.php');
-
-    if ($useremail) {
+    echo $amount;
+    if ($useremail != '') {
         $sql = "SELECT * FROM `tblpayment` WHERE `_useremail` LIKE '%$useremail%' ";
     }
-    if ($amount && !$useremail && !$status) {
-        $sql = "SELECT * FROM `tblpayment` WHERE `_amount`='2000' ";
+    if ($amount != '') {
+        $sql = "SELECT * FROM `tblpayment` WHERE `_amount`='$amount' ";
     }
-    if ($status && !$useremail && !$amount) {
+    if ($status != '' && $useremail =='' && $amount == '') {
         $sql = "SELECT * FROM `tblpayment` WHERE `_status`='$status' ";
     }
-    if (!$useremail && !$status && !$amount) {
+    if ($useremail == '' && $status =='' && $amount == '') {
         $sql = "SELECT * FROM `tblpayment` ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
     }
 
@@ -2408,26 +2335,13 @@ function _getTranscations($useremail = '', $amount = '', $status = '', $startfro
     if ($query) {
         foreach ($query as $data) {
         ?>
-            <tr>
+            <tr style="margin-bottom:-25px">
                 <td><?php echo $data['_id']; ?></td>
                 <td><?php echo $data['_useremail']; ?></td>
                 <td><?php echo $data['_amount']; ?></td>
                 <td><?php echo $data['_currency']; ?></td>
                 <td>
-                    <label class="checkbox-inline form-switch">
-                        <?php
-                        if ($data['_status'] == 'true') {
-                        ?>
-                            <input disabled role="switch" name="isactive" value="true" checked type="checkbox">
-                        <?php
-                        }
-                        if (!$data['_status']) {
-                        ?>
-                            <input disabled role="switch" name="isactive" value="false" type="checkbox">
-                        <?php
-                        }
-                        ?>
-                    </label>
+                    <?php echo $data['_status']; ?>
                 </td>
                 <td><?php echo $data['_couponcode']; ?></td>
                 <td>
@@ -2441,7 +2355,7 @@ function _getTranscations($useremail = '', $amount = '', $status = '', $startfro
                 </td>
             </tr>
         <?php
-        }
+        } ?> <br> <?php
     }
 }
 
@@ -2526,7 +2440,6 @@ function _getCouponTranscation($couponname = '', $couponamount = '', $startfrom 
     }
 }
 
-
 function _getSingleCouponTranscations($id, $param)
 {
 
@@ -2560,6 +2473,7 @@ function _updateCouponTranscation($_id, $couponname, $couponamount, $useremail)
 }
 
 
+// Product Functions
 
 function _getproduct($id,$type){
     require('_config.php');
@@ -2579,6 +2493,7 @@ function _getproduct($id,$type){
         }
     }
 }
+
 
 
 function _updateEmailTemplate($templateName, $templateCode)

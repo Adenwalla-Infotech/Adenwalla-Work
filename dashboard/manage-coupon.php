@@ -223,7 +223,7 @@ if(isset($_POST['submit'])){
             <div class="col-lg-4">
               <label for="inputEmail4" class="form-label">Coupon Type</label>
               <select name="type" class="form-control">
-                <option value="Variable">Variable</option>
+                <option value="Variable">Percentage</option>
                 <option value="Fixed">Fixed</option>
                 <option value="Uncertain">Uncertain</option>
               </select>

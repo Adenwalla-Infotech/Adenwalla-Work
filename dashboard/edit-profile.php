@@ -17,6 +17,7 @@ if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['is
 require('../includes/_functions.php');
 
 $_id =  $_SESSION['userId'];
+$membership = _getsingleuser($_id,'_usermembership');
 
 if (isset($_POST['submit'])) {
     $username = $_POST['username'];
@@ -118,6 +119,19 @@ if(isset($_POST['update'])){
         .stretch-card{
             padding: 0px;
         }
+        .price-label {
+			font-size: 16px;
+		    font-weight: 600;
+		    line-height: 1.34;
+		    margin-bottom: 0;
+		    padding: 6px 15px;
+		    display: inline-block;
+		    border-radius: 3px; 
+		}
+		.price-label.basic {
+		    background: #E8EAF6;
+		    color: #3F51B5;
+		}
     </style>
 </head>
 
@@ -156,6 +170,12 @@ if(isset($_POST['update'])){
                                                     <button class="btn btn-primary" name="update" type="submit"><i class="mdi mdi-content-save"></i>&nbsp;&nbsp;Update Image</button>
                                                 </div>
                                             </form>
+                                        </div>
+                                        <div class="card mb-4 mb-xl-0" style="margin-top: 25px;border-radius:22px">
+                                            <div class="card-header">Purchased Membership <svg fill="green" xmlns="http://www.w3.org/2000/svg" style="width: 15px;float:right" viewBox="0 0 512 512"><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --><path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/></svg></div>
+                                            <?php _getproduct($membership,'membership'); ?>
+                                            <hr style="margin-top: -0px;">
+                                            <p class="p-3" style="margin-top: -20px;margin-left:3px">Expires at  <a href="#">&nbsp;<?php echo date("M j, Y",strtotime(_getsingleuser($_id,'_usermemsleft'))); ?></a><span style="color: red;">Cancel Now</span></p>
                                         </div>
                                     </div>
                                     <div class="col-xl-8">

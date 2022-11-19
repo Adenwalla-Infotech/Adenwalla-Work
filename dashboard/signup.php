@@ -11,7 +11,6 @@ if(isset($_SESSION['isLoggedIn'])){
 require('../includes/_functions.php'); 
 if(isset($_POST['submit'])){
     $username = $_POST['username'];
-    $usertype = $_POST['usertype'];
     $userphone = $_POST['userphone'];
     $userpassword = $_POST['userpassword'];
     $useremail = $_POST['useremail'];

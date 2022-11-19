@@ -48,8 +48,7 @@ $start_from = ($page - 1) * $record_per_page;
   <link rel="stylesheet" href="../assets/css/vertical-layout-light/style.css">
   <!-- endinject -->
   <link rel="shortcut icon" href="../assets/images/favicon.png" />
-</head>
-
+</head> 
 <body>
   <div class="container-scroller">
     <?php include('templates/_header.php'); ?>
@@ -77,9 +76,10 @@ $start_from = ($page - 1) * $record_per_page;
                     </div>
                     <div class="col-lg-3" style="margin-bottom: 20px;">
                       <select style="height: 40px;" name="status" class="form-control form-control-sm" id="exampleFormControlSelect2" required>
-                        <option>Status</option>
-                        <option value="true">True</option>
-                        <option value="">False</option>
+                        <option value=" ">Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="success">Success</option>
+                        <option value="failed">Failed</option>
                       </select>
                     </div>
                     <div class="col-lg-2" style="margin-bottom: 20px;">
@@ -131,14 +131,25 @@ $start_from = ($page - 1) * $record_per_page;
 
                             _getTranscations($useremail, $amount, $status ,'' , '');
                           }
-                          if (!isset($_POST['search'])) {
-                            _getTranscations('', '', '', $start_from ,$record_per_page);
-                          }
-
-
-
-                          ?>
+                          if (!isset($_POST['search'])) { ?>
+                            <script>
+                                function getData(){
+                                  $.ajax({
+                                    url: '_payment.php',
+                                    type: 'get',
+                                    data: { "page": "<?php echo $page; ?>","start":"<?php echo $start_from ;?>"},
+                                    success: function(response) { 
+                                      document.getElementById('table').innerHTML = response;
+                                    }
+                                  });
+                                }
+                                setInterval(function(){
+                                  getData();
+                                },1000)
+                            </script>
+                          <?php } ?>
                         </tbody>
+                        <tbody id="table"></tbody>
                       </table>
                     </div>
                   </div>
@@ -186,6 +197,7 @@ $start_from = ($page - 1) * $record_per_page;
     <div class="container"></div>
 </body>
 <script src="../assets/vendors/js/vendor.bundle.base.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
 <!-- endinject -->
 <!-- Plugin js for this page -->
 <!-- End plugin js for this page -->

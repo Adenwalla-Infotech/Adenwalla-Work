@@ -81,7 +81,7 @@ if(isset($_POST['submit'])){
         <div class="col-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                  <h4 class="card-title">Manage Taxes (Tax Markup)</h4>
+                  <h4 class="card-title">Manage Fees (Fee Markup)</h4>
                   <p class="card-description">
                     Web Help Desk uses tickets to manage service requests. These tickets can be initiated through email, created in the application, and imported from another application. Techs, admins, and clients can also manage tickets through email or through the application in a web browser.
                   </p>
@@ -115,9 +115,9 @@ if(isset($_POST['submit'])){
                         <table id="example" class="display expandable-table" style="width:100%">
                           <thead>
                             <tr>
-                              <th>Tax Name</th>
-                              <th>Tax Type</th>
-                              <th>Tax Amount</th>
+                              <th>Fee Name</th>
+                              <th>Fee Type</th>
+                              <th>Fee Amount</th>
                               <th>Status</th>
                               <th>Created at</th>
                               <th>Action</th>
@@ -209,24 +209,24 @@ if(isset($_POST['submit'])){
     <form action="" method="post">
       <div class="modal-content" style="padding: 10px;">
         <div class="modal-header" style="padding: 0px;margin-bottom: 20px;padding-bottom:10px">
-          <h4 class="modal-title fs-5" id="exampleModalLabel">Add Markup (Custom Tax)</h4>
+          <h4 class="modal-title fs-5" id="exampleModalLabel">Add Markup (Custom Fee)</h4>
           <button type="button" class="btn-close" style="border: none;;background-color:white" data-bs-dismiss="modal" aria-label="Close"><svg style="width: 15px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512"><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --><path d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"/></svg></button>
         </div>
         <div class="modal-body" style="padding: 0px;">
           <div class="row">
             <div class="col-lg-4">
-              <label for="inputEmail4" class="form-label">Tax Name</label>
+              <label for="inputEmail4" class="form-label">Fee Name</label>
               <input type="text" name="name" class="form-control" placeholder="Tax Name">
             </div>
             <div class="col-lg-4">
-              <label for="inputEmail4" class="form-label">Tax Type</label>
+              <label for="inputEmail4" class="form-label">Fee Type</label>
               <select name="type" class="form-control">
-                <option value="Variable">Variable</option>
+                <option value="Variable">Percentage</option>
                 <option value="Fixed">Fixed</option>
               </select>
             </div>
             <div class="col-lg-4">
-              <label for="inputEmail4" class="form-label">Tax Currency</label>
+              <label for="inputEmail4" class="form-label">Fee Currency</label>
               <select name="currency" class="form-control">
                 <option selected value="">Select currency</option>
                 <option value="USD">America (United States) Dollars – USD</option>
@@ -357,7 +357,7 @@ if(isset($_POST['submit'])){
           </div>
           <div class="row" style="margin-top: 20px;">
             <div class="col-lg-6">
-              <label for="inputEmail4" class="form-label">Tax Amount</label>
+              <label for="inputEmail4" class="form-label">Fee Amount</label>
               <input type="text" class="form-control" name="amount" placeholder="Tax Amount">
             </div>
             <div class="col-lg-6" style="margin-top:30px;">

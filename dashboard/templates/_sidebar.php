@@ -6,73 +6,60 @@
         <span class="menu-title">Dashboard</span>
       </a>
     </li>
-
-    <?php if ($_SESSION['userType'] == 2) { ?>
-      <li class="nav-item">
-          <a class="nav-link" data-toggle="collapse" href="#ui-transactions" aria-expanded="false" aria-controls="ui-basic">
-            <i class="ti-rss menu-icon"></i>
-            <span class="menu-title">Transactions</span>
-            <i class="menu-arrow"></i>
-          </a>
-          <div class="collapse" id="ui-transactions">
-            <ul class="nav flex-column sub-menu">
-              <li class="nav-item"> <a class="nav-link" href="manage-payment-transcations.php">Payment Record</a></li>
-              <li class="nav-item"> <a class="nav-link" href="manage-coupon-transcations.php">Coupon Record</a></li>
-            </ul>
-          </div>
-      </li>
-    <?php } ?>
-
-    
     <li class="nav-item">
-      <a class="nav-link" href="edit-profile">
-        <i class="ti-settings menu-icon"></i>
-        <span class="menu-title">Profile Setting</span>
+      <a class="nav-link" href="memberships">
+        <i class="mdi mdi-wallet-membership menu-icon"></i>
+        <span class="menu-title">Memberships</span>
       </a>
     </li>
+    <hr style="width: 100%;height:0.1px;background-color:#E5E5E5">
     <?php if ($_SESSION['userType'] == 2) { ?>
       <li class="nav-item">
-          <a class="nav-link" data-toggle="collapse" href="#ui-blog" aria-expanded="false" aria-controls="ui-basic">
-            <i class="ti-rss menu-icon"></i>
-            <span class="menu-title">Blog Posts</span>
-            <i class="menu-arrow"></i>
-          </a>
-          <div class="collapse" id="ui-blog">
-            <ul class="nav flex-column sub-menu">
-              <li class="nav-item"> <a class="nav-link" href="add-blog">Add Blog</a></li>
-              <li class="nav-item"> <a class="nav-link" href="manage-blog">Manage Blog</a></li>
-            </ul>
-          </div>
-      </li>
-    <?php } ?>
-    <?php if ($_SESSION['userType'] == 2) { ?>
-      <li class="nav-item">
-        <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-          <i class="mdi mdi-account-outline menu-icon"></i>
-          <span class="menu-title">All User</span>
+        <a class="nav-link" data-toggle="collapse" href="#ui-transactions" aria-expanded="false" aria-controls="ui-basic">
+          <i class="ti-rss menu-icon"></i>
+          <span class="menu-title">Transactions</span>
           <i class="menu-arrow"></i>
         </a>
-        <div class="collapse" id="ui-basic">
+        <div class="collapse" id="ui-transactions">
           <ul class="nav flex-column sub-menu">
-            <li class="nav-item"> <a class="nav-link" href="add-user">Add user</a></li>
-            <li class="nav-item"> <a class="nav-link" href="manage-users">Manage Users</a></li>
+            <li class="nav-item"> <a class="nav-link" href="manage-payment-transcations.php">Payment Record</a></li>
+            <li class="nav-item"> <a class="nav-link" href="manage-coupon-transcations.php">Coupon Record</a></li>
           </ul>
         </div>
       </li>
     <?php } ?>
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="collapse" href="#ui-ticket" aria-expanded="false" aria-controls="ui-basic">
-        <i class="mdi mdi-ticket-account menu-icon"></i>
-        <span class="menu-title">Tickets</span>
-        <i class="menu-arrow"></i>
-      </a>
-      <div class="collapse" id="ui-ticket">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="add-ticket">Add Ticket</a></li>
-          <li class="nav-item"> <a class="nav-link" href="manage-tickets">Manage Tickets</a></li>
-        </ul>
-      </div>
-    </li>
+    <?php if ($_SESSION['userType'] == 2) { ?>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#ui-markups" aria-expanded="false" aria-controls="ui-basic">
+          <i class="mdi mdi-database menu-icon"></i>
+          <span class="menu-title">All Markups</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="ui-markups">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="manage-currency">Curreny Markup</a></li>
+            <li class="nav-item"> <a class="nav-link" href="manage-tax">Fee Markup</a></li>
+            <li class="nav-item"> <a class="nav-link" href="manage-coupon">Offer Markup</a></li>
+          </ul>
+        </div>
+      </li>
+    <?php } ?>
+    <?php if ($_SESSION['userType'] == 2) { ?>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#ui-membership" aria-expanded="false" aria-controls="ui-basic">
+          <i class="mdi mdi-wallet-membership menu-icon"></i>
+          <span class="menu-title">Membership</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="ui-membership">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="add-membership">Add Membership</a></li>
+            <li class="nav-item"> <a class="nav-link" href="manage-membership">Manage Membership</a></li>
+          </ul>
+        </div>
+      </li>
+      <hr style="width: 100%;height:0.1px;background-color:#E5E5E5">
+    <?php } ?>
     <?php if ($_SESSION['userType'] == 2) { ?>
       <li class="nav-item">
         <a class="nav-link" data-toggle="collapse" href="#ui-category" aria-expanded="false" aria-controls="ui-basic">
@@ -92,6 +79,56 @@
     <?php } ?>
     <?php if ($_SESSION['userType'] == 2) { ?>
       <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#ui-blog" aria-expanded="false" aria-controls="ui-basic">
+          <i class="ti-rss menu-icon"></i>
+          <span class="menu-title">Blog Posts</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="ui-blog">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="add-blog">Add Blog</a></li>
+            <li class="nav-item"> <a class="nav-link" href="manage-blog">Manage Blog</a></li>
+          </ul>
+        </div>
+      </li>
+      <hr style="width: 100%;height:0.1px;background-color:#E5E5E5">
+    <?php } ?>
+    <?php if ($_SESSION['userType'] == 2) { ?>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+          <i class="mdi mdi-account-outline menu-icon"></i>
+          <span class="menu-title">All User</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="ui-basic">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="add-user">Add user</a></li>
+            <li class="nav-item"> <a class="nav-link" href="manage-users">Manage Users</a></li>
+          </ul>
+        </div>
+      </li>
+    <?php } ?>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#ui-ticket" aria-expanded="false" aria-controls="ui-basic">
+        <i class="mdi mdi-ticket-account menu-icon"></i>
+        <span class="menu-title">Support Ticket</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="ui-ticket">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"> <a class="nav-link" href="add-ticket">Add Ticket</a></li>
+          <li class="nav-item"> <a class="nav-link" href="manage-tickets">Manage Tickets</a></li>
+        </ul>
+      </div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="edit-profile">
+        <i class="ti-settings menu-icon"></i>
+        <span class="menu-title">Profile Setting</span>
+      </a>
+    </li>
+    <?php if ($_SESSION['userType'] == 2) { ?>
+      <li class="nav-item">
         <a class="nav-link" data-toggle="collapse" href="#ui-setting" aria-expanded="false" aria-controls="ui-basic">
           <i class="mdi mdi-security menu-icon"></i>
           <span class="menu-title">Settings</span>
@@ -108,10 +145,11 @@
       </li>
     <?php } ?>
 
-    <li class="nav-item">
+    <?php if ($_SESSION['userType'] == 2) { ?>
+      <li class="nav-item">
         <a class="nav-link" data-toggle="collapse" href="#ui-template" aria-expanded="false" aria-controls="ui-basic">
           <i class="mdi mdi-security menu-icon"></i>
-          <span class="menu-title">Templates</span>
+          <span class="menu-title">Template</span>
           <i class="menu-arrow"></i>
         </a>
         <div class="collapse" id="ui-template">
@@ -123,6 +161,6 @@
           </ul>
         </div>
       </li>
-
+    <?php } ?>
   </ul>
 </nav>

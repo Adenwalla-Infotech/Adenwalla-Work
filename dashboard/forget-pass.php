@@ -53,7 +53,7 @@ if(isset($_POST['submit'])){
             <?php } ?>
             <div class="auth-form-light text-left py-5 px-4 px-sm-5">
               <div class="brand-logo">
-                <img src="../assets/images/logo.png" alt="logo">
+                <img src="../uploads/images/<?php echo _siteconfig('_sitelogo'); ?>" alt="logo">
               </div>
               <h4>Forgot password?</h4>
               <h6 class="font-weight-light">Recovery is easy. It only takes a few steps</h6>
