@@ -144,7 +144,7 @@ if (isset($_POST['submit'])) {
                                             <label class="checkbox-inline" style="margin-left: 20px;">
                                                 <?php
                                                 if (_getsingleuser($_id, '_userstatus') == true) { ?><input name="isactive" value="true" checked type="checkbox">&nbsp;Is Active<?php }
-                                                                                                                                                                            if (_getsingleuser($_id, '_userstatus') != true) { ?><input name="isactive" value="true" type="checkbox">&nbsp;Is Active<?php }
+                                                if (_getsingleuser($_id, '_userstatus') != true) { ?><input name="isactive" value="true" type="checkbox">&nbsp;Is Active<?php }
                                                                                                                                                                                                                                                                                                     ?>
                                             </label>
                                             <label class="checkbox-inline" style="margin-left: 20px;">

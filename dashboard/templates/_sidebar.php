@@ -15,17 +15,17 @@
     <hr style="width: 100%;height:0.1px;background-color:#E5E5E5">
     <?php if ($_SESSION['userType'] == 2) { ?>
       <li class="nav-item">
-          <a class="nav-link" data-toggle="collapse" href="#ui-transactions" aria-expanded="false" aria-controls="ui-basic">
-            <i class="ti-rss menu-icon"></i>
-            <span class="menu-title">Transactions</span>
-            <i class="menu-arrow"></i>
-          </a>
-          <div class="collapse" id="ui-transactions">
-            <ul class="nav flex-column sub-menu">
-              <li class="nav-item"> <a class="nav-link" href="manage-payment-transcations.php">Payment Record</a></li>
-              <li class="nav-item"> <a class="nav-link" href="manage-coupon-transcations.php">Coupon Record</a></li>
-            </ul>
-          </div>
+        <a class="nav-link" data-toggle="collapse" href="#ui-transactions" aria-expanded="false" aria-controls="ui-basic">
+          <i class="ti-rss menu-icon"></i>
+          <span class="menu-title">Transactions</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="ui-transactions">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="manage-payment-transcations.php">Payment Record</a></li>
+            <li class="nav-item"> <a class="nav-link" href="manage-coupon-transcations.php">Coupon Record</a></li>
+          </ul>
+        </div>
       </li>
     <?php } ?>
     <?php if ($_SESSION['userType'] == 2) { ?>
@@ -37,9 +37,9 @@
         </a>
         <div class="collapse" id="ui-markups">
           <ul class="nav flex-column sub-menu">
-            <li class="nav-item"> <a class="nav-link" href="manage-currency">Currency Markup</a></li>
+            <li class="nav-item"> <a class="nav-link" href="manage-currency">Curreny Markup</a></li>
             <li class="nav-item"> <a class="nav-link" href="manage-tax">Fee Markup</a></li>
-            <li class="nav-item"> <a class="nav-link" href="manage-coupon">Offer Coupon</a></li>
+            <li class="nav-item"> <a class="nav-link" href="manage-coupon">Offer Markup</a></li>
           </ul>
         </div>
       </li>
@@ -79,17 +79,17 @@
     <?php } ?>
     <?php if ($_SESSION['userType'] == 2) { ?>
       <li class="nav-item">
-          <a class="nav-link" data-toggle="collapse" href="#ui-blog" aria-expanded="false" aria-controls="ui-basic">
-            <i class="ti-rss menu-icon"></i>
-            <span class="menu-title">Blog Posts</span>
-            <i class="menu-arrow"></i>
-          </a>
-          <div class="collapse" id="ui-blog">
-            <ul class="nav flex-column sub-menu">
-              <li class="nav-item"> <a class="nav-link" href="add-blog">Add Blog</a></li>
-              <li class="nav-item"> <a class="nav-link" href="manage-blog">Manage Blog</a></li>
-            </ul>
-          </div>
+        <a class="nav-link" data-toggle="collapse" href="#ui-blog" aria-expanded="false" aria-controls="ui-basic">
+          <i class="ti-rss menu-icon"></i>
+          <span class="menu-title">Blog Posts</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="ui-blog">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="add-blog">Add Blog</a></li>
+            <li class="nav-item"> <a class="nav-link" href="manage-blog">Manage Blog</a></li>
+          </ul>
+        </div>
       </li>
       <hr style="width: 100%;height:0.1px;background-color:#E5E5E5">
     <?php } ?>
@@ -140,6 +140,24 @@
             <li class="nav-item"> <a class="nav-link" href="email-config">Email Setting</a></li>
             <li class="nav-item"> <a class="nav-link" href="site-config">Site Setting</a></li>
             <li class="nav-item"> <a class="nav-link" href="payment-config">Payment Setting</a></li>
+          </ul>
+        </div>
+      </li>
+    <?php } ?>
+
+    <?php if ($_SESSION['userType'] == 2) { ?>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#ui-template" aria-expanded="false" aria-controls="ui-basic">
+          <i class="mdi mdi-security menu-icon"></i>
+          <span class="menu-title">Template</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="ui-template">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="add-purchase-template.php">Purchase Template</a></li>
+            <li class="nav-item"> <a class="nav-link" href="add-reminder-template.php">Reminder Template</a></li>
+            <li class="nav-item"> <a class="nav-link" href="add-lecture-template.php">Lecture Template</a></li>
+            <li class="nav-item"> <a class="nav-link" href="add-signup-template.php">Signup Template</a></li>
           </ul>
         </div>
       </li>

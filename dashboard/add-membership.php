@@ -45,7 +45,7 @@ if (isset($_POST['submit'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Add Category | <?php echo _siteconfig('_sitetitle'); ?></title>
+    <title>Add Membership | <?php echo _siteconfig('_sitetitle'); ?></title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@mdi/font@6.9.96/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../assets/vendors/feather/feather.css">
