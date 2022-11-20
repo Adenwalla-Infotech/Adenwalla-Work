@@ -13,9 +13,12 @@ if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['is
         echo "</script>";
     }
 }
+if (isset($_SESSION['template_success']) || !isset($_SESSION['template_success'])) {
+    $_SESSION['template_success'] = false;
+}
 
-if (isset($_SESSION['forgot_success']) || !isset($_SESSION['forgot_success'])) {
-    $_SESSION['forgot_success'] = false;
+if (isset($_SESSION['template_error']) || !isset($_SESSION['template_error'])) {
+    $_SESSION['template_error'] = false;
 }
 
 require('../includes/_functions.php');
@@ -69,13 +72,28 @@ if (isset($_POST['submit'])) {
             <!-- partial -->
             <div class="main-panel">
                 <div class="content-wrapper">
-                    <?php if ($_SESSION['forgot_success']) { ?>
-                        <div id="liveAlertPlaceholder">
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                <strong>Template Update</strong> Template saved successfully.
-                            </div>
-                        </div>
-                    <?php } ?>
+                <?php
+                     
+                     if ($_SESSION['template_success']) {
+                         ?>
+                             <div id="liveAlertPlaceholder">
+                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                     <strong>Template Update</strong> Template saved successfully.
+                                 </div>
+                             </div>
+                         <?php 
+                     } 
+                      
+                     if ($_SESSION['template_error']) {
+                         ?>
+                             <div id="liveAlertPlaceholder">
+                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                     <strong>Error</strong> while updating template.
+                                 </div>
+                             </div>
+                         <?php 
+                     } 
+                     ?>
 
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">

@@ -160,24 +160,27 @@ function _sendotp($otp, $userphone, $useremail)
 
         $curl = curl_init();
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $baseurl,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_SSL_VERIFYHOST => 0,
-            CURLOPT_SSL_VERIFYPEER => 0,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => json_encode($fields),
-            CURLOPT_HTTPHEADER => array(
-                "authorization: $apikey",
-                "accept: */*",
-                "cache-control: no-cache",
-                "content-type: application/json"
-            ),
-        ));
+        curl_setopt_array(
+            $curl,
+            array(
+                CURLOPT_URL => $baseurl,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_SSL_VERIFYHOST => 0,
+                CURLOPT_SSL_VERIFYPEER => 0,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_POSTFIELDS => json_encode($fields),
+                CURLOPT_HTTPHEADER => array(
+                    "authorization: $apikey",
+                    "accept: */*",
+                    "cache-control: no-cache",
+                    "content-type: application/json"
+                ),
+            )
+        );
 
         $response = curl_exec($curl);
         $err = curl_error($curl);
@@ -470,8 +473,8 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
-            
-            $tables = [$admin_table, $sms_config, $email_config, $site_config, $payment_config, $tickets_table, $ticket_comment, $contact_table, $category_table, $subcategory_table, $blog_table, $currency_table, $tax_table, $payment_trans, $coupon_table, $coupon_trans, $membership_table , $templates];
+
+            $tables = [$admin_table, $sms_config, $email_config, $site_config, $payment_config, $tickets_table, $ticket_comment, $contact_table, $category_table, $subcategory_table, $blog_table, $currency_table, $tax_table, $payment_trans, $coupon_table, $coupon_trans, $membership_table, $templates];
 
             foreach ($tables as $k => $sql) {
                 $query = @$temp_conn->query($sql);
@@ -598,24 +601,27 @@ function _notifyuser($useremail = '', $userphone = '', $message, $subject = '')
 
             $curl = curl_init();
 
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => $baseurl,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => "",
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 30,
-                CURLOPT_SSL_VERIFYHOST => 0,
-                CURLOPT_SSL_VERIFYPEER => 0,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => "POST",
-                CURLOPT_POSTFIELDS => json_encode($fields),
-                CURLOPT_HTTPHEADER => array(
-                    "authorization: $apikey",
-                    "accept: */*",
-                    "cache-control: no-cache",
-                    "content-type: application/json"
-                ),
-            ));
+            curl_setopt_array(
+                $curl,
+                array(
+                    CURLOPT_URL => $baseurl,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => "",
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 30,
+                    CURLOPT_SSL_VERIFYHOST => 0,
+                    CURLOPT_SSL_VERIFYPEER => 0,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => "POST",
+                    CURLOPT_POSTFIELDS => json_encode($fields),
+                    CURLOPT_HTTPHEADER => array(
+                        "authorization: $apikey",
+                        "accept: */*",
+                        "cache-control: no-cache",
+                        "content-type: application/json"
+                    ),
+                )
+            );
 
             $response = curl_exec($curl);
             $err = curl_error($curl);
@@ -626,7 +632,7 @@ function _notifyuser($useremail = '', $userphone = '', $message, $subject = '')
                 $alert = new PHPAlert();
                 $alert->warn("SMS not sent");
             } else {
-                $_SESSION['forgot_success'] = true;
+                $_SESSION['template_success'] = true;
             }
         }
     }
@@ -687,30 +693,30 @@ function _getuser($username = '', $usertype = '', $limit = '', $startfrom = '')
                     <td><?php echo $data['_useremail']; ?></td>
                     <td>
                         <?php
-                        if ($data['_usertype'] == 0) { ?>
+                if ($data['_usertype'] == 0) { ?>
                             <span>Student</span>
                         <?php }
-                        if ($data['_usertype'] == 1) { ?>
+                if ($data['_usertype'] == 1) { ?>
                             <span>Teacher</span>
                         <?php }
-                        if ($data['_usertype'] == 2) { ?>
+                if ($data['_usertype'] == 2) { ?>
                             <span>Site Admin</span>
                         <?php } ?>
                     </td>
                     <td>
                         <label class="checkbox-inline form-switch">
                             <?php
-                            if ($data['_userstatus'] == true) { ?><input disabled role="switch" name="isactive" value="true" checked type="checkbox"><?php }
-                                                                                                                                                    if ($data['_userstatus'] != true) { ?><input disabled role="switch" name="isactive" value="true" type="checkbox"><?php }
-                                                                                                                                                                                                                                                                        ?>
+                if ($data['_userstatus'] == true) { ?><input disabled role="switch" name="isactive" value="true" checked type="checkbox"><?php }
+                if ($data['_userstatus'] != true) { ?><input disabled role="switch" name="isactive" value="true" type="checkbox"><?php }
+                                                                    ?>
                         </label>
                     </td>
                     <td>
                         <label class="checkbox-inline">
                             <?php
-                            if ($data['_userverify'] == true) { ?><input disabled role="switch" name="isactive" value="true" checked type="checkbox"><?php }
-                                                                                                                                                    if ($data['_userverify'] != true) { ?><input disabled role="switch" name="isactive" value="true" type="checkbox"><?php }
-                                                                                                                                                                                                                                                                        ?>
+                if ($data['_userverify'] == true) { ?><input disabled role="switch" name="isactive" value="true" checked type="checkbox"><?php }
+                if ($data['_userverify'] != true) { ?><input disabled role="switch" name="isactive" value="true" type="checkbox"><?php }
+                                                                    ?>
                         </label>
                     </td>
                     <td>
@@ -736,30 +742,30 @@ function _getuser($username = '', $usertype = '', $limit = '', $startfrom = '')
                     <td><?php echo $data['_useremail']; ?></td>
                     <td>
                         <?php
-                        if ($data['_usertype'] == 0) { ?>
+                if ($data['_usertype'] == 0) { ?>
                             <span>Student</span>
                         <?php }
-                        if ($data['_usertype'] == 1) { ?>
+                if ($data['_usertype'] == 1) { ?>
                             <span>Teacher</span>
                         <?php }
-                        if ($data['_usertype'] == 2) { ?>
+                if ($data['_usertype'] == 2) { ?>
                             <span>Site Admin</span>
                         <?php } ?>
                     </td>
                     <td>
                         <label class="checkbox-inline form-switch">
                             <?php
-                            if ($data['_userstatus'] == true) { ?><input disabled role="switch" name="isactive" value="true" checked type="checkbox"><?php }
-                                                                                                                                                    if ($data['_userstatus'] != true) { ?><input disabled role="switch" name="isactive" value="true" type="checkbox"><?php }
-                                                                                                                                                                                                                                                                        ?>
+                if ($data['_userstatus'] == true) { ?><input disabled role="switch" name="isactive" value="true" checked type="checkbox"><?php }
+                if ($data['_userstatus'] != true) { ?><input disabled role="switch" name="isactive" value="true" type="checkbox"><?php }
+                                                                    ?>
                         </label>
                     </td>
                     <td>
                         <label class="checkbox-inline">
                             <?php
-                            if ($data['_userverify'] == true) { ?><input disabled role="switch" name="isactive" value="true" checked type="checkbox"><?php }
-                                                                                                                                                    if ($data['_userverify'] != true) { ?><input disabled role="switch" name="isactive" value="true" type="checkbox"><?php }
-                                                                                                                                                                                                                                                                        ?>
+                if ($data['_userverify'] == true) { ?><input disabled role="switch" name="isactive" value="true" checked type="checkbox"><?php }
+                if ($data['_userverify'] != true) { ?><input disabled role="switch" name="isactive" value="true" type="checkbox"><?php }
+                                                                    ?>
                         </label>
                     </td>
                     <td>
@@ -784,30 +790,30 @@ function _getuser($username = '', $usertype = '', $limit = '', $startfrom = '')
                     <td><?php echo $data['_useremail']; ?></td>
                     <td>
                         <?php
-                        if ($data['_usertype'] == 0) { ?>
+                if ($data['_usertype'] == 0) { ?>
                             <span>Student</span>
                         <?php }
-                        if ($data['_usertype'] == 1) { ?>
+                if ($data['_usertype'] == 1) { ?>
                             <span>Teacher</span>
                         <?php }
-                        if ($data['_usertype'] == 2) { ?>
+                if ($data['_usertype'] == 2) { ?>
                             <span>Site Admin</span>
                         <?php } ?>
                     </td>
                     <td>
                         <label class="checkbox-inline form-switch">
                             <?php
-                            if ($data['_userstatus'] == true) { ?><input disabled role="switch" name="isactive" value="true" checked type="checkbox"><?php }
-                                                                                                                                                    if ($data['_userstatus'] != true) { ?><input disabled role="switch" name="isactive" value="true" type="checkbox"><?php }
-                                                                                                                                                                                                                                                                        ?>
+                if ($data['_userstatus'] == true) { ?><input disabled role="switch" name="isactive" value="true" checked type="checkbox"><?php }
+                if ($data['_userstatus'] != true) { ?><input disabled role="switch" name="isactive" value="true" type="checkbox"><?php }
+                                                                    ?>
                         </label>
                     </td>
                     <td>
                         <label class="checkbox-inline">
                             <?php
-                            if ($data['_userverify'] == true) { ?><input disabled role="switch" name="isactive" value="true" checked type="checkbox"><?php }
-                                                                                                                                                    if ($data['_userverify'] != true) { ?><input disabled role="switch" name="isactive" value="true" type="checkbox"><?php }
-                                                                                                                                                                                                                                                                        ?>
+                if ($data['_userverify'] == true) { ?><input disabled role="switch" name="isactive" value="true" checked type="checkbox"><?php }
+                if ($data['_userverify'] != true) { ?><input disabled role="switch" name="isactive" value="true" type="checkbox"><?php }
+                                                                    ?>
                         </label>
                     </td>
                     <td>
@@ -858,9 +864,9 @@ function _updateProfile($username, $useremail, $userpassword, $userphone, $usera
 {
     require('_config.php');
     require('_alert.php');
-    $email =  $_SESSION['userEmailId'];
+    $email = $_SESSION['userEmailId'];
     $phone = $_SESSION['userPhoneNo'];
-    $id =  $_SESSION['userId'];
+    $id = $_SESSION['userId'];
     if ($phone != $userphone && $email != $useremail) {
         $sql = "SELECT * FROM `tblusers` WHERE`_useremail` = '$useremail' AND `_userphone` = '$userphone'";
         $run = true;
@@ -932,7 +938,7 @@ function _updatedb($newfile)
 {
     require('_config.php');
     require('_alert.php');
-    $id =  $_SESSION['userId'];
+    $id = $_SESSION['userId'];
     $sql = "UPDATE `tblusers` SET `_userdp`='$newfile' WHERE `_id` = $id";
     $query = mysqli_query($conn, $sql);
     if ($query) {
@@ -1094,7 +1100,6 @@ function _savepaymentconfig($suppliername, $apikey, $companyname, $isactive)
 function _saveticket($subject, $category, $status, $image, $user, $message)
 {
     require('_config.php');
-    require('_alert.php');
     if ($image) {
         $sql = "INSERT INTO `tbltickets`(`_title`, `_message`, `_image`, `_category`, `_subcategory`, `_useremail`, `_status`) VALUES ('$subject','$message','$image','$category','null','$user','$status')";
     } else {
@@ -1102,18 +1107,18 @@ function _saveticket($subject, $category, $status, $image, $user, $message)
     }
     $query = mysqli_query($conn, $sql);
     if ($query) {
-        $alert = new PHPAlert();
-        $alert->success("Ticket Generated");
+        $_SESSION['ticket_success'] = true;
+        header("location:");
     } else {
-        $alert = new PHPAlert();
-        $alert->warn("Something went wrong");
+        $_SESSION['ticket_error'] = true;
+        header("location:");
     }
 }
 
 function _gettickets($ticketid = '', $status = '', $limit = '', $startfrom = '')
 {
     require('_config.php');
-    $user =  $_SESSION['userEmailId'];
+    $user = $_SESSION['userEmailId'];
     if ($status != '' && $ticketid == '') {
         if ($_SESSION['userType'] == 2) {
             $sql = "SELECT * FROM `tbltickets` WHERE `_status` = '$status'";
@@ -1293,9 +1298,9 @@ function _getCategory($_categoryname = '', $status = '', $limit = '', $startfrom
 
                     <label class="checkbox-inline form-switch">
                         <?php
-                        if ($data['_status'] == true) { ?><input disabled role="switch" name="isactive" value="true" checked type="checkbox"><?php }
-                                                                                                                                            if ($data['_status'] != true) { ?><input disabled role="switch" name="isactive" value="true" type="checkbox"><?php }
-                                                                                                                                                                                                                                                            ?>
+            if ($data['_status'] == true) { ?><input disabled role="switch" name="isactive" value="true" checked type="checkbox"><?php }
+            if ($data['_status'] != true) { ?><input disabled role="switch" name="isactive" value="true" type="checkbox"><?php }
+                                                        ?>
                     </label>
                 </td>
                 <td>
@@ -1413,23 +1418,23 @@ function _getSubCategory($_subcategoryname = '', $categoryId = '', $limit = '', 
 
                     <label class="checkbox-inline form-switch">
                         <?php
-                        if ($data['_status'] == true) { ?><input disabled role="switch" name="isactive" value="true" checked type="checkbox"><?php }
-                                                                                                                                            if ($data['_status'] != true) { ?><input disabled role="switch" name="isactive" value="true" type="checkbox"><?php }
-                                                                                                                                                                                                                                                            ?>
+            if ($data['_status'] == true) { ?><input disabled role="switch" name="isactive" value="true" checked type="checkbox"><?php }
+            if ($data['_status'] != true) { ?><input disabled role="switch" name="isactive" value="true" type="checkbox"><?php }
+                                                        ?>
                     </label>
 
 
                 </td>
                 <td><?php
-                    $catid = $data['_categoryid'];
-                    $sql = "SELECT * FROM `tblcategory` WHERE `_id` = $catid";
-                    $query = mysqli_query($conn, $sql);
-                    if ($query) {
-                        foreach ($query as $data) {
-                            echo $data['_categoryname'];
-                        }
-                    }
-                    ?></td>
+            $catid = $data['_categoryid'];
+            $sql = "SELECT * FROM `tblcategory` WHERE `_id` = $catid";
+            $query = mysqli_query($conn, $sql);
+            if ($query) {
+                foreach ($query as $data) {
+                    echo $data['_categoryname'];
+                }
+            }
+                ?></td>
                 <td>
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
                 </td>
@@ -1510,20 +1515,20 @@ function _showCategoryOptions($_categoryID = '')
                 <option selected disabled value="">Category</option>
 
                 <?php
-                foreach ($query as $data) {
+            foreach ($query as $data) {
 
-                    $currentId = $data['_id'];
+                $currentId = $data['_id'];
 
-                    if ($_categoryID == $currentId) {
+                if ($_categoryID == $currentId) {
                 ?>
                         <option value="<?php echo $data['_id']; ?>" selected> <?php echo $data['_categoryname']; ?> </option>
                     <?php
-                    } else {
+                } else {
                     ?>
                         <option value="<?php echo $data['_id']; ?>"> <?php echo $data['_categoryname']; ?> </option>
                 <?php
-                    }
                 }
+            }
                 ?>
 
             </select>
@@ -1540,11 +1545,11 @@ function _showCategoryOptions($_categoryID = '')
             <select style="height: 46px;" id="categoryId" name="categoryId" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
                 <option selected disabled value="">Select Category</option>
                 <?php
-                foreach ($query as $data) {
+            foreach ($query as $data) {
                 ?>
                     <option value="<?php echo $data['_id']; ?>"> <?php echo $data['_categoryname']; ?> </option>
                 <?php
-                }
+            }
                 ?>
 
             </select>
@@ -1575,21 +1580,21 @@ function _showSubCategoryOptions($_subcategoryID = '')
 
                 <?php
 
-                foreach ($query as $data) {
+            foreach ($query as $data) {
 
-                    $currentId = $data['_id'];
+                $currentId = $data['_id'];
 
-                    if ($_subcategoryID == $currentId) {
+                if ($_subcategoryID == $currentId) {
                 ?>
                         <option value="<?php echo $data['_id']; ?>" selected> <?php echo $data['_subcategoryname']; ?> </option>
                     <?php
 
-                    } else {
+                } else {
                     ?>
                         <option value="<?php echo $data['_id']; ?>"> <?php echo $data['_subcategoryname']; ?> </option>
                 <?php
-                    }
                 }
+            }
 
                 ?>
 
@@ -1609,11 +1614,11 @@ function _showSubCategoryOptions($_subcategoryID = '')
             <select style="height: 46px;" id="subcategoryId" name="subcategoryId" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
                 <option selected disabled value=""> Sub Category</option>
                 <?php
-                foreach ($query as $data) {
+            foreach ($query as $data) {
                 ?>
                     <option value="<?php echo $data['_id']; ?>"> <?php echo $data['_subcategoryname']; ?> </option>
                 <?php
-                }
+            }
                 ?>
 
             </select>
@@ -1630,16 +1635,15 @@ function _showSubCategoryOptions($_subcategoryID = '')
 function _createBlog($_blogtitle, $_blogdesc, $_blogcategory, $_blogsubcategory, $_blogmetadesc, $_blogimg, $_userid, $_status)
 {
     require('_config.php');
-    require('_alert.php');
 
     $sql = "INSERT INTO `tblblog`(`_blogtitle`, `_parmalink`, `_blogdesc`, `_blogcategory`, `_blogsubcategory`, `_blogmetadesc`,`_blogimg`, `_userid`, `_status`) VALUES ('$_blogtitle', '$_blogtitle','$_blogdesc', '$_blogcategory', '$_blogsubcategory', '$_blogmetadesc','$_blogimg', '$_userid', '$_status')";
     $query = mysqli_query($conn, $sql);
     if ($query) {
-        $alert = new PHPAlert();
-        $alert->success("Blog Created");
+        $_SESSION['blog_success'] = true;
+        header("location:");
     } else {
-        $alert = new PHPAlert();
-        $alert->warn("Blog Failed");
+        $_SESSION['blog_error'] = true;
+        header("location:");
     }
 }
 
@@ -1672,29 +1676,29 @@ function _getBlogs($blogtitle = '', $blogcategory = '', $blogsubcategory = '', $
                 <td>
                     <label class="checkbox-inline form-switch">
                         <?php
-                        if ($data['_status'] == 'true') {
+            if ($data['_status'] == 'true') {
                         ?>
                             <input disabled role="switch" name="isactive" value="true" checked type="checkbox">
                         <?php
-                        }
-                        if (!$data['_status']) {
+            }
+            if (!$data['_status']) {
                         ?>
                             <input disabled role="switch" name="isactive" value="false" type="checkbox">
                         <?php
-                        }
+            }
                         ?>
                     </label>
                 </td>
                 <td>
                     <?php
-                    $catid = $data['_blogcategory'];
-                    $sql = "SELECT * FROM `tblcategory` WHERE `_id` = $catid";
-                    $query = mysqli_query($conn, $sql);
-                    if ($query) {
-                        foreach ($query as $result) {
-                            echo $result['_categoryname'];
-                        }
-                    }
+            $catid = $data['_blogcategory'];
+            $sql = "SELECT * FROM `tblcategory` WHERE `_id` = $catid";
+            $query = mysqli_query($conn, $sql);
+            if ($query) {
+                foreach ($query as $result) {
+                    echo $result['_categoryname'];
+                }
+            }
                     ?>
                 </td>
                 <td>
@@ -1709,7 +1713,7 @@ function _getBlogs($blogtitle = '', $blogcategory = '', $blogsubcategory = '', $
                         <a href='manage-blog?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
                 </td>
             <?php
-                    }
+            }
             ?>
 
             </tr>
@@ -1724,18 +1728,17 @@ function updateBlog($_blogtitle, $_blogdesc, $_blogcategory, $_blogsubcategory, 
 {
 
     require('_config.php');
-    require('_alert.php');
 
 
     $sql = "UPDATE `tblblog` SET `_blogtitle`='$_blogtitle' , `_blogdesc`='$_blogdesc'  , `_blogcategory`='$_blogcategory'  , `_blogsubcategory`='$_blogsubcategory' , `_blogmetadesc`='$_blogmetadesc' , `_blogimg`='$_blogimg' , `_status`='$_status' WHERE `_id` = $_id";
 
     $query = mysqli_query($conn, $sql);
     if ($query) {
-        $alert = new PHPAlert();
-        $alert->success("Blog Updated");
+        $_SESSION['blog_success'] = true;
+        header("location:");
     } else {
-        $alert = new PHPAlert();
-        $alert->warn("Something went wrong");
+        $_SESSION['blog_error'] = true;
+        header("location:");
     }
 }
 
@@ -1787,7 +1790,7 @@ function _createmarkup($base, $conversion, $price, $status)
 function _getmarkup($conversion = '', $status = '', $limit = '', $startfrom = '')
 {
     require('_config.php');
-    $user =  $_SESSION['userEmailId'];
+    $user = $_SESSION['userEmailId'];
     if ($status != '' && $conversion == '') {
         $sql = "SELECT * FROM `tblcurrency` WHERE `_status` = '$status'";
     } else if ($conversion != '' && $status != '') {
@@ -1805,16 +1808,16 @@ function _getmarkup($conversion = '', $status = '', $limit = '', $startfrom = ''
                 <td>
                     <label class="checkbox-inline form-switch">
                         <?php
-                        if ($data['_status'] == 'true') {
+            if ($data['_status'] == 'true') {
                         ?>
                             <input disabled role="switch" name="isactive" value="true" checked type="checkbox">
                         <?php
-                        }
-                        if (!$data['_status']) {
+            }
+            if (!$data['_status']) {
                         ?>
                             <input disabled role="switch" name="isactive" value="false" type="checkbox">
                         <?php
-                        }
+            }
                         ?>
                     </label>
                 </td>
@@ -1876,7 +1879,7 @@ function _createtaxmarkup($name, $type, $currency, $amount, $status)
 function _gettaxmarkup($name = '', $status = '', $limit = '', $startfrom = '')
 {
     require('_config.php');
-    $user =  $_SESSION['userEmailId'];
+    $user = $_SESSION['userEmailId'];
     if ($status != '' && $name == '') {
         $sql = "SELECT * FROM `tbltaxes` WHERE `_status` = '$status'";
     } else if ($name != '' && $status != '') {
@@ -1894,16 +1897,16 @@ function _gettaxmarkup($name = '', $status = '', $limit = '', $startfrom = '')
                 <td>
                     <label class="checkbox-inline form-switch">
                         <?php
-                        if ($data['_status'] == 'true') {
+            if ($data['_status'] == 'true') {
                         ?>
                             <input disabled role="switch" name="isactive" value="true" checked type="checkbox">
                         <?php
-                        }
-                        if (!$data['_status']) {
+            }
+            if (!$data['_status']) {
                         ?>
                             <input disabled role="switch" name="isactive" value="false" type="checkbox">
                         <?php
-                        }
+            }
                         ?>
                     </label>
                 </td>
@@ -1966,7 +1969,7 @@ function _gettotal($sub, $currency, $discount)
         $final = $sub - $discount; // if not put it in else
 
         $arrtotal = $final + array_sum($tax);
-        if($arrtotal < 0){
+        if ($arrtotal < 0) {
             $arrtotal = 0;
         }
         return $arrtotal;
@@ -2136,20 +2139,20 @@ function _updatepayment($id, $status)
 // Membership Module
 
 
-function _createMembership($membershipname, $membershipdesc, $duration, $discount, $discounttype, $price,$isactive)
+function _createMembership($membershipname, $membershipdesc, $duration, $discount, $discounttype, $price, $isactive)
 {
     require('_config.php');
-    require('_alert.php');
+
 
     $sql = "INSERT INTO `tblmembership`(`_membershipname`, `_membershipdesc`, `_price`, `_benefit`, `_benefittype`, `_duration`, `_status`) VALUES ('$membershipname','$membershipdesc','$price','$discount','$discounttype','$duration','$isactive')";
 
     $query = mysqli_query($conn, $sql);
     if ($query) {
-        $alert = new PHPAlert();
-        $alert->success("Membership Created");
+        $_SESSION['membership_success'] = true;
+        header("location:");
     } else {
-        $alert = new PHPAlert();
-        $alert->warn("Creation Failed");
+        $_SESSION['membership_error'] = true;
+        header("location:");
     }
 }
 
@@ -2171,16 +2174,16 @@ function _getMembership($membershipname = '', $limit = '', $startfrom = '')
                 <td>
                     <label class="checkbox-inline form-switch">
                         <?php
-                        if ($data['_status'] == 'true') {
+            if ($data['_status'] == 'true') {
                         ?>
                             <input disabled role="switch" name="isactive" value="true" checked type="checkbox">
                         <?php
-                        }
-                        if (!$data['_status']) {
+            }
+            if (!$data['_status']) {
                         ?>
                             <input disabled role="switch" name="isactive" value="false" type="checkbox">
                         <?php
-                        }
+            }
                         ?>
                     </label>
                 </td>
@@ -2214,22 +2217,21 @@ function _getSingleMembership($id, $param)
 }
 
 
-function _updateMembership($_id,$membershipname, $membershipdesc, $duration, $discount, $discounttype, $price, $isactive)
+function _updateMembership($_id, $membershipname, $membershipdesc, $duration, $discount, $discounttype, $price, $isactive)
 {
 
     require('_config.php');
-    require('_alert.php');
-
 
     $sql = "UPDATE `tblmembership` SET `_membershipname`='$membershipname' , `_membershipdesc`='$membershipdesc' , `_duration`='$duration' , `_benefit`='$discount' , `_benefittype`='$discounttype' , `_price`='$price' , `_status`='$isactive' WHERE `_id` = $_id";
 
+
     $query = mysqli_query($conn, $sql);
     if ($query) {
-        $alert = new PHPAlert();
-        $alert->success("Membership Updated");
+        $_SESSION['membership_success'] = true;
+        header("location:");
     } else {
-        $alert = new PHPAlert();
-        $alert->warn("Something went wrong");
+        $_SESSION['membership_error'] = true;
+        header("location:");
     }
 }
 
@@ -2246,67 +2248,70 @@ function _deleteMembership($id)
     }
 }
 
-function checkmembership($amount,$currency){
+function checkmembership($amount, $currency)
+{
     require('_config.php');
     $useremail = $_SESSION['userEmailId'];
     $sql = "SELECT * FROM `tblusers` WHERE `_useremail` = '$useremail'";
-    $query = mysqli_query($conn,$sql);
-    foreach($query as $data){
+    $query = mysqli_query($conn, $sql);
+    foreach ($query as $data) {
         $membership = $data['_usermembership'];
     }
-    if($membership){
+    if ($membership) {
         $sql = "SELECT * FROM `tblmembership` WHERE `_id` = $membership";
-        $query = mysqli_query($conn,$sql);
-        if($query){
-            foreach($query as $data){
-               $type = $data['_benefittype'];
-               $benifit = $data['_benefit'];
+        $query = mysqli_query($conn, $sql);
+        if ($query) {
+            foreach ($query as $data) {
+                $type = $data['_benefittype'];
+                $benifit = $data['_benefit'];
             }
-            if($type == 'Variable'){
+            if ($type == 'Variable') {
                 $discount = ($benifit / 100) * $amount;
                 return $discount;
-            }else{
-                return _conversion($benifit,$currency);
+            } else {
+                return _conversion($benifit, $currency);
             }
         }
-    }else{
+    } else {
         return false;
     }
 }
 
-function _allmemberships(){
+function _allmemberships()
+{
     require('_config.php');
     $sql = "SELECT * FROM `tblmembership` WHERE `_status` = 'true'";
-    $query = mysqli_query($conn,$sql);
-    if($query){
-        foreach($query as $data){ ?>
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        foreach ($query as $data) { ?>
             <div class="col-lg-4">
-                    <div class="price-box">
-                        <div class="">
-                        	<div class="price-label basic"><?php echo $data['_membershipname']; ?></div>
-                        	<div class="price">INR&nbsp;<?php echo $data['_price']; ?></div>
-                        	<div class="price-info">Per Month, For <?php echo $data['_duration']; ?> Month.</div>
-                        </div>
-                        <div class="info">
-                            <ul>
-                                <?php echo $data['_membershipdesc']; ?>
-                            </ul>
-                            <a href="payment?amount=<?php echo $data['_price']; ?>&currency=INR&prod=membership&id=<?php echo $data['_id']; ?>" style="margin-top:-20px" class="plan-btn">Join Plan</a>
-                        </div>
+                <div class="price-box">
+                    <div class="">
+                        <div class="price-label basic"><?php echo $data['_membershipname']; ?></div>
+                        <div class="price">INR&nbsp;<?php echo $data['_price']; ?></div>
+                        <div class="price-info">Per Month, For <?php echo $data['_duration']; ?> Month.</div>
+                    </div>
+                    <div class="info">
+                        <ul>
+                            <?php echo $data['_membershipdesc']; ?>
+                        </ul>
+                        <a href="payment?amount=<?php echo $data['_price']; ?>&currency=INR&prod=membership&id=<?php echo $data['_id']; ?>" style="margin-top:-20px" class="plan-btn">Join Plan</a>
                     </div>
                 </div>
+            </div>
         <?php }
     }
 }
 
-function _purchasememebership($userid,$memberid){
+function _purchasememebership($userid, $memberid)
+{
     require('_config.php');
     $duration = _getSingleMembership($memberid, '_duration');
     date_default_timezone_set('Africa/Nairobi');
     $date = strtotime(date('Y-m-d H:i:s'));
-    $enddata =  date("Y-m-d", strtotime("+$duration month", $date))."\n";
+    $enddata = date("Y-m-d", strtotime("+$duration month", $date)) . "\n";
     $sql = "UPDATE `tblusers` SET `_usermembership`='$memberid',`_usermemstart`='$date',`_usermemsleft`='$enddata' WHERE `_id` = $userid";
-    $query = mysqli_query($conn,$sql);
+    $query = mysqli_query($conn, $sql);
 }
 
 // Transcations
@@ -2323,10 +2328,10 @@ function _getTranscations($useremail = '', $amount = '', $status = '', $startfro
     if ($amount != '') {
         $sql = "SELECT * FROM `tblpayment` WHERE `_amount`='$amount' ";
     }
-    if ($status != '' && $useremail =='' && $amount == '') {
+    if ($status != '' && $useremail == '' && $amount == '') {
         $sql = "SELECT * FROM `tblpayment` WHERE `_status`='$status' ";
     }
-    if ($useremail == '' && $status =='' && $amount == '') {
+    if ($useremail == '' && $status == '' && $amount == '') {
         $sql = "SELECT * FROM `tblpayment` ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
     }
 
@@ -2376,7 +2381,7 @@ function _getSingleTranscations($id, $param)
 
 
 
-function _updateTranscation($_id, $useremail, $amount, $couponcode, $currency,  $isactive)
+function _updateTranscation($_id, $useremail, $amount, $couponcode, $currency, $isactive)
 {
 
     require('_config.php');
@@ -2419,7 +2424,7 @@ function _getCouponTranscation($couponname = '', $couponamount = '', $startfrom 
 
     if ($query) {
         foreach ($query as $data) {
-        ?>
+                  ?>
             <tr>
                 <td><?php echo $data['_id']; ?></td>
                 <td><?php echo $data['_couponname']; ?></td>
@@ -2475,13 +2480,14 @@ function _updateCouponTranscation($_id, $couponname, $couponamount, $useremail)
 
 // Product Functions
 
-function _getproduct($id,$type){
+function _getproduct($id, $type)
+{
     require('_config.php');
-    if($type == 'membership'){
+    if ($type == 'membership') {
         $sql = "SELECT * FROM `tblmembership` WHERE `_id` = $id";
-        $query = mysqli_query($conn,$sql);
-        if($query){
-            foreach($query as $data){ ?>
+        $query = mysqli_query($conn, $sql);
+        if ($query) {
+            foreach ($query as $data) { ?>
                 <li style="border:none;" class="list-group-item d-flex justify-content-between lh-condensed">
                     <div>
                         <h6 class="my-0"><?php echo $data['_membershipname']; ?></h6>
@@ -2489,7 +2495,7 @@ function _getproduct($id,$type){
                     </div>
                     <span class="text-muted">INR&nbsp;<?php echo $data['_price']; ?></span>
                 </li>
-            <?php }
+<?php }
         }
     }
 }
@@ -2504,20 +2510,21 @@ function _updateEmailTemplate($templateName, $templateCode)
 
     $sql = "UPDATE `tblemailtemplates` SET `$templateName`='$templateCode' WHERE `_id` = 2 ";
 
-    
+
     $query = mysqli_query($conn, $sql);
     if ($query) {
-        $_SESSION['forgot_success'] = true;
+        $_SESSION['template_success'] = true;
         header("location:");
     } else {
-        $alert = new PHPAlert();
-        $alert->warn("Something went wrong");
+        $_SESSION['template_error'] = true;
+        header("location:");
     }
 }
 
 
 
-function _getSingleEmailTemplate($templateName){
+function _getSingleEmailTemplate($templateName)
+{
 
     require('_config.php');
     $sql = "SELECT * FROM `tblemailtemplates` WHERE `_id` = 2 ";
@@ -2527,7 +2534,6 @@ function _getSingleEmailTemplate($templateName){
             return $data[$templateName];
         }
     }
-
 }
 
 
