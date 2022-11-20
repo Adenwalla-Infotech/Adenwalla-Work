@@ -14,10 +14,13 @@ if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['is
     }
 }
 
-if (isset($_SESSION['forgot_success']) || !isset($_SESSION['forgot_success'])) {
-    $_SESSION['forgot_success'] = false;
+if (isset($_SESSION['blog_success']) || !isset($_SESSION['blog_success'])) {
+    $_SESSION['blog_success'] = false;
 }
 
+if (isset($_SESSION['blog_error']) || !isset($_SESSION['blog_error'])) {
+    $_SESSION['blog_error'] = false;
+}
 $_id = $_GET['id'];
 
 require('../includes/_functions.php');
@@ -94,13 +97,30 @@ if (isset($_POST['submit'])) {
             <!-- partial -->
             <div class="main-panel">
                 <div class="content-wrapper">
-                    <?php if ($_SESSION['forgot_success']) { ?>
+                    <?php
+
+                    if ($_SESSION['blog_success']) {
+                    ?>
                         <div id="liveAlertPlaceholder">
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                <strong>Blog Update!</strong> Blog Update successfully.
+                                <strong>Blog Updated!</strong> Blog Updated successfully.
                             </div>
                         </div>
-                    <?php } ?>
+                    <?php
+                    }
+
+                    if ($_SESSION['blog_error']) {
+                    ?>
+                        <div id="liveAlertPlaceholder">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <strong>Blog Updation Failed!</strong> Error while updating blog.
+                            </div>
+                        </div>
+                    <?php
+                    }
+
+
+                    ?>
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">

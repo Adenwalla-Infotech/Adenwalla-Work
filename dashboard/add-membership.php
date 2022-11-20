@@ -13,9 +13,12 @@ if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['is
         echo "</script>";
     }
 }
+if (isset($_SESSION['membership_success']) || !isset($_SESSION['membership_success'])) {
+    $_SESSION['membership_success'] = false;
+}
 
-if (isset($_SESSION['forgot_success']) || !isset($_SESSION['forgot_success'])) {
-    $_SESSION['forgot_success'] = false;
+if (isset($_SESSION['membership_error']) || !isset($_SESSION['membership_error'])) {
+    $_SESSION['membership_error'] = false;
 }
 
 require('../includes/_functions.php');
@@ -76,13 +79,30 @@ if (isset($_POST['submit'])) {
             <!-- partial -->
             <div class="main-panel">
                 <div class="content-wrapper">
-                    <?php if ($_SESSION['forgot_success']) { ?>
-                        <div id="liveAlertPlaceholder">
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                <strong>Membership Created!</strong> New Membership created successfully.
+                    <?php 
+                    
+                    if ($_SESSION['membership_success']) {
+                        ?>
+                            <div id="liveAlertPlaceholder">
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <strong>Membership Created!</strong> New Membership created successfully.
+                                </div>
                             </div>
-                        </div>
-                    <?php } ?>
+                        <?php 
+                    } 
+                    
+                    if ($_SESSION['membership_error']) {
+                        ?>
+                            <div id="liveAlertPlaceholder">
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Membership Creation Failed!</strong> Error while creating membership.
+                                </div>
+                            </div>
+                        <?php 
+                    } 
+                    
+                    
+                    ?>
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
