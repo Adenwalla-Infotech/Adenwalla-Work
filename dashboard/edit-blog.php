@@ -220,6 +220,18 @@ if (isset($_POST['submit'])) {
             <!-- page-body-wrapper ends -->
         </div>
         <div class="container"></div>
+        <script>
+            const getSubCategory = (val) => {
+                $.ajax({
+                    type: "POST",
+                    url: "getSubCategory.php",
+                    data: 'catid=' + val,
+                    success: function(data) {
+                        $(`#subcategoryId`).html(data);
+                    }
+                });
+            }
+        </script>
         <script src="../includes/_validation.js"></script>
 
 </body>

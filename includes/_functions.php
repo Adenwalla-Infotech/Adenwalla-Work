@@ -723,7 +723,13 @@ function _getuser($username = '', $usertype = '', $limit = '', $startfrom = '')
                         <?php echo date("F j, Y", strtotime($data['CreationDate'])); ?>
                     </td>
                     <td>
-                        <?php echo date("F j, Y", strtotime($data['UpdationDate'])); ?>
+                    <?php
+                    if (strtotime($data['UpdationDate']) == '') {
+                        echo "Not Updated Yet";
+                    } else {
+                        echo date("M j, Y", strtotime($data['UpdationDate']));
+                    }
+                    ?>
                     </td>
                     <td><a href="edit-user?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
                         <a href='manage-users?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
@@ -772,7 +778,13 @@ function _getuser($username = '', $usertype = '', $limit = '', $startfrom = '')
                         <?php echo date("F j, Y", strtotime($data['CreationDate'])); ?>
                     </td>
                     <td>
-                        <?php echo date("F j, Y", strtotime($data['UpdationDate'])); ?>
+                    <?php
+                    if (strtotime($data['UpdationDate']) == '') {
+                        echo "Not Updated Yet";
+                    } else {
+                        echo date("M j, Y", strtotime($data['UpdationDate']));
+                    }
+                    ?>
                     </td>
                     <td><a href="edit-user?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
                         <a href='manage-users?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
@@ -820,7 +832,13 @@ function _getuser($username = '', $usertype = '', $limit = '', $startfrom = '')
                         <?php echo date("F j, Y", strtotime($data['CreationDate'])); ?>
                     </td>
                     <td>
-                        <?php echo date("F j, Y", strtotime($data['UpdationDate'])); ?>
+                    <?php
+                    if (strtotime($data['UpdationDate']) == '') {
+                        echo "Not Updated Yet";
+                    } else {
+                        echo date("M j, Y", strtotime($data['UpdationDate']));
+                    }
+                    ?>
                     </td>
                     <td><a href="edit-user?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
                         <a href='manage-users?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
@@ -1154,7 +1172,13 @@ function _gettickets($ticketid = '', $status = '', $limit = '', $startfrom = '')
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
                 </td>
                 <td>
-                    <?php echo date("M j, Y", strtotime($data['UpdationDate'])); ?>
+                <?php
+                    if (strtotime($data['UpdationDate']) == '') {
+                        echo "Not Updated Yet";
+                    } else {
+                        echo date("M j, Y", strtotime($data['UpdationDate']));
+                    }
+                    ?>
                 </td>
                 <td><a href="view-ticket?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-eye"></a>
                     <?php if ($_SESSION['userType'] == 2) { ?>
@@ -1307,7 +1331,13 @@ function _getCategory($_categoryname = '', $status = '', $limit = '', $startfrom
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
                 </td>
                 <td>
-                    <?php echo date("M j, Y", strtotime($data['UpdationDate'])); ?>
+                    <?php
+            if (strtotime($data['UpdationDate']) == '') {
+                echo "Not Updated Yet";
+            } else {
+                echo date("M j, Y", strtotime($data['UpdationDate']));
+            }
+                    ?>
                 </td>
                 <td><a href="edit-category?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
                     <?php if ($_SESSION['userType'] == 2) { ?>
@@ -1439,7 +1469,13 @@ function _getSubCategory($_subcategoryname = '', $categoryId = '', $limit = '', 
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
                 </td>
                 <td>
-                    <?php echo date("M j, Y", strtotime($data['UpdationDate'])); ?>
+                    <?php
+            if (strtotime($data['UpdationDate']) == '') {
+                echo "Not Updated Yet";
+            } else {
+                echo date("M j, Y", strtotime($data['UpdationDate']));
+            }
+                    ?>
                 </td>
                 <td><a href="edit-subcategory?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
                     <?php if ($_SESSION['userType'] == 2) { ?>
@@ -1510,7 +1546,7 @@ function _showCategoryOptions($_categoryID = '')
         if ($query) {
         ?>
             <label for="categoryId" class="form-label">Select Category</label>
-            <select style="height: 40px;" id="categoryId" name="categoryId" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
+            <select style="height: 40px;" id="categoryId" name="categoryId" onClick="getSubCategory(this.options[this.selectedIndex].value)" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
 
                 <option selected disabled value="">Category</option>
 
@@ -1542,7 +1578,7 @@ function _showCategoryOptions($_categoryID = '')
         $query = mysqli_query($conn, $sql);
         if ($query) { ?>
             <label for="categoryId" class="form-label">Select Category</label>
-            <select style="height: 46px;" id="categoryId" name="categoryId" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
+            <select style="height: 46px;" id="categoryId" name="categoryId" onClick="getSubCategory(this.options[this.selectedIndex].value)" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
                 <option selected disabled value="">Select Category</option>
                 <?php
             foreach ($query as $data) {
@@ -1567,33 +1603,23 @@ function _showSubCategoryOptions($_subcategoryID = '')
 
     if ($_subcategoryID != '') {
 
-        $sql = "SELECT * FROM `tblsubcategory`  ";
+        $sql = "SELECT * FROM `tblsubcategory` where `_id`=$_subcategoryID  ";
 
         $query = mysqli_query($conn, $sql);
         if ($query) {
+
+
+
         ?>
             <label for="subcategoryId" class="form-label">Select Sub-Category</label>
-            <select style="height: 40px;" id="subcategoryId" name="subcategoryId" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
-
-                <option selected disabled value=""> Sub Category</option>
-
+            <select style="height: 40px;" id="subcategoryId" name="subcategoryId" id="subcategory" class="form-control form-control-lg" required>
 
                 <?php
 
             foreach ($query as $data) {
-
-                $currentId = $data['_id'];
-
-                if ($_subcategoryID == $currentId) {
                 ?>
-                        <option value="<?php echo $data['_id']; ?>" selected> <?php echo $data['_subcategoryname']; ?> </option>
-                    <?php
-
-                } else {
-                    ?>
-                        <option value="<?php echo $data['_id']; ?>"> <?php echo $data['_subcategoryname']; ?> </option>
+                    <option value="<?php echo $data['_id']; ?>" selected> <?php echo $data['_subcategoryname']; ?> </option>
                 <?php
-                }
             }
 
                 ?>
@@ -1611,15 +1637,8 @@ function _showSubCategoryOptions($_subcategoryID = '')
 
         ?>
             <label for="subcategoryId" class="form-label">Select Sub-Category</label>
-            <select style="height: 46px;" id="subcategoryId" name="subcategoryId" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
-                <option selected disabled value=""> Sub Category</option>
-                <?php
-            foreach ($query as $data) {
-                ?>
-                    <option value="<?php echo $data['_id']; ?>"> <?php echo $data['_subcategoryname']; ?> </option>
-                <?php
-            }
-                ?>
+            <select style="height: 46px;" id="subcategoryId" name="subcategoryId" id="subcategory" class="form-control form-control-lg" required>
+
 
             </select>
         <?php
@@ -1681,7 +1700,7 @@ function _getBlogs($blogtitle = '', $blogcategory = '', $blogsubcategory = '', $
                             <input disabled role="switch" name="isactive" value="true" checked type="checkbox">
                         <?php
             }
-            if (!$data['_status']) {
+            if ($data['_status'] == 'false') {
                         ?>
                             <input disabled role="switch" name="isactive" value="false" type="checkbox">
                         <?php
@@ -1705,7 +1724,13 @@ function _getBlogs($blogtitle = '', $blogcategory = '', $blogsubcategory = '', $
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
                 </td>
                 <td>
-                    <?php echo date("M j, Y", strtotime($data['UpdationDate'])); ?>
+                    <?php
+            if (strtotime($data['UpdationDate']) == '') {
+                echo "Not Updated Yet";
+            } else {
+                echo date("M j, Y", strtotime($data['UpdationDate']));
+            }
+                    ?>
                 </td>
                 <td>
                     <a href="edit-blog?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
@@ -2191,7 +2216,13 @@ function _getMembership($membershipname = '', $limit = '', $startfrom = '')
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
                 </td>
                 <td>
-                    <?php echo date("M j, Y", strtotime($data['UpdationDate'])); ?>
+                <?php
+                    if (strtotime($data['UpdationDate']) == '') {
+                        echo "Not Updated Yet";
+                    } else {
+                        echo date("M j, Y", strtotime($data['UpdationDate']));
+                    }
+                    ?>
                 </td>
                 <td><a href="edit-membership?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
                     <?php if ($_SESSION['userType'] == 2) { ?>
@@ -2353,7 +2384,13 @@ function _getTranscations($useremail = '', $amount = '', $status = '', $startfro
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
                 </td>
                 <td>
-                    <?php echo date("M j, Y", strtotime($data['UpdationDate'])); ?>
+                <?php
+                    if (strtotime($data['UpdationDate']) == '') {
+                        echo "Not Updated Yet";
+                    } else {
+                        echo date("M j, Y", strtotime($data['UpdationDate']));
+                    }
+                    ?>
                 </td>
                 <td>
                     <a href="edit-transcation.php?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
@@ -2434,7 +2471,13 @@ function _getCouponTranscation($couponname = '', $couponamount = '', $startfrom 
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
                 </td>
                 <td>
-                    <?php echo date("M j, Y", strtotime($data['UpdationDate'])); ?>
+                <?php
+                    if (strtotime($data['UpdationDate']) == '') {
+                        echo "Not Updated Yet";
+                    } else {
+                        echo date("M j, Y", strtotime($data['UpdationDate']));
+                    }
+                    ?>
                 </td>
                 <td>
                     <a href="edit-coupon-transcation.php?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
