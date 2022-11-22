@@ -474,7 +474,32 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
 
-            $tables = [$admin_table, $sms_config, $email_config, $site_config, $payment_config, $tickets_table, $ticket_comment, $contact_table, $category_table, $subcategory_table, $blog_table, $currency_table, $tax_table, $payment_trans, $coupon_table, $coupon_trans, $membership_table, $templates];
+
+            $invoice = "CREATE TABLE IF NOT EXISTS `tblinvoice` (
+                `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                `_clientname` varchar(55) NOT NULL,
+                `_clientemail` varchar(55) NOT NULL,
+                `_clientnumber` varchar(55) NOT NULL, 
+                `_clientaddress` varchar(55) NOT NULL, 
+                `_refno` varchar(55) NOT NULL,
+                `_invoicenote` varchar(255) NOT NULL,
+                `_duedate` varchar(55) NOT NULL,
+                `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                `UpdationDate` datetime NULL ON UPDATE current_timestamp()
+            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
+
+
+            $invoiceitems = "CREATE TABLE IF NOT EXISTS `tblinvoiceitems` (
+                `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                `_invoiceno` varchar(55) NOT NULL,
+                `_productname` varchar(55) NOT NULL,
+                `_productquantity` varchar(55) NOT NULL, 
+                `_productamount` varchar(55) NOT NULL, 
+                `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                `UpdationDate` datetime NULL ON UPDATE current_timestamp()
+            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
+
+            $tables = [$admin_table, $sms_config, $email_config, $site_config, $payment_config, $tickets_table, $ticket_comment, $contact_table, $category_table, $subcategory_table, $blog_table, $currency_table, $tax_table, $payment_trans, $coupon_table, $coupon_trans, $membership_table, $templates, $invoice, $invoiceitems];
 
             foreach ($tables as $k => $sql) {
                 $query = @$temp_conn->query($sql);
@@ -723,13 +748,13 @@ function _getuser($username = '', $usertype = '', $limit = '', $startfrom = '')
                         <?php echo date("F j, Y", strtotime($data['CreationDate'])); ?>
                     </td>
                     <td>
-                    <?php
-                    if (strtotime($data['UpdationDate']) == '') {
-                        echo "Not Updated Yet";
-                    } else {
-                        echo date("M j, Y", strtotime($data['UpdationDate']));
-                    }
-                    ?>
+                        <?php
+                if (strtotime($data['UpdationDate']) == '') {
+                    echo "Not Updated Yet";
+                } else {
+                    echo date("M j, Y", strtotime($data['UpdationDate']));
+                }
+                        ?>
                     </td>
                     <td><a href="edit-user?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
                         <a href='manage-users?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
@@ -778,13 +803,13 @@ function _getuser($username = '', $usertype = '', $limit = '', $startfrom = '')
                         <?php echo date("F j, Y", strtotime($data['CreationDate'])); ?>
                     </td>
                     <td>
-                    <?php
-                    if (strtotime($data['UpdationDate']) == '') {
-                        echo "Not Updated Yet";
-                    } else {
-                        echo date("M j, Y", strtotime($data['UpdationDate']));
-                    }
-                    ?>
+                        <?php
+                if (strtotime($data['UpdationDate']) == '') {
+                    echo "Not Updated Yet";
+                } else {
+                    echo date("M j, Y", strtotime($data['UpdationDate']));
+                }
+                        ?>
                     </td>
                     <td><a href="edit-user?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
                         <a href='manage-users?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
@@ -832,13 +857,13 @@ function _getuser($username = '', $usertype = '', $limit = '', $startfrom = '')
                         <?php echo date("F j, Y", strtotime($data['CreationDate'])); ?>
                     </td>
                     <td>
-                    <?php
-                    if (strtotime($data['UpdationDate']) == '') {
-                        echo "Not Updated Yet";
-                    } else {
-                        echo date("M j, Y", strtotime($data['UpdationDate']));
-                    }
-                    ?>
+                        <?php
+                if (strtotime($data['UpdationDate']) == '') {
+                    echo "Not Updated Yet";
+                } else {
+                    echo date("M j, Y", strtotime($data['UpdationDate']));
+                }
+                        ?>
                     </td>
                     <td><a href="edit-user?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
                         <a href='manage-users?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
@@ -1172,12 +1197,12 @@ function _gettickets($ticketid = '', $status = '', $limit = '', $startfrom = '')
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
                 </td>
                 <td>
-                <?php
-                    if (strtotime($data['UpdationDate']) == '') {
-                        echo "Not Updated Yet";
-                    } else {
-                        echo date("M j, Y", strtotime($data['UpdationDate']));
-                    }
+                    <?php
+            if (strtotime($data['UpdationDate']) == '') {
+                echo "Not Updated Yet";
+            } else {
+                echo date("M j, Y", strtotime($data['UpdationDate']));
+            }
                     ?>
                 </td>
                 <td><a href="view-ticket?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-eye"></a>
@@ -2216,12 +2241,12 @@ function _getMembership($membershipname = '', $limit = '', $startfrom = '')
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
                 </td>
                 <td>
-                <?php
-                    if (strtotime($data['UpdationDate']) == '') {
-                        echo "Not Updated Yet";
-                    } else {
-                        echo date("M j, Y", strtotime($data['UpdationDate']));
-                    }
+                    <?php
+            if (strtotime($data['UpdationDate']) == '') {
+                echo "Not Updated Yet";
+            } else {
+                echo date("M j, Y", strtotime($data['UpdationDate']));
+            }
                     ?>
                 </td>
                 <td><a href="edit-membership?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
@@ -2384,12 +2409,12 @@ function _getTranscations($useremail = '', $amount = '', $status = '', $startfro
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
                 </td>
                 <td>
-                <?php
-                    if (strtotime($data['UpdationDate']) == '') {
-                        echo "Not Updated Yet";
-                    } else {
-                        echo date("M j, Y", strtotime($data['UpdationDate']));
-                    }
+                    <?php
+            if (strtotime($data['UpdationDate']) == '') {
+                echo "Not Updated Yet";
+            } else {
+                echo date("M j, Y", strtotime($data['UpdationDate']));
+            }
                     ?>
                 </td>
                 <td>
@@ -2471,12 +2496,12 @@ function _getCouponTranscation($couponname = '', $couponamount = '', $startfrom 
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
                 </td>
                 <td>
-                <?php
-                    if (strtotime($data['UpdationDate']) == '') {
-                        echo "Not Updated Yet";
-                    } else {
-                        echo date("M j, Y", strtotime($data['UpdationDate']));
-                    }
+                    <?php
+            if (strtotime($data['UpdationDate']) == '') {
+                echo "Not Updated Yet";
+            } else {
+                echo date("M j, Y", strtotime($data['UpdationDate']));
+            }
                     ?>
                 </td>
                 <td>
@@ -2538,7 +2563,7 @@ function _getproduct($id, $type)
                     </div>
                     <span class="text-muted">INR&nbsp;<?php echo $data['_price']; ?></span>
                 </li>
-<?php }
+            <?php }
         }
     }
 }
@@ -2578,6 +2603,295 @@ function _getSingleEmailTemplate($templateName)
         }
     }
 }
+
+
+
+// Invoice
+
+function _createInvoice($_clientname, $_clientemail, $_clientnumber, $_clientaddress, $_invoicenote,$_refno, $_duedate)
+{
+
+    require('_config.php');
+    require('_alert.php');
+
+    $sql = "INSERT INTO `tblinvoice`(`_clientname`,`_clientemail`,`_clientnumber`,`_clientaddress`,`_refno`,`_invoicenote`,`_duedate`) VALUES ('$_clientname','$_clientemail','$_clientnumber','$_clientaddress','$_refno','$_invoicenote','$_duedate')";
+
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->success("Invoice Created");
+    } else {
+        $alert = new PHPAlert();
+        $alert->warn("Creation Failed");
+    }
+}
+
+
+
+function _getInvoice($clientemail = '', $refno = '', $startfrom = '', $limit = '')
+{
+
+    require('_config.php');
+
+
+
+    if($clientemail != '' && $refno == ''){
+
+        $sql = "SELECT * FROM `tblinvoice` where `_clientemail` LIKE '%$clientemail%' ";
+
+    }
+
+    if($clientemail == '' && $refno != ''){
+
+        $sql = "SELECT * FROM `tblinvoice` where `_refno` LIKE '%$refno%' ";
+
+    }
+
+    if($clientemail == '' && $refno == '' ){
+
+        $sql = "SELECT * FROM `tblinvoice` ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
+
+    }
+ 
+
+
+
+    $query = mysqli_query($conn, $sql);
+
+    if ($query) {
+        foreach ($query as $data) {
+            ?>
+            <tr>
+                <td><?php echo $data['_id']; ?></td>
+                <td><?php echo $data['_clientname']; ?></td>
+                <td><?php echo $data['_clientemail']; ?></td>
+                <td><?php echo $data['_refno']; ?></td>
+                <td><?php echo $data['_duedate']; ?></td>
+                <td>
+                    <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
+                </td>
+                <td>
+                    <?php
+            if (strtotime($data['UpdationDate']) == '') {
+                echo "Not Updated Yet";
+            } else {
+                echo date("M j, Y", strtotime($data['UpdationDate']));
+            }
+                    ?>
+                </td>
+                <td>
+                    <a href="edit-invoice.php?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
+                    <a href='manage-invoice?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
+                </td>
+            </tr>
+        <?php
+        }
+    }
+}
+
+
+function _viewInvoice($startfrom = '', $limit = '')
+{
+
+    require('_config.php');
+
+
+    $sql = "SELECT * FROM `tblinvoice` ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
+
+
+    $query = mysqli_query($conn, $sql);
+
+    if ($query) {
+        foreach ($query as $data) {
+            ?>
+            <tr>
+                <td><?php echo $data['_id']; ?></td>
+                <td><?php echo $data['_clientname']; ?></td>
+                <td><?php echo $data['_clientemail']; ?></td>
+                <td><?php echo $data['_duedate']; ?></td>
+                <td>
+                    <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
+                </td>
+                <td>
+                    <?php
+            if (strtotime($data['UpdationDate']) == '') {
+                echo "Not Updated Yet";
+            } else {
+                echo date("M j, Y", strtotime($data['UpdationDate']));
+            }
+                    ?>
+                </td>
+                <td>
+                    <a href="view-invoice.php?invoiceno=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-eye"></a>
+                </td>
+            </tr>
+        <?php
+        }
+    }
+}
+
+
+
+function _getSingleInvoice($id, $param)
+{
+
+    require('_config.php');
+    $sql = "SELECT * FROM `tblinvoice` WHERE `_id` = $id";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        foreach ($query as $data) {
+            return $data[$param];
+        }
+    }
+}
+
+
+function _updateInvoice($_id, $_clientname, $_clientemail, $_clientnumber, $_clientaddress, $_invoicenote, $_duedate)
+{
+
+    require('_config.php');
+    require('_alert.php');
+
+
+    $sql = "UPDATE `tblinvoice` SET `_clientname`='$_clientname' , `_clientemail`='$_clientemail' , `_clientnumber`='$_clientnumber' ,`_clientaddress`='$_clientaddress' , `_invoicenote`='$_invoicenote' , `_duedate`='$_duedate' WHERE `_id` = '$_id'";
+
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->success("Invoice Updated");
+    } else {
+        $alert = new PHPAlert();
+        $alert->warn("Something went wrong");
+    }
+}
+
+
+
+function _deleteInvoice($id)
+{
+    require('_config.php');
+    require('_alert.php');
+
+    $sql = "DELETE FROM `tblinvoice` WHERE `_id` = '$id'";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->success("Invoice Deleted");
+    }
+}
+
+
+
+function _addInvoiceItem($invoiceno, $productname, $invoicequantity, $invoiceamount)
+{
+
+
+    require('_config.php');
+    require('_alert.php');
+
+    $sql = "INSERT INTO `tblinvoiceitems`(`_invoiceno`,`_productname`,`_productquantity`,`_productamount`) VALUES ('$invoiceno','$productname','$invoicequantity','$invoiceamount')";
+
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->success("Invoice Item Added");
+    } else {
+        $alert = new PHPAlert();
+        $alert->warn("Creation Failed");
+    }
+}
+
+
+
+function _getInvoiceItems($invoiceno, $startfrom = '', $limit = '')
+{
+
+    require('_config.php');
+
+
+    $sql = "SELECT * FROM `tblinvoiceitems` where `_invoiceno`='$invoiceno' ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
+
+
+    $query = mysqli_query($conn, $sql);
+
+    if ($query) {
+        foreach ($query as $data) {
+        ?>
+            <tr>
+                <td><?php echo $data['_id']; ?></td>
+                <td><?php echo $data['_productname']; ?></td>
+                <td><?php echo $data['_productquantity']; ?></td>
+                <td><?php echo $data['_productamount']; ?></td>
+                <td>
+                    <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
+                </td>
+                <td>
+                    <?php
+            if (strtotime($data['UpdationDate']) == '') {
+                echo "Not Updated Yet";
+            } else {
+                echo date("M j, Y", strtotime($data['UpdationDate']));
+            }
+                    ?>
+                </td>
+                <td>
+                    <span style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box" onclick="callEditItem(<?php echo $data['_invoiceno'];?>,<?php echo $data['_id'];?>)" ></span>
+                    <a href='edit-invoice?invoiceno=<?php echo $invoiceno?>&itemno=<?php echo $data['_id'];  ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
+                </td>
+            </tr>
+<?php
+        }
+    }
+}
+
+
+
+function _getSingleInvoiceItem($invoiceno, $id, $param)
+{
+
+    require('_config.php');
+    $sql = "SELECT * FROM `tblinvoiceitems` WHERE `_invoiceno` = '$invoiceno' AND `_id`='$id' ";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        foreach ($query as $data) {
+            return $data[$param];
+        }
+    }
+}
+
+
+function _updateInvoiceItems($_id, $invoiceno, $productname, $invoicequantity, $invoiceamount)
+{
+
+    require('_config.php');
+    require('_alert.php');
+
+
+    $sql = "UPDATE `tblinvoiceitems` SET `_productname`='$productname' , `_productquantity`='$invoicequantity' , `_productamount`='$invoiceamount'  WHERE `_id` = '$_id' AND `_invoiceno`='$invoiceno' ";
+
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->success("Invoice Item Updated");
+    } else {
+        $alert = new PHPAlert();
+        $alert->warn("Something went wrong");
+    }
+}
+
+function _deleteInvoiceItems($invoiceno, $id)
+{
+    require('_config.php');
+
+    $sql = "DELETE FROM `tblinvoiceitems` WHERE `_invoiceno` = '$invoiceno' AND `_id`='$id' ";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $_SESSION['forgot_success'] = true;
+        header("location:edit-invoice?id=$invoiceno");
+    }
+}
+
+
 
 
 ?>
