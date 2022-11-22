@@ -18,7 +18,6 @@ require('../includes/_functions.php');
 
 $_id =  $_SESSION['userId'];
 $membership = _getsingleuser($_id,'_usermembership');
-
 if (isset($_POST['submit'])) {
     $username = $_POST['username'];
     $useremail = $_POST['useremail'];
@@ -171,12 +170,14 @@ if(isset($_POST['update'])){
                                                 </div>
                                             </form>
                                         </div>
-                                        <div class="card mb-4 mb-xl-0" style="margin-top: 25px;border-radius:22px">
-                                            <div class="card-header">Purchased Membership <svg fill="green" xmlns="http://www.w3.org/2000/svg" style="width: 15px;float:right" viewBox="0 0 512 512"><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --><path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/></svg></div>
-                                            <?php _getproduct($membership,'membership'); ?>
-                                            <hr style="margin-top: -0px;">
-                                            <p class="p-3" style="margin-top: -20px;margin-left:3px">Expires at  <a href="#">&nbsp;<?php echo date("M j, Y",strtotime(_getsingleuser($_id,'_usermemsleft'))); ?></a><a href="#" style="color: red;float:right">Cancel Now</a></p>
-                                        </div>
+                                        <?php if(_getsingleuser($_id,'_usermemsleft')){?>
+                                            <div class="card mb-4 mb-xl-0" style="margin-top: 25px;border-radius:22px">
+                                                <div class="card-header">Purchased Membership <svg fill="green" xmlns="http://www.w3.org/2000/svg" style="width: 15px;float:right" viewBox="0 0 512 512"><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --><path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/></svg></div>
+                                                <?php _getproduct($membership,'membership'); ?>
+                                                <hr style="margin-top: -0px;">
+                                                <p class="p-3" style="margin-top: -20px;margin-left:3px">Expires at  <a href="#">&nbsp;<?php echo date("M j, Y",strtotime(_getsingleuser($_id,'_usermemsleft'))); ?></a><a href="#" style="color: red;float:right">Cancel Now</a></p>
+                                            </div>
+                                        <?php }?>
                                     </div>
                                     <div class="col-xl-8">
                                         <form action="" method="post" class="needs-validation" novalidate  enctype="multipart/form-data">

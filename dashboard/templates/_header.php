@@ -3,7 +3,7 @@ $_userid =  $_SESSION['userId'];
 ?>
 <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
   <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-    <a class="navbar-brand brand-logo mr-5" style="margin-left:20px" href="index.html"><img src="../uploads/images/<?php echo _siteconfig('_sitelogo'); ?>" class="mr-2" alt="logo" /></a>
+    <a class="navbar-brand brand-logo mr-5" style="margin-left:30px" href=""><img src="../uploads/images/<?php echo _siteconfig('_sitelogo'); ?>" class="mr-2" alt="logo" /></a>
     <a class="navbar-brand brand-logo-mini" href="index.html"><img src="../uploads/images/<?php echo _siteconfig('_sitereslogo'); ?>" alt="logo" /></a>
   </div>
   <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">

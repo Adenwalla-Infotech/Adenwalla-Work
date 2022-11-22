@@ -490,9 +490,15 @@ if (isset($_POST['pay'])) {
                                                     </div>
                                                     <?php }?>
                                                     <?php if($_SESSION['paybtn']){?>
-                                                        <div class="col-12" style="padding: 0px">
-                                                            <button name="pay" id="rzp-button1" class="btn btn-success" style="margin-top: 30px;width:95%" type="button">Pay&nbsp;&nbsp;<?php echo $currency;?>&nbsp;<?php echo round(_gettotal($getamount,$currency,$applydiscount),2);?></button>
-                                                    </div>
+                                                        <?php if(round(_gettotal($getamount,$currency,$applydiscount),2) < 1){ ?>
+                                                            <div class="col-12" style="padding: 0px">
+                                                                <button name="payment" class="btn btn-success" style="margin-top: 30px;width:95%" type="button" id="rzp-button2">Pay&nbsp;&nbsp;<?php echo $currency;?>&nbsp;<?php echo round(_gettotal($getamount,$currency,$applydiscount),2);?></button>
+                                                            </div>
+                                                        <?php }else{ ?>
+                                                            <div class="col-12" style="padding: 0px">
+                                                                <button name="pay" id="rzp-button1" class="btn btn-success" style="margin-top: 30px;width:95%" type="button">Pay&nbsp;&nbsp;<?php echo $currency;?>&nbsp;<?php echo round(_gettotal($getamount,$currency,$applydiscount),2);?></button>
+                                                            </div>
+                                                        <?php }?>
                                                     <?php }?>
                                                 </div>    
                                             </div>
@@ -565,6 +571,19 @@ if (isset($_POST['pay'])) {
         <input type="text" name="productid" value="<?php echo $productid; ?>" style="display: none;">
     <?php }?>
     <button id="transpay" type="submit" name="payment" hidden></button>
+</form>
+<form action="success" method="post">
+    <script>
+        document.getElementById('rzp-button2').onclick = function(e){
+            alert('hit')
+            document.getElementById('tranpay').click();
+        }
+    </script>
+    <?php if($product && $productid){ ?>       
+        <input type="text" name="product" value="<?php echo $product; ?>" style="display: none;">
+        <input type="text" name="productid" value="<?php echo $productid; ?>" style="display: none;">
+    <?php }?>
+    <button id="tranpay" type="submit" name="payment" hidden></button>
 </form>
 
 </html>

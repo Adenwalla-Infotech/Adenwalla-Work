@@ -1,10 +1,7 @@
 <?php
 
-
 require('../includes/_functions.php');
 require('../includes/_config.php');
-
-
 
 $invoiceno = $_GET['invoiceno'];
 
@@ -59,8 +56,7 @@ $invoiceno = $_GET['invoiceno'];
                     <div class="row">
                         <div class="col-12">
                             <div class="text-center text-150">
-                                <i class="fa fa-book fa-2x text-success-m2 mr-1"></i>
-                                <span class="text-default-d3">Adenwalla.com</span>
+                                <img style="width: 180px;" src="../uploads/images/<?php echo _siteconfig('_sitelogo'); ?>" alt="logo" />
                             </div>
                         </div>
                     </div>
@@ -123,16 +119,15 @@ $invoiceno = $_GET['invoiceno'];
                             $productName =  $data['_productname'];
                             $productQuantity =  $data['_productquantity'];
                             $productRate =  $data['_productamount'];
-                            $total = $productQuantity * $productRate;
-
+                            $total = $productRate * $productQuantity;
                         ?>
                             <div class="text-95 text-secondary-d3">
                                 <div class="row mb-2 mb-sm-0 py-25">
                                     <div class="d-none d-sm-block col-1"> <?php echo $index+1 ?> </div>
                                     <div class="col-9 col-sm-5"><?php echo $productName ?></div>
                                     <div class="d-none d-sm-block col-2"><?php echo $productQuantity ?></div>
-                                    <div class="d-none d-sm-block col-2 text-95"><?php echo $productRate ?></div>
-                                    <div class="col-2 text-secondary-d2" id="totalAmount" ><?php echo $total ?></div>
+                                    <div class="d-none d-sm-block col-2 text-95">INR&nbsp;<?php echo $productRate ?></div>
+                                    <div class="col-2 text-secondary-d2" id="totalAmount" >INR&nbsp;<?php echo $total ?></div>
                                 </div>
                             </div>
                         <?php

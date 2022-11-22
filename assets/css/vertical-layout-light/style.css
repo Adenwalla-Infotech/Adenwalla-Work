@@ -28381,7 +28381,7 @@ div.tagsinput span.tag a {
 }
 
 .auth .brand-logo img {
-  width: 280px;
+  width: 220px;
 }
 
 .auth form .form-group {
@@ -28651,6 +28651,8 @@ div.tagsinput span.tag a {
   padding: 0.25rem 0 0 3.07rem;
   background: #4B49AC;
   padding-bottom: 12px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
 }
 
 .sidebar .nav.sub-menu .nav-item {
@@ -28823,7 +28825,7 @@ div.tagsinput span.tag a {
 
 .navbar .navbar-brand-wrapper .navbar-brand img {
   max-width: 100%;
-  height: 34px;
+  height: 40px;
   margin: auto;
   vertical-align: middle;
 }

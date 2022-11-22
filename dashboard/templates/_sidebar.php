@@ -14,7 +14,8 @@
     </li>
     <li class="nav-item">
       <a class="nav-link" href="myinvoice">
-        <i class="mdi mdi-wallet-membership menu-icon"></i>
+        <!-- <i class="mdi mdi-wallet-membership menu-icon"></i> -->
+        <i class="mdi mdi-cash-multiple menu-icon"></i>
         <span class="menu-title">My Invoice</span>
       </a>
     </li>
@@ -22,7 +23,7 @@
     <?php if ($_SESSION['userType'] == 2) { ?>
       <li class="nav-item">
         <a class="nav-link" data-toggle="collapse" href="#ui-transactions" aria-expanded="false" aria-controls="ui-basic">
-          <i class="ti-rss menu-icon"></i>
+          <i class="mdi mdi-currency-inr menu-icon"></i>
           <span class="menu-title">Transactions</span>
           <i class="menu-arrow"></i>
         </a>
@@ -133,6 +134,8 @@
         <span class="menu-title">Profile Setting</span>
       </a>
     </li>
+    <hr style="width: 100%;height:0.1px;background-color:#E5E5E5">
+
     <?php if ($_SESSION['userType'] == 2) { ?>
       <li class="nav-item">
         <a class="nav-link" data-toggle="collapse" href="#ui-setting" aria-expanded="false" aria-controls="ui-basic">
@@ -154,8 +157,8 @@
     <?php if ($_SESSION['userType'] == 2) { ?>
       <li class="nav-item">
         <a class="nav-link" data-toggle="collapse" href="#ui-template" aria-expanded="false" aria-controls="ui-basic">
-          <i class="mdi mdi-security menu-icon"></i>
-          <span class="menu-title">Template</span>
+          <i class="mdi mdi-email-outline menu-icon"></i>
+          <span class="menu-title">Email Template</span>
           <i class="menu-arrow"></i>
         </a>
         <div class="collapse" id="ui-template">
@@ -167,11 +170,10 @@
           </ul>
         </div>
       </li>
-    <?php } ?>
-
     <li class="nav-item">
         <a class="nav-link" data-toggle="collapse" href="#ui-invoice" aria-expanded="false" aria-controls="ui-basic">
-          <i class="mdi mdi-wallet-membership menu-icon"></i>
+          <!-- <i class="mdi mdi-wallet-membership menu-icon"></i> -->
+          <i class="mdi mdi-cash-multiple menu-icon"></i>
           <span class="menu-title">Invoice</span>
           <i class="menu-arrow"></i>
         </a>
@@ -182,6 +184,6 @@
           </ul>
         </div>
       </li>
-
+      <?php } ?>
   </ul>
 </nav>

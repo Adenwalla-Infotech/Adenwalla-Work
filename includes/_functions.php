@@ -1,5 +1,14 @@
 <?php
 
+// Dashboard Functions 
+function _getdashtotal($param,$active,$status){
+    require('_config.php');
+    $sql = "SELECT * FROM `$param` WHERE `$active` = '$status'";
+    $query = mysqli_query($conn,$sql);
+    $count = mysqli_num_rows($query);
+    return $count;
+}
+
 /* Auth Functions */
 function _login($userpassword, $useremail)
 {
@@ -65,6 +74,8 @@ function _signup($userpassword, $useremail, $username, $userphone)
 
                 $query = mysqli_query($conn, $sql);
                 if ($query) {
+                    $_SESSION['temp_username'] = $username;
+                    $_SESSION['temp_phone'] = $userphone;
                     _sendotp($userotp, $userphone, $useremail);
                 }
             }
@@ -87,7 +98,8 @@ function _forgetpass($useremail, $userphone)
         if ($query) {
             $subject = 'Password Changed';
             $message = "Password : $userpass (Your New Password)";
-            _notifyuser($useremail, $userphone, $message, $subject);
+            $sendmail = "Password : $userpass (Your New Password)";
+            _notifyuser($useremail, $userphone, $sendmail, $message, $subject);
         }
     } else {
         $alert = new PHPAlert();
@@ -127,16 +139,29 @@ function _verifyotp($verifyotp)
             $query = mysqli_query($conn, $sql);
             if ($query) {
                 $_SESSION['signup_success'] = true;
+                $sql = "SELECT * FROM `tblemailtemplates`";
+                $query = mysqli_query($conn,$sql);
+                foreach($query as $data){
+                    $template = $data['_signuptemplate'];
+                }
+                $variables = array();
+                $variables['name'] = $_SESSION['temp_username'];
+                $variables['companyname'] = _siteconfig('_sitetitle');
+                $sendmail = _usetemplate($template,$variables);
+                $subject = "Account Created Successfully";
+                $userphone = $_SESSION['temp_phone'];
+                $message = 'Thank you for creating account with '._siteconfig('_sitetitle').'. Kindy Login to Continue';
+                _notifyuser($useremail, $userphone, $sendmail,$message, $subject);
                 echo "<script>";
                 echo "window.location.href = 'login'";
                 echo "</script>";
             } else {
                 $alert = new PHPAlert();
-                $alert->warn("Verification Failed");
+                $alert->warn("Something Went Wrong");
             }
         } else {
             $alert = new PHPAlert();
-            $alert->warn("Something Went Wrong");
+            $alert->warn("Verification Failed");
         }
     }
 }
@@ -585,7 +610,19 @@ function _createuser($username, $useremail, $usertype, $userphone, $isactive, $i
                 $query = mysqli_query($conn, $sql);
                 if ($query) {
                     if ($notify) {
-                        _notifyuser($useremail, $userphone, $message, $subject);
+                        $sql = "SELECT * FROM `tblemailtemplates`";
+                        $query = mysqli_query($conn,$sql);
+                        foreach($query as $data){
+                            $template = $data['_signuptemplate'];
+                        }
+                        $variables = array();
+                        $variables['name'] = $username;
+                        $variables['companyname'] = _siteconfig('_sitetitle');
+                        $sendmail = _usetemplate($template,$variables);
+                        $message = 'Thank you for creating account with '._siteconfig('_sitetitle').'. Kindy Login to Continue';
+                        _notifyuser($useremail, $userphone, $sendmail,$message, $subject);
+                        $alert = new PHPAlert();
+                        $alert->success("User Created");
                     } else {
                         $alert = new PHPAlert();
                         $alert->success("User Created");
@@ -603,7 +640,7 @@ use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-function _notifyuser($useremail = '', $userphone = '', $message, $subject = '')
+function _notifyuser($useremail = '', $userphone = '', $sendmail = '', $message = '', $subject = '')
 {
     require('_config.php');
     if ($userphone != '') {
@@ -697,7 +734,8 @@ function _notifyuser($useremail = '', $userphone = '', $message, $subject = '')
             $mail->isHTML(true);
 
             $mail->Subject = $subject;
-            $mail->Body = "<i>$message</i>";
+            $mail->Body = $sendmail;
+            $mail->IsHTML(true); 
             if ($mail->send()) {
                 $_SESSION['send_mail'] = true;
             }
@@ -2365,9 +2403,36 @@ function _purchasememebership($userid, $memberid)
     $duration = _getSingleMembership($memberid, '_duration');
     date_default_timezone_set('Africa/Nairobi');
     $date = strtotime(date('Y-m-d H:i:s'));
-    $enddata = date("Y-m-d", strtotime("+$duration month", $date)) . "\n";
+    $enddata = date("Y-m-d", strtotime("+$duration month", $date));
     $sql = "UPDATE `tblusers` SET `_usermembership`='$memberid',`_usermemstart`='$date',`_usermemsleft`='$enddata' WHERE `_id` = $userid";
-    $query = mysqli_query($conn, $sql);
+    $query = mysqli_query($conn,$sql);
+    if($query){
+        $sql = "SELECT * FROM `tblemailtemplates`";
+        $query = mysqli_query($conn,$sql);
+        foreach($query as $data){
+            $template = $data['_purchasetemplate'];
+        }
+        $variables = array();
+        $variables['name'] = _getsingleuser($userid,'_username');
+        $variables['price'] = _getSingleMembership($memberid, '_price');
+        $variables['product'] = _getSingleMembership($memberid, '_membershipname');
+        $variables['date'] = date('M j, Y');
+        $variables['companyname'] = _siteconfig('_sitetitle');
+        $variables['paymentid'] = $_SESSION['transid'];
+        $sendmail = _usetemplate($template,$variables);
+        $message = 'Thank you for your purchase with '._siteconfig('_sitetitle').'. We have mailed your order details on '._getsingleuser($userid,'_useremail').'';
+        _notifyuser(_getsingleuser($userid,'_useremail'),_getsingleuser($userid,'_userphone'),$sendmail,$message,'Purchase Completed');
+    }
+}
+
+
+function _usetemplate($template,$data){
+    foreach($data as $key => $value)
+    {
+        $template = str_replace('{{ '.$key.' }}', $value, $template);
+    }
+
+    return $template;
 }
 
 // Transcations
@@ -2569,15 +2634,15 @@ function _getproduct($id, $type)
 }
 
 
+// Email Templates
 
 function _updateEmailTemplate($templateName, $templateCode)
 {
 
     require('_config.php');
-
-
-    $sql = "UPDATE `tblemailtemplates` SET `$templateName`='$templateCode' WHERE `_id` = 2 ";
-
+    require('_alert.php');
+    $emailtemp = $conn -> real_escape_string($templateCode);
+    $sql = "UPDATE `tblemailtemplates` SET `$templateName`='" . $emailtemp . "' WHERE `_id` = 2 ";
 
     $query = mysqli_query($conn, $sql);
     if ($query) {
@@ -2589,11 +2654,7 @@ function _updateEmailTemplate($templateName, $templateCode)
     }
 }
 
-
-
-function _getSingleEmailTemplate($templateName)
-{
-
+function _getSingleEmailTemplate($templateName){
     require('_config.php');
     $sql = "SELECT * FROM `tblemailtemplates` WHERE `_id` = 2 ";
     $query = mysqli_query($conn, $sql);
@@ -2603,7 +2664,6 @@ function _getSingleEmailTemplate($templateName)
         }
     }
 }
-
 
 
 // Invoice

@@ -103,7 +103,7 @@ if (isset($_POST['submit'])) {
 
                                     <div class="row g-3">
                                         <div class="col">
-                                            <textarea name="signupcode" id="mytextarea"><?php echo _getSingleEmailTemplate('_signuptemplate');  ?></textarea>
+                                            <textarea name="signupcode" class="form-control" rows="20"><?php echo _getSingleEmailTemplate('_signuptemplate');  ?></textarea>
                                             <div class="invalid-feedback">Please enter code</div>
                                         </div>
                                     </div>
