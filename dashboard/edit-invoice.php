@@ -31,10 +31,11 @@ if (isset($_POST['submit'])) {
     $_clientaddress = $_POST['clientaddress'];
     $_invoicenote = $_POST['invoicenote'];
     $_duedate = $_POST['duedate'];
+    $_paymentstatus  = $_POST['paymentstatus'];
 
 
 
-    _updateInvoice($_id, $_clientname, $_clientemail, $_clientnumber, $_clientaddress, $_invoicenote, $_duedate);
+    _updateInvoice($_id, $_clientname, $_clientemail, $_clientnumber, $_clientaddress, $_invoicenote, $_duedate,$_paymentstatus );
 }
 
 
@@ -104,6 +105,12 @@ if (isset($_GET['del'])) {
     <link rel="stylesheet" href="../assets/css/vertical-layout-light/style.css">
     <!-- endinject -->
     <link rel="shortcut icon" href="../assets/images/favicon.png" />
+    <script src="../assets/plugins/tinymce/js/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '#mytextarea'
+        });
+    </script>
 </head>
 
 <body>
@@ -162,15 +169,47 @@ if (isset($_GET['del'])) {
                                     </div>
 
                                     <div class="row g-3" style="margin-top: 20px;">
-                                        <div class="col">
+                                        <div class="col-6">
                                             <label for="membershipdesc" class="form-label">Due Date</label>
                                             <input type="date" class="form-control" placeholder="Due Date" aria-label="Due Date" id="duedate" name="duedate" value="<?php echo _getSingleInvoice($_id, '_duedate') ?>" required>
                                             <div class="invalid-feedback">Please type correct date</div>
                                         </div>
 
+                                        <div class="col-6">
+                                            <label for="paymentstatus" class="form-label">Payment Status</label>
+                                            <select style="height: 46px;" id="paymentstatus" name="paymentstatus" class="form-control form-control-lg"  required>
+                                            
+                                                    <?php 
+                                                    
+                                                    $status =  _getSingleInvoice($_id, '_paymentstatus');
+
+                                                    if($status=='UnPaid'){
+                                                        ?>
+                                                            <option selected value="UnPaid">UnPaid</option>
+                                                            <option value="Paid">Paid</option>
+                                                        <?php
+                                                    }
+                                                    else{
+                                                        ?>
+                                                        <option  value="UnPaid">UnPaid</option>
+                                                        <option  selected value="Paid">Paid</option>
+                                                    <?php
+                                                    }
+                                                     
+                                                    ?>
+
+                                               
+                                            </select>
+                                            <div class="invalid-feedback">Please select correct status</div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row g-3" style="margin-top: 20px;">
+
                                         <div class="col">
                                             <label for="invoicenote" class="form-label">Note</label>
-                                            <textarea name="invoicenote" rows="5" minlength="5" class="form-control" required>
+                                            <textarea name="invoicenote" rows="5" minlength="5" id="mytextarea" class="form-control" required>
                                             <?php echo _getSingleInvoice($_id, '_invoicenote') ?>
                                             </textarea>
                                         </div>
@@ -178,7 +217,7 @@ if (isset($_GET['del'])) {
 
 
                                     <div class="col-12" style="margin-top: 30px;">
-                                        <button type="submit" name="submit" style="width: 200px;margin-left: -10px" class="btn btn-primary">Create Membership</button>
+                                        <button type="submit" name="submit" style="width: 200px;margin-left: -10px" class="btn btn-primary">Update Membership</button>
 
                                         <button type="button" class="btn btn-primary btn-sm font-weight-medium auth-form-btn" style="height:40px; float:right; " data-bs-toggle="modal" data-bs-target="#exampleModal">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="white" style="width: 15px;" viewBox="0 0 448 512">
@@ -198,17 +237,6 @@ if (isset($_GET['del'])) {
                                     delete them from here. You can also change the order of your categories by dragging
                                     and dropping them into the order you
                                 </p>
-                                <form method="POST" action="">
-                                    <div class="row">
-                                        <div class="col-lg-3" style="margin-bottom: 20px;">
-                                            <input type="text" class="form-control form-control-sm" name="categoryname" placeholder="Category Name">
-                                        </div>
-                                        <div class="col-lg-2" style="margin-bottom: 20px;">
-                                            <button name="search" class="btn btn-block btn-primary btn-sm font-weight-medium auth-form-btn" style="height:40px" name="submit_search"><i class="mdi mdi-account-search"></i>&nbsp;SEARCH</button>
-                                        </div>
-
-                                    </div>
-                                </form>
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="table-responsive">

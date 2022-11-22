@@ -19,6 +19,13 @@
         <span class="menu-title">My Invoice</span>
       </a>
     </li>
+    <li class="nav-item">
+      <a class="nav-link" href="mytranscations">
+        <!-- <i class="mdi mdi-wallet-membership menu-icon"></i> -->
+        <i class="mdi mdi-cash-multiple menu-icon"></i>
+        <span class="menu-title">My Transactions</span>
+      </a>
+    </li>
     <hr style="width: 100%;height:0.1px;background-color:#E5E5E5">
     <?php if ($_SESSION['userType'] == 2) { ?>
       <li class="nav-item">
@@ -163,10 +170,12 @@
         </a>
         <div class="collapse" id="ui-template">
           <ul class="nav flex-column sub-menu">
-            <li class="nav-item"> <a class="nav-link" href="purchase-template.php">Purchase Template</a></li>
-            <li class="nav-item"> <a class="nav-link" href="reminder-template.php">Reminder Template</a></li>
-            <li class="nav-item"> <a class="nav-link" href="lecture-template.php">Lecture Template</a></li>
-            <li class="nav-item"> <a class="nav-link" href="signup-template.php">Signup Template</a></li>
+            <li class="nav-item"> <a class="nav-link" href="purchase-template.php">Purchase</a></li>
+            <li class="nav-item"> <a class="nav-link" href="reminder-template.php">Reminder</a></li>
+            <li class="nav-item"> <a class="nav-link" href="lecture-template.php">Lecture</a></li>
+            <li class="nav-item"> <a class="nav-link" href="signup-template.php">Signup</a></li>
+            <li class="nav-item"> <a class="nav-link" href="cancel-template.php">Cancel</a></li>
+            <li class="nav-item"> <a class="nav-link" href="payment-template.php">Payment</a></li>
           </ul>
         </div>
       </li>

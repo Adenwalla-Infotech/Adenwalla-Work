@@ -18,10 +18,7 @@ require('../includes/_functions.php');
 require('../includes/_config.php');
 
 
-if (isset($_GET['del'])) {
-    $_id = $_GET['id'];
-    _deleteInvoice($_id);
-}
+
 
 
 $record_per_page = 5;
@@ -70,7 +67,7 @@ $start_from = ($page - 1) * $record_per_page;
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">My Invoices (Payment Reciept)</h4>
+                                <h4 class="card-title">My Transcations</h4>
                                 <p class="card-description">
                                     From here, you'll see a list of all the categories on your site. You can edit or
                                     delete them from here. You can also change the order of your categories by dragging
@@ -82,17 +79,18 @@ $start_from = ($page - 1) * $record_per_page;
                                             <table id="example" class="display expandable-table" style="width:100%">
                                                 <thead>
                                                     <tr>
-                                                        <th>Id</th>
-                                                        <th>Payment Status</th>
-                                                        <th>Due Date</th>
-                                                        <th>Created at</th>
-                                                        <th>Updated at</th>
-                                                        <th>Action</th>
+                                                        <th>Transcation Id</th>
+                                                        <th>Product Name</th>
+                                                        <th>Product Amount</th>
+                                                        <th>Product Type</th>
+                                                        <th>Coupon</th>
+                                                        <th>Transcation Date</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody style="text-align: left;margin-left: 30px">
                                                     <?php
-                                                        _viewInvoice($start_from, $record_per_page);
+                                                         $useremail = $_SESSION['userEmailId'];
+                                                        _viewTranscation($useremail,$start_from, $record_per_page);
                                                     ?>
                                                 </tbody>
                                             </table>

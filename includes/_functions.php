@@ -447,6 +447,9 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_amount` varchar(255) NULL,
                 `_currency` varchar(255) NOT NULL,
                 `_status` varchar(255) NOT NULL,
+                `_producttitle` varchar(100) NOT NULL,
+                `_productid` varchar(55) NOT NULL,
+                `_producttype` varchar(55) NOT NULL,
                 `_couponcode` varchar(255) NOT NULL,
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
@@ -491,10 +494,12 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
 
             $templates = "CREATE TABLE IF NOT EXISTS `tblemailtemplates` (
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
-                `_purchasetemplate` varchar(55) NOT NULL,
-                `_remindertemplate` varchar(55) NOT NULL,
-                `_lecturetemplate` varchar(55) NOT NULL,
-                `_signuptemplate` varchar(55) NOT NULL,
+                `_purchasetemplate` varchar(255) NOT NULL,
+                `_remindertemplate` varchar(255) NOT NULL,
+                `_lecturetemplate` varchar(255) NOT NULL,
+                `_signuptemplate` varchar(255) NOT NULL,
+                `_canceltemplate` varchar(255) NOT NULL,
+                `_paymenttemplate` varchar(255) NOT NULL,
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
@@ -502,13 +507,14 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
 
             $invoice = "CREATE TABLE IF NOT EXISTS `tblinvoice` (
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
-                `_clientname` varchar(55) NOT NULL,
-                `_clientemail` varchar(55) NOT NULL,
-                `_clientnumber` varchar(55) NOT NULL, 
-                `_clientaddress` varchar(55) NOT NULL, 
-                `_refno` varchar(55) NOT NULL,
+                `_clientname` varchar(255) NOT NULL,
+                `_clientemail` varchar(255) NOT NULL,
+                `_clientnumber` varchar(255) NOT NULL, 
+                `_clientaddress` varchar(255) NOT NULL, 
+                `_paymentstatus` varchar(255) NOT NULL,
+                `_refno` varchar(255) NOT NULL,
                 `_invoicenote` varchar(255) NOT NULL,
-                `_duedate` varchar(55) NOT NULL,
+                `_duedate` varchar(255) NOT NULL,
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
@@ -547,7 +553,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
 
                 $payment_data = "INSERT INTO `tblpaymentconfig`(`_suppliername`, `_apikey`, `_companyname`, `_supplierstatus`) VALUES ('Razorpay','12345678901234567890','Adenwalla & Co.','true')";
 
-                $template_data = "INSERT INTO `tblemailtemplates`(`_purchasetemplate`, `_remindertemplate`, `_lecturetemplate`, `_signuptemplate`) VALUES ('Your Html Code','Your Html Code','Your Html Code','Your Html Code')";
+                $template_data = "INSERT INTO `tblemailtemplates`(`_purchasetemplate`, `_remindertemplate`, `_lecturetemplate`, `_signuptemplate`, `_canceltemplate`, `_paymenttemplate`) VALUES ('Your Html Code','Your Html Code','Your Html Code','Your Html Code','Your Html Code','Your Html Code')";
 
                 $data = [$admin_data, $sms_data, $email_data, $site_data, $payment_data, $template_data];
 
@@ -1920,6 +1926,27 @@ function _getmarkup($conversion = '', $status = '', $limit = '', $startfrom = ''
     }
 }
 
+function _getmarkupOnlyCurrency(){
+
+    require('_config.php');
+
+
+    $sql = "SELECT * FROM `tblcurrency` ";
+
+    $query = mysqli_query($conn, $sql);
+
+    if ($query) {
+    
+
+    foreach ($query as $data) { 
+        ?>
+                <option value="<?php echo $data['_conversioncurrency']; ?>" ><?php echo $data['_conversioncurrency']; ?></option>
+        <?php 
+        }
+    }
+
+}
+
 function _conversion($amount, $currency)
 {
     require('_config.php');
@@ -2640,7 +2667,7 @@ function _updateEmailTemplate($templateName, $templateCode)
 {
 
     require('_config.php');
-    require('_alert.php');
+
     $emailtemp = $conn -> real_escape_string($templateCode);
     $sql = "UPDATE `tblemailtemplates` SET `$templateName`='" . $emailtemp . "' WHERE `_id` = 2 ";
 
@@ -2668,13 +2695,13 @@ function _getSingleEmailTemplate($templateName){
 
 // Invoice
 
-function _createInvoice($_clientname, $_clientemail, $_clientnumber, $_clientaddress, $_invoicenote,$_refno, $_duedate)
+function _createInvoice($_clientname, $_clientemail, $_clientnumber, $_clientaddress, $_invoicenote,$_refno, $_duedate,$_paymentstatus)
 {
 
     require('_config.php');
     require('_alert.php');
 
-    $sql = "INSERT INTO `tblinvoice`(`_clientname`,`_clientemail`,`_clientnumber`,`_clientaddress`,`_refno`,`_invoicenote`,`_duedate`) VALUES ('$_clientname','$_clientemail','$_clientnumber','$_clientaddress','$_refno','$_invoicenote','$_duedate')";
+    $sql = "INSERT INTO `tblinvoice`(`_clientname`,`_clientemail`,`_clientnumber`,`_clientaddress`,`_paymentstatus`,`_refno`,`_invoicenote`,`_duedate`) VALUES ('$_clientname','$_clientemail','$_clientnumber','$_clientaddress','$_paymentstatus','$_refno','$_invoicenote','$_duedate')";
 
     $query = mysqli_query($conn, $sql);
     if ($query) {
@@ -2725,8 +2752,31 @@ function _getInvoice($clientemail = '', $refno = '', $startfrom = '', $limit = '
                 <td><?php echo $data['_id']; ?></td>
                 <td><?php echo $data['_clientname']; ?></td>
                 <td><?php echo $data['_clientemail']; ?></td>
+                
+                <?php
+                    if($data['_paymentstatus']=='UnPaid'){
+                        ?>
+                        <td>
+                            <span style="background-color:#dd4949; color:#fff; padding:3px 5px; border-radius:10px; " >
+                                <?php echo $data['_paymentstatus']; ?>
+                            </span>
+                        </td>
+                        <?php
+                    }
+                    else{
+                        ?>
+                            <td>
+                            <span style="background-color:#86bd68; color:#fff; padding:3px 5px; border-radius:10px; " >
+                                <?php echo $data['_paymentstatus']; ?>
+                            </span>
+                            </td>
+                        <?php
+                    }
+                ?>
+                
+
                 <td><?php echo $data['_refno']; ?></td>
-                <td><?php echo $data['_duedate']; ?></td>
+                <td><?php echo date("M j, Y", strtotime($data['_duedate'])); ?></td>
                 <td>
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
                 </td>
@@ -2766,9 +2816,27 @@ function _viewInvoice($startfrom = '', $limit = '')
             ?>
             <tr>
                 <td><?php echo $data['_id']; ?></td>
-                <td><?php echo $data['_clientname']; ?></td>
-                <td><?php echo $data['_clientemail']; ?></td>
-                <td><?php echo $data['_duedate']; ?></td>
+                <?php
+                    if($data['_paymentstatus']=='UnPaid'){
+                        ?>
+                        <td>
+                            <span style="background-color:#dd4949; color:#fff; padding:3px 5px; border-radius:10px; " >
+                                <?php echo $data['_paymentstatus']; ?>
+                            </span>
+                        </td>
+                        <?php
+                    }
+                    else{
+                        ?>
+                           <td>
+                           <span style="background-color:#86bd68; color:#fff; padding:3px 5px; border-radius:10px; " >
+                                <?php echo $data['_paymentstatus']; ?>
+                            </span>
+                            </td>
+                        <?php
+                    }
+                ?>
+                <td><?php echo date("M j, Y", strtotime($data['_duedate'])); ?></td>
                 <td>
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
                 </td>
@@ -2806,14 +2874,14 @@ function _getSingleInvoice($id, $param)
 }
 
 
-function _updateInvoice($_id, $_clientname, $_clientemail, $_clientnumber, $_clientaddress, $_invoicenote, $_duedate)
+function _updateInvoice($_id, $_clientname, $_clientemail, $_clientnumber, $_clientaddress, $_invoicenote, $_duedate ,$_paymentstatus )
 {
 
     require('_config.php');
     require('_alert.php');
 
 
-    $sql = "UPDATE `tblinvoice` SET `_clientname`='$_clientname' , `_clientemail`='$_clientemail' , `_clientnumber`='$_clientnumber' ,`_clientaddress`='$_clientaddress' , `_invoicenote`='$_invoicenote' , `_duedate`='$_duedate' WHERE `_id` = '$_id'";
+    $sql = "UPDATE `tblinvoice` SET `_clientname`='$_clientname' , `_clientemail`='$_clientemail' , `_clientnumber`='$_clientnumber' ,`_clientaddress`='$_clientaddress',`_paymentstatus`='$_paymentstatus' , `_invoicenote`='$_invoicenote' , `_duedate`='$_duedate' WHERE `_id` = '$_id'";
 
     $query = mysqli_query($conn, $sql);
     if ($query) {
@@ -2951,6 +3019,37 @@ function _deleteInvoiceItems($invoiceno, $id)
     }
 }
 
+
+// View Transcation
+function _viewTranscation($useremail, $startfrom = '', $limit = ''){
+
+    
+    require('_config.php');
+
+
+    $sql = "SELECT * FROM `tblpayment` where `_useremail`='$useremail' ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
+
+
+    $query = mysqli_query($conn, $sql);
+
+    if ($query) {
+        foreach ($query as $data) {
+        ?>
+            <tr>
+                <td><?php echo $data['_id']; ?></td>
+                <td><?php echo $data['_producttitle']; ?></td>
+                <td><?php echo $data['_amount']; ?></td>
+                <td><?php echo $data['_producttype']; ?></td>
+                <td><?php echo $data['_couponcode']; ?></td>
+                <td>
+                    <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
+                </td>
+            </tr>
+<?php
+        }
+    }
+
+}
 
 
 

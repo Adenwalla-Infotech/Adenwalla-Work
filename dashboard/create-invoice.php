@@ -29,10 +29,11 @@ if (isset($_POST['submit'])) {
     $_invoicenote = $_POST['invoicenote'];
     $_refno = $_POST['refno'];
     $_duedate = $_POST['duedate'];
+    $_paymentstatus = $_POST['paymentstatus'];
 
 
 
-    _createInvoice($_clientname, $_clientemail, $_clientnumber, $_clientaddress, $_invoicenote,$_refno, $_duedate);
+    _createInvoice($_clientname, $_clientemail, $_clientnumber, $_clientaddress, $_invoicenote, $_refno, $_duedate,$_paymentstatus);
 }
 
 ?>
@@ -56,6 +57,12 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet" href="../assets/css/vertical-layout-light/style.css">
     <!-- endinject -->
     <link rel="shortcut icon" href="../assets/images/favicon.png" />
+    <script src="../assets/plugins/tinymce/js/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '#mytextarea'
+        });
+    </script>
 </head>
 
 <body>
@@ -112,7 +119,7 @@ if (isset($_POST['submit'])) {
                                     </div>
 
                                     <div class="row g-3" style="margin-top: 20px;">
-                                        
+
                                         <div class="col">
                                             <label for="membershipdesc" class="form-label">Due Date</label>
                                             <input type="date" class="form-control" placeholder="Due Date" aria-label="Due Date" id="duedate" name="duedate" required>
@@ -124,14 +131,28 @@ if (isset($_POST['submit'])) {
                                             <input type="text" class="form-control" placeholder="Invoice No" aria-label="Invoice No" id="refno" name="refno" required>
                                             <div class="invalid-feedback">Please type correct Invoice No</div>
                                         </div>
-                                   
+
                                     </div>
 
                                     <div class="row g-3" style="margin-top: 20px;">
-                                       
+
+                                        <div class="col-6">
+                                            <label for="paymentstatus" class="form-label">Payment Status</label>
+                                            <select style="height: 46px;" id="paymentstatus" name="paymentstatus" class="form-control form-control-lg"  required>
+                                                <option selected disabled value="">Status</option>
+                                                <option value="UnPaid">UnPaid</option>
+                                                <option value="Paid">Paid</option>
+                                            </select>
+                                            <div class="invalid-feedback">Please select correct status</div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row g-3" style="margin-top: 20px;">
+
                                         <div class="col">
                                             <label for="invoicenote" class="form-label">Note</label>
-                                            <textarea name="invoicenote" rows="5" minlength="5" class="form-control" required></textarea>
+                                            <textarea name="invoicenote" id="mytextarea" rows="5" minlength="5" class="form-control" required></textarea>
                                         </div>
                                     </div>
 

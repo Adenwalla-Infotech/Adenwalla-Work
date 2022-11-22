@@ -98,6 +98,7 @@ $start_from = ($page - 1) * $record_per_page;
                                                         <th>Id</th>
                                                         <th>Client Name</th>
                                                         <th>Client Email</th>
+                                                        <th>Status</th>
                                                         <th>Refrence No</th>
                                                         <th>Due Date</th>
                                                         <th>Created at</th>

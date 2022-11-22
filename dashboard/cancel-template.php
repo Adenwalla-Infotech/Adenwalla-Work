@@ -26,8 +26,8 @@ require('../includes/_functions.php');
 
 if (isset($_POST['submit'])) {
 
-    $templateName = '_purchasetemplate';
-    $templateCode = $_POST['purchasecode'];
+    $templateName = '_canceltemplate';
+    $templateCode = $_POST['cancelcode'];
 
     _updateEmailTemplate($templateName, $templateCode);
 }
@@ -40,7 +40,7 @@ if (isset($_POST['submit'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Purchase Template | <?php echo _siteconfig('_sitetitle'); ?></title>
+    <title>Cancel Template | <?php echo _siteconfig('_sitetitle'); ?></title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@mdi/font@6.9.96/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../assets/vendors/feather/feather.css">
@@ -97,7 +97,8 @@ if (isset($_POST['submit'])) {
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Add Purchase Template</h4>
+
+                                <h4 class="card-title">Add Cancel Template</h4>
                                 <p class="card-description">
                                     Web Help Desk uses tickets to manage service requests. These tickets can be initiated through email, created in the application, and imported from another application. Techs, admins, and clients can also manage tickets through email or through the application in a web browser.
                                 </p>
@@ -105,7 +106,7 @@ if (isset($_POST['submit'])) {
 
                                     <div class="row g-3">
                                         <div class="col">
-                                            <textarea name="purchasecode" rows="20" class="form-control"><?php echo _getSingleEmailTemplate('_purchasetemplate');  ?></textarea>
+                                            <textarea name="cancelcode" rows="20" class="form-control"><?php echo _getSingleEmailTemplate('_canceltemplate');  ?></textarea>
                                             <div class="invalid-feedback">Please enter code</div>
                                         </div>
                                     </div>

@@ -16,7 +16,7 @@ $invoiceno = $_GET['invoiceno'];
     <meta charset="utf-8">
     <!--  This file has been downloaded from bootdey.com @bootdey on twitter -->
     <!--  All snippets are MIT license http://bootdey.com/license -->
-    <title>company invoice - Bootdey.com</title>
+    <title>Invoice</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -32,19 +32,15 @@ $invoiceno = $_GET['invoiceno'];
                 Invoice
                 <small class="page-info">
                     <i class="fa fa-angle-double-right text-80"></i>
-                    ID: <?php echo _getSingleInvoice($invoiceno , '_refno') ?>
+                    ID: <?php echo _getSingleInvoice($invoiceno, '_refno') ?>
                 </small>
             </h1>
 
             <div class="page-tools">
                 <div class="action-buttons">
-                    <a class="btn bg-white btn-light mx-1px text-95" href="#" data-title="Print">
+                    <a class="btn bg-white btn-light mx-1px text-95" href="#" data-title="Print" onclick="window.print()">
                         <i class="mr-1 fa fa-print text-primary-m1 text-120 w-2"></i>
                         Print
-                    </a>
-                    <a class="btn bg-white btn-light mx-1px text-95" href="#" data-title="PDF">
-                        <i class="mr-1 fa fa-file-pdf-o text-danger-m1 text-120 w-2"></i>
-                        Export
                     </a>
                 </div>
             </div>
@@ -89,9 +85,30 @@ $invoiceno = $_GET['invoiceno'];
                                     Invoice
                                 </div>
 
-                                <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-600 text-90">ID:</span> <?php echo _getSingleInvoice($invoiceno , '_refno') ?></div>
+                                <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-600 text-90">ID:</span> <?php echo _getSingleInvoice($invoiceno, '_refno') ?></div>
 
                                 <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-600 text-90">Due Date:</span> <?php echo _getSingleInvoice($invoiceno, '_duedate') ?></div>
+
+                                <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-600 text-90">Status:</span>
+
+
+
+                                    <?php
+
+                                    $status =  _getSingleInvoice($invoiceno, '_paymentstatus');
+
+                                    if ($status == 'UnPaid') {
+                                    ?>
+                                        <span class="badge badge-danger badge-pill px-25">Unpaid</span>
+                                    <?php
+                                    } else {
+                                    ?>
+                                        <span class="badge badge-success badge-pill px-25">Paid</span>
+                                    <?php
+                                    }
+                                    ?>
+
+                                </div>
 
                             </div>
                         </div>
@@ -113,7 +130,7 @@ $invoiceno = $_GET['invoiceno'];
 
                         $query = mysqli_query($conn, $sql);
 
-                        foreach ($query as $index => $data ) {
+                        foreach ($query as $index => $data) {
 
 
                             $productName =  $data['_productname'];
@@ -123,11 +140,11 @@ $invoiceno = $_GET['invoiceno'];
                         ?>
                             <div class="text-95 text-secondary-d3">
                                 <div class="row mb-2 mb-sm-0 py-25">
-                                    <div class="d-none d-sm-block col-1"> <?php echo $index+1 ?> </div>
+                                    <div class="d-none d-sm-block col-1"> <?php echo $index + 1 ?> </div>
                                     <div class="col-9 col-sm-5"><?php echo $productName ?></div>
                                     <div class="d-none d-sm-block col-2"><?php echo $productQuantity ?></div>
                                     <div class="d-none d-sm-block col-2 text-95">INR&nbsp;<?php echo $productRate ?></div>
-                                    <div class="col-2 text-secondary-d2" id="totalAmount" >INR&nbsp;<?php echo $total ?></div>
+                                    <div class="col-2 text-secondary-d2">INR&nbsp;<span id="totalAmount"><?php echo $total ?></span></div>
                                 </div>
                             </div>
                         <?php
@@ -172,14 +189,14 @@ $invoiceno = $_GET['invoiceno'];
                             </div>
 
                             <div class="col-12 col-sm-5 text-grey text-90 order-first order-sm-last">
-                                
+
 
                                 <div class="row my-2 align-items-center bgc-primary-l3 p-2">
                                     <div class="col-7 text-right">
                                         Total Amount
                                     </div>
                                     <div class="col-5">
-                                        <span class="text-150 text-success-d3 opacity-2" id="amountDisplay" ></span>
+                                        INR&nbsp;<span class="text-150 text-success-d3 opacity-2" id="amountDisplay"></span>
                                     </div>
                                 </div>
                             </div>
@@ -188,8 +205,31 @@ $invoiceno = $_GET['invoiceno'];
                         <hr />
 
                         <div style="margin-bottom: 50px;">
-                            <span class="text-secondary-d1 text-105">Thank you for your business</span>
-                            <a href="#" class="btn btn-info btn-bold px-4 float-right mt-3 mt-lg-0">Pay Now</a>
+
+                            <div class="row g-3">
+                                <div class="col">
+                                    <span class="text-secondary-d1 text-105">Thank you for your business</span>
+
+                                </div>
+
+                                <div>
+
+                                    <div class="col">
+                                        <label for="usertype" class="form-label">Select Currency</label>
+                                        <select onchange="setConversionCurrency(this.options[this.selectedIndex])" style="height: 46px;" id="usertype" name="usertype" class="form-control form-control-sm" id="exampleFormControlSelect2" required>
+                                            <option selected disabled value="">Currency</option>
+                                            <?php _getmarkupOnlyCurrency() ?>
+                                        </select>
+                                        <div class="invalid-feedback">Please select correct usertype</div>
+                                    </div>
+
+                                </div>
+
+                                <div class="col">
+                                    <a id="payNow" class="btn btn-info btn-bold px-4 float-right mt-3 mt-lg-0">Pay Now</a>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -348,20 +388,33 @@ $invoiceno = $_GET['invoiceno'];
     </style>
 
     <script type="text/javascript">
-
         let totalAmount = document.querySelectorAll("#totalAmount");
         let amountDisplay = document.getElementById("amountDisplay");
 
         let total = 0;
 
         for (let i = 0; i < totalAmount.length; i++) {
-           
-            total = total +  parseFloat(totalAmount[i].innerHTML) ;
-            
+
+            total = total + parseFloat(totalAmount[i].innerHTML);
+
         }
 
         amountDisplay.innerHTML = total;
 
+        let payNow = document.getElementById('payNow');
+
+
+
+
+        const setConversionCurrency = (value) => {
+
+            let currency = value.value;
+
+            payNow.setAttribute("href", `payment?amount=50&currency=${currency}`)
+
+
+
+        }
     </script>
 </body>
 

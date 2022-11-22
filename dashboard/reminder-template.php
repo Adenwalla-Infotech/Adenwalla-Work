@@ -97,7 +97,10 @@ if (isset($_POST['submit'])) {
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Reminder Template Code</h4>
+                                <h4 class="card-title">Add Reminder Template</h4>
+                                <p class="card-description">
+                                    Web Help Desk uses tickets to manage service requests. These tickets can be initiated through email, created in the application, and imported from another application. Techs, admins, and clients can also manage tickets through email or through the application in a web browser.
+                                </p>
                                 <form method="POST" action="" enctype="multipart/form-data" class="needs-validation" novalidate>
 
                                     <div class="row g-3">
