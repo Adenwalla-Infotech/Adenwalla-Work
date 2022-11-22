@@ -12,6 +12,12 @@
         <span class="menu-title">Memberships</span>
       </a>
     </li>
+    <li class="nav-item">
+      <a class="nav-link" href="myinvoice">
+        <i class="mdi mdi-wallet-membership menu-icon"></i>
+        <span class="menu-title">My Invoice</span>
+      </a>
+    </li>
     <hr style="width: 100%;height:0.1px;background-color:#E5E5E5">
     <?php if ($_SESSION['userType'] == 2) { ?>
       <li class="nav-item">
@@ -162,5 +168,20 @@
         </div>
       </li>
     <?php } ?>
+
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#ui-invoice" aria-expanded="false" aria-controls="ui-basic">
+          <i class="mdi mdi-wallet-membership menu-icon"></i>
+          <span class="menu-title">Invoice</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="ui-invoice">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="create-invoice.php">Create Invoice</a></li>
+            <li class="nav-item"> <a class="nav-link" href="manage-invoice">Manage Invoice</a></li>
+          </ul>
+        </div>
+      </li>
+
   </ul>
 </nav>
