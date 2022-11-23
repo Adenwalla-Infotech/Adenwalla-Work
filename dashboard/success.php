@@ -8,7 +8,9 @@
         if(isset($_POST['product'])&& isset($_POST['productid'])){
             $product = $_POST['product'];
             $productid = $_POST['productid'];
-            _purchasememebership($userid,$productid);
+            if($product == 'membership'){
+                _purchasememebership($userid,$productid);
+            }   
             _updatepayment($id,'success');
         }else{
             _updatepayment($id,'success');

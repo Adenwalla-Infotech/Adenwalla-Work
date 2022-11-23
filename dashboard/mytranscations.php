@@ -37,7 +37,7 @@ $start_from = ($page - 1) * $record_per_page;
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>My Invoices |
+    <title>My Transactions |
         <?php echo _siteconfig('_sitetitle'); ?>
     </title>
     <!-- plugins:css -->
@@ -67,7 +67,7 @@ $start_from = ($page - 1) * $record_per_page;
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">My Transcations</h4>
+                                <h4 class="card-title">My Transcations (All Payments)</h4>
                                 <p class="card-description">
                                     From here, you'll see a list of all the categories on your site. You can edit or
                                     delete them from here. You can also change the order of your categories by dragging
@@ -84,6 +84,7 @@ $start_from = ($page - 1) * $record_per_page;
                                                         <th>Product Amount</th>
                                                         <th>Product Type</th>
                                                         <th>Coupon</th>
+                                                        <th>Status</th>
                                                         <th>Transcation Date</th>
                                                     </tr>
                                                 </thead>
@@ -100,7 +101,9 @@ $start_from = ($page - 1) * $record_per_page;
                                 <nav aria-label="Page navigation example" style="margin-top: 10px;">
                                     <ul class="pagination">
                                         <?php
-                                        $query = mysqli_query($conn, "SELECT * FROM `tblinvoice`");
+                                        $userid = $_SESSION['userId'];
+                                        $useremail = _getsingleuser($userid,'_useremail');
+                                        $query = mysqli_query($conn, "SELECT * FROM `tblpayment` where `_useremail`='$useremail' AND `_status` != 'pending'");
                                         $total_records = mysqli_num_rows($query);
                                         $total_pages = ceil($total_records / $record_per_page);
                                         $start_loop = $page;

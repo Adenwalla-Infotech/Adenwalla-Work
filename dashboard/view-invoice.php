@@ -125,18 +125,13 @@ $invoiceno = $_GET['invoiceno'];
                         </div>
 
                         <?php
-
                         $sql = "SELECT * FROM `tblinvoiceitems` WHERE `_invoiceno` = '$invoiceno' ";
-
                         $query = mysqli_query($conn, $sql);
-
                         foreach ($query as $index => $data) {
-
-
                             $productName =  $data['_productname'];
                             $productQuantity =  $data['_productquantity'];
                             $productRate =  $data['_productamount'];
-                            $total = $productRate * $productQuantity;
+                            $total = (int)$productQuantity * (int)$productRate;
                         ?>
                             <div class="text-95 text-secondary-d3">
                                 <div class="row mb-2 mb-sm-0 py-25">
@@ -410,7 +405,7 @@ $invoiceno = $_GET['invoiceno'];
 
             let currency = value.value;
 
-            payNow.setAttribute("href", `payment?amount=50&currency=${currency}`)
+            payNow.setAttribute("href", `payment?amount=50&currency=${currency}&prod=invoice&id=<?php echo $invoiceno; ?>`)
 
 
 

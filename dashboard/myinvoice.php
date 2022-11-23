@@ -101,8 +101,10 @@ $start_from = ($page - 1) * $record_per_page;
                                 </div>
                                 <nav aria-label="Page navigation example" style="margin-top: 10px;">
                                     <ul class="pagination">
-                                        <?php
-                                        $query = mysqli_query($conn, "SELECT * FROM `tblinvoice`");
+                                        <?php   
+                                        $userid = $_SESSION['userId'];
+                                        $useremail = _getsingleuser($userid,'_useremail');
+                                        $query = mysqli_query($conn, "SELECT * FROM `tblinvoice` WHERE `_clientemail` = '$useremail'");
                                         $total_records = mysqli_num_rows($query);
                                         $total_pages = ceil($total_records / $record_per_page);
                                         $start_loop = $page;
@@ -113,8 +115,8 @@ $start_from = ($page - 1) * $record_per_page;
                                         $end_loop = $start_loop + 3;
                                         if ($page > 1) {
                                             echo "<li class='page-item'>
-                        <a href='category-manage?page=" . ($page - 1) . "' class='page-link'>Previous</a>
-                      </li>";
+                                                <a href='category-manage?page=" . ($page - 1) . "' class='page-link'>Previous</a>
+                                                 </li>";
                                         }
                                         for ($i = 1; $i <= $total_pages; $i++) {
                                             echo "

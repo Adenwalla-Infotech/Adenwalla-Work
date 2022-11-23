@@ -38,6 +38,20 @@ if (isset($_POST['submit'])) {
     _updateInvoice($_id, $_clientname, $_clientemail, $_clientnumber, $_clientaddress, $_invoicenote, $_duedate,$_paymentstatus );
 }
 
+if(isset($_GET['notify'])){
+    $sql = "SELECT * FROM `tblemailtemplates`";
+    $query = mysqli_query($conn,$sql);
+    foreach($query as $data){
+        $template = $data['_paymenttemplate'];
+    }
+    $variables = array();
+    $variables['name'] = _getSingleInvoice($_id, '_clientname');
+    $variables['email'] = _getSingleInvoice($_id, '_clientemail');
+    $variables['phone'] = _getSingleInvoice($_id, '_clientnumber');
+    $variables['duedate'] = _getSingleInvoice($_id, '_duedate');
+    $sendmail = _usetemplate($template,$variables);
+    _notifyuser(_getSingleInvoice($_id, '_clientemail'),_getSingleInvoice($_id, '_clientnumber'),$sendmail,'Your Invoice has Been Generated, Kindly Check you mail for more details','Invoice for Payment');
+}
 
 
 
@@ -134,7 +148,7 @@ if (isset($_GET['del'])) {
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Update Invoice</h4>
+                                <h4 class="card-title">Update Invoice (Add Items)</h4>
                                 <p class="card-description">
                                     Before you start writing about your new topic, it's important to do some research. This will help you to understand the topic better, This will make it easier for you to write about the topic, and it will also make it more likely that people will be interested in reading what you have to say.
                                 </p>
@@ -208,7 +222,7 @@ if (isset($_GET['del'])) {
                                     <div class="row g-3" style="margin-top: 20px;">
 
                                         <div class="col">
-                                            <label for="invoicenote" class="form-label">Note</label>
+                                            <label for="invoicenote" class="form-label">Extra Note</label>
                                             <textarea name="invoicenote" rows="5" minlength="5" id="mytextarea" class="form-control" required>
                                             <?php echo _getSingleInvoice($_id, '_invoicenote') ?>
                                             </textarea>
@@ -218,7 +232,7 @@ if (isset($_GET['del'])) {
 
                                     <div class="col-12" style="margin-top: 30px;">
                                         <button type="submit" name="submit" style="width: 200px;margin-left: -10px" class="btn btn-primary">Update Membership</button>
-
+                                        <a href="edit-invoice?id=<?php echo $_id; ?>&notify=true" style="width: 200px;margin-left: 10px" class="btn btn-primary">Notify User</a>
                                         <button type="button" class="btn btn-primary btn-sm font-weight-medium auth-form-btn" style="height:40px; float:right; " data-bs-toggle="modal" data-bs-target="#exampleModal">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="white" style="width: 15px;" viewBox="0 0 448 512">
                                                 <!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) -->

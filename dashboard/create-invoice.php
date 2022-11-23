@@ -84,7 +84,7 @@ if (isset($_POST['submit'])) {
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Create Invoice</h4>
+                                <h4 class="card-title">Create Invoice (New Invoice)</h4>
                                 <p class="card-description">
                                     Before you start writing about your new topic, it's important to do some research. This will help you to understand the topic better, This will make it easier for you to write about the topic, and it will also make it more likely that people will be interested in reading what you have to say.
                                 </p>
@@ -151,7 +151,7 @@ if (isset($_POST['submit'])) {
                                     <div class="row g-3" style="margin-top: 20px;">
 
                                         <div class="col">
-                                            <label for="invoicenote" class="form-label">Note</label>
+                                            <label for="invoicenote" class="form-label">Extra Instruction</label>
                                             <textarea name="invoicenote" id="mytextarea" rows="5" minlength="5" class="form-control" required></textarea>
                                         </div>
                                     </div>

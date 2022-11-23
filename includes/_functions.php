@@ -1,6 +1,6 @@
 <?php
 
-// Dashboard Functions 
+/* Dashboard Functions */ 
 function _getdashtotal($param,$active,$status){
     require('_config.php');
     $sql = "SELECT * FROM `$param` WHERE `$active` = '$status'";
@@ -494,12 +494,12 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
 
             $templates = "CREATE TABLE IF NOT EXISTS `tblemailtemplates` (
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
-                `_purchasetemplate` varchar(255) NOT NULL,
-                `_remindertemplate` varchar(255) NOT NULL,
-                `_lecturetemplate` varchar(255) NOT NULL,
-                `_signuptemplate` varchar(255) NOT NULL,
-                `_canceltemplate` varchar(255) NOT NULL,
-                `_paymenttemplate` varchar(255) NOT NULL,
+                `_purchasetemplate` text NOT NULL,
+                `_remindertemplate` text NOT NULL,
+                `_lecturetemplate` text NOT NULL,
+                `_signuptemplate` text NOT NULL,
+                `_canceltemplate` text NOT NULL,
+                `_paymenttemplate` text NOT NULL,
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
@@ -513,7 +513,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_clientaddress` varchar(255) NOT NULL, 
                 `_paymentstatus` varchar(255) NOT NULL,
                 `_refno` varchar(255) NOT NULL,
-                `_invoicenote` varchar(255) NOT NULL,
+                `_invoicenote` text NOT NULL,
                 `_duedate` varchar(255) NOT NULL,
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
@@ -2225,32 +2225,6 @@ function _validatecoupon($amount, $coupon, $currency)
 }
 
 
-// Transaction Functions
-
-function _payment($amount, $currency, $coupon = '')
-{
-    require('_config.php');
-    $useremail = $_SESSION['userEmailId'];
-    $sql = "INSERT INTO `tblpayment`(`_useremail`, `_amount`, `_currency`, `_status`, `_couponcode`) VALUES ('$useremail','$amount','$currency','pending','$coupon')";
-    $query = mysqli_query($conn, $sql);
-    if ($query) {
-        return $conn->insert_id;
-    }
-}
-
-function _updatepayment($id, $status)
-{
-    require('_config.php');
-    $sql = "UPDATE `tblpayment` SET `_status`='$status' WHERE `_id` = $id";
-    $query = mysqli_query($conn, $sql);
-    if ($query) {
-        2 + 2;
-    }
-}
-
-
-
-
 // Membership Module
 
 
@@ -2518,8 +2492,6 @@ function _getTranscations($useremail = '', $amount = '', $status = '', $startfro
     }
 }
 
-
-
 function _getSingleTranscations($id, $param)
 {
 
@@ -2533,17 +2505,11 @@ function _getSingleTranscations($id, $param)
     }
 }
 
-
-
 function _updateTranscation($_id, $useremail, $amount, $couponcode, $currency, $isactive)
 {
-
     require('_config.php');
     require('_alert.php');
-
-
     $sql = "UPDATE `tblpayment` SET `_useremail`='$useremail' , `_amount`='$amount' , `_currency`='$currency' , `_couponcode`='$couponcode' , `_status`='$isactive' WHERE `_id` = '$_id'";
-
     $query = mysqli_query($conn, $sql);
     if ($query) {
         $alert = new PHPAlert();
@@ -2553,8 +2519,6 @@ function _updateTranscation($_id, $useremail, $amount, $couponcode, $currency, $
         $alert->warn("Something went wrong");
     }
 }
-
-
 
 function _getCouponTranscation($couponname = '', $couponamount = '', $startfrom = '', $limit = '')
 {
@@ -2637,6 +2601,33 @@ function _updateCouponTranscation($_id, $couponname, $couponamount, $useremail)
     }
 }
 
+function _payment($amount, $currency, $coupon = '',$prod,$prodid)
+{
+    if($prod == 'membership'){
+        $prodname = _getSingleMembership($prodid,'_membershipname');
+    }
+    if($prod == 'invoice'){
+        $prodname = _getSingleInvoice($prodid,'_refno');
+    }
+    require('_config.php');
+    $useremail = $_SESSION['userEmailId'];
+    $sql = "INSERT INTO `tblpayment`(`_useremail`, `_amount`, `_currency`, `_status`, `_producttitle`, `_productid`, `_producttype`, `_couponcode`) VALUES ('$useremail','$amount','$currency','pending','$prodname', '$prodid', '$prod', '$coupon')";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        return $conn->insert_id;
+    }
+}
+
+function _updatepayment($id, $status)
+{
+    require('_config.php');
+    $sql = "UPDATE `tblpayment` SET `_status`='$status' WHERE `_id` = $id";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        2 + 2;
+    }
+}
+
 
 // Product Functions
 
@@ -2654,6 +2645,21 @@ function _getproduct($id, $type)
                         <small class="text-muted">Membership Purchase For <?php echo $data['_duration']; ?> Month.</small>
                     </div>
                     <span class="text-muted">INR&nbsp;<?php echo $data['_price']; ?></span>
+                </li>
+            <?php }
+        }
+    }
+    if($type == 'invoice'){
+        $sql = "SELECT * FROM `tblinvoice` WHERE `_id` = $id";
+        $query = mysqli_query($conn, $sql);
+        if ($query) {
+            foreach ($query as $data) { ?>
+                <li style="border:none;" class="list-group-item d-flex justify-content-between lh-condensed">
+                    <div>
+                        <h6 class="my-0">Payment for Invoice : <?php echo $data['_refno']; ?>&nbsp;(Refrence Number)</h6>
+                        <small class="text-muted">Invoice payment for requested service</small>
+                    </div>
+                    <!-- <span class="text-muted">INR&nbsp;<?php echo $data['_price']; ?></span> -->
                 </li>
             <?php }
         }
@@ -2804,13 +2810,10 @@ function _viewInvoice($startfrom = '', $limit = '')
 {
 
     require('_config.php');
-
-
-    $sql = "SELECT * FROM `tblinvoice` ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
-
-
+    $userid = $_SESSION['userId'];
+    $useremail = _getsingleuser($userid,'_useremail');
+    $sql = "SELECT * FROM `tblinvoice` WHERE `_clientemail` = '$useremail' ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
     $query = mysqli_query($conn, $sql);
-
     if ($query) {
         foreach ($query as $data) {
             ?>
@@ -3027,7 +3030,7 @@ function _viewTranscation($useremail, $startfrom = '', $limit = ''){
     require('_config.php');
 
 
-    $sql = "SELECT * FROM `tblpayment` where `_useremail`='$useremail' ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
+    $sql = "SELECT * FROM `tblpayment` where `_useremail`='$useremail' AND `_status` != 'pending' ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
 
 
     $query = mysqli_query($conn, $sql);
@@ -3041,11 +3044,12 @@ function _viewTranscation($useremail, $startfrom = '', $limit = ''){
                 <td><?php echo $data['_amount']; ?></td>
                 <td><?php echo $data['_producttype']; ?></td>
                 <td><?php echo $data['_couponcode']; ?></td>
+                <td><?php echo $data['_status']; ?></td>
                 <td>
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
                 </td>
             </tr>
-<?php
+        <?php
         }
     }
 

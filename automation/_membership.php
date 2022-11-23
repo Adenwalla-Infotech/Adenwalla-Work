@@ -19,10 +19,17 @@ function _removemembership(){
                 $sql = "UPDATE `tblusers` SET `_usermembership`=null,`_usermemstart`=null,`_usermemsleft`=null WHERE `_id` = '$id'";
                 $query = mysqli_query($conn,$sql);
                 if($query){
-                    $username = _getsingleuser($id, '_username');
-                    $useremail = _getsingleuser($id, '_useremail');
-                    $userphone = _getsingleuser($id, '_userphone');
-                    _notifyuser($useremail,$userphone,'Your Subscription has Expired','Your Subscription has Expired','Your Subscription is Expired');
+                    $sql = "SELECT * FROM `tblemailtemplates`";
+                    $query = mysqli_query($conn,$sql);
+                    foreach($query as $data){
+                        $template = $data['_canceltemplate'];
+                    }
+                    $variables = array();
+                    $variables['name'] = _getsingleuser($id, '_username');
+                    $variables['email'] = _getsingleuser($id, '_useremail');
+                    $variables['phone'] = _getsingleuser($id, '_userphone');
+                    $sendmail = _usetemplate($template,$variables);
+                    _notifyuser(_getsingleuser($id, '_useremail'),_getsingleuser($id, '_userphone'),$sendmail,'Your Subscription has Expired, Kindly Check you mail for more details','Your Subscription is Expired');
                 }
             }
         }else{

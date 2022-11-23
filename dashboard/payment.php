@@ -64,7 +64,7 @@ if (isset($_POST['pay'])) {
     $country = $_POST['country'];
     $amount = _gettotal($getamount,$currency,$applydiscount);
     $_SESSION['paybtn'] = true;
-    $_SESSION['transid'] = _payment($amount,$currency,$couponcode);
+    $_SESSION['transid'] = _payment($amount,$currency,$couponcode,$product,$productid);
 }
 
 ?>
@@ -542,6 +542,7 @@ if (isset($_POST['pay'])) {
             "image": "http://localhost/Adenwalla-Infotech/moniqart-development/uploads/images/logo.png",
             // "order_id": "OD<?php echo rand(111111, 999999)?>", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
             "handler": function (response){
+                console.log('response',response);
                 document.getElementById('transpay').click();
             },
             "prefill": {
