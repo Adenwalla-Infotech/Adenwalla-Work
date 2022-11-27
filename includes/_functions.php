@@ -2469,7 +2469,7 @@ function _purchasememebership($userid, $memberid)
         $variables['paymentid'] = $_SESSION['transid'];
         $sendmail = _usetemplate($template, $variables);
         $message = 'Thank you for your purchase with ' . _siteconfig('_sitetitle') . '. We have mailed your order details on ' . _getsingleuser($userid, '_useremail') . '';
-        _notifyuser(_getsingleuser($userid, '_useremail'), _getsingleuser($userid, '_userphone'), $sendmail, $message, 'Purchase Completed');
+        // _notifyuser(_getsingleuser($userid, '_useremail'), _getsingleuser($userid, '_userphone'), $sendmail, $message, 'Purchase Completed');
     }
 }
 
