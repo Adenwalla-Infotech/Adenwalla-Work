@@ -10,6 +10,7 @@
             $productid = $_POST['productid'];
             if($product == 'membership'){
                 _purchasememebership($userid,$productid);
+                _updatepayment($id,'success');
             }   
             _updatepayment($id,'success');
         }else{
