@@ -2453,10 +2453,8 @@ function _purchasememebership($userid, $memberid)
     $today = date('Y-m-d H:i:s');
     $enddata = date("Y-m-d", strtotime("+$duration month", $date));
     $sql = "UPDATE `tblusers` SET `_usermembership`='$memberid',`_usermemstart`='$today',`_usermemsleft`='$enddata' WHERE `_id` = $userid";
-    echo $sql;
     $query = mysqli_query($conn, $sql);
     if ($query) {
-        echo 'query runninhg';
         $sql = "SELECT * FROM `tblemailtemplates`";
         $query = mysqli_query($conn, $sql);
         foreach ($query as $data) {
