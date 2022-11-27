@@ -576,7 +576,6 @@ if (isset($_POST['pay'])) {
 <form action="success" method="post">
     <script>
         document.getElementById('rzp-button2').onclick = function(e){
-            alert('hit')
             document.getElementById('tranpay').click();
         }
     </script>
