@@ -2454,6 +2454,7 @@ function _purchasememebership($userid, $memberid)
     $sql = "UPDATE `tblusers` SET `_usermembership`='$memberid',`_usermemstart`='$date',`_usermemsleft`='$enddata' WHERE `_id` = $userid";
     $query = mysqli_query($conn, $sql);
     if ($query) {
+        echo 'query runninhg';
         $sql = "SELECT * FROM `tblemailtemplates`";
         $query = mysqli_query($conn, $sql);
         foreach ($query as $data) {
