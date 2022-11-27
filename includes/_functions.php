@@ -2454,23 +2454,23 @@ function _purchasememebership($userid, $memberid)
     $enddata = date("Y-m-d", strtotime("+$duration month", $date));
     $sql = "UPDATE `tblusers` SET `_usermembership`='$memberid',`_usermemstart`='$today',`_usermemsleft`='$enddata' WHERE `_id` = $userid";
     $query = mysqli_query($conn, $sql);
-    if ($query) {
-        $sql = "SELECT * FROM `tblemailtemplates`";
-        $query = mysqli_query($conn, $sql);
-        foreach ($query as $data) {
-            $template = $data['_purchasetemplate'];
-        }
-        $variables = array();
-        $variables['name'] = _getsingleuser($userid, '_username');
-        $variables['price'] = _getSingleMembership($memberid, '_price');
-        $variables['product'] = _getSingleMembership($memberid, '_membershipname');
-        $variables['date'] = date('M j, Y');
-        $variables['companyname'] = _siteconfig('_sitetitle');
-        $variables['paymentid'] = $_SESSION['transid'];
-        $sendmail = _usetemplate($template, $variables);
-        $message = 'Thank you for your purchase with ' . _siteconfig('_sitetitle') . '. We have mailed your order details on ' . _getsingleuser($userid, '_useremail') . '';
-        _notifyuser(_getsingleuser($userid, '_useremail'), _getsingleuser($userid, '_userphone'), $sendmail, $message, 'Purchase Completed');
-    }
+    // if ($query) {
+    //     $sql = "SELECT * FROM `tblemailtemplates`";
+    //     $query = mysqli_query($conn, $sql);
+    //     foreach ($query as $data) {
+    //         $template = $data['_purchasetemplate'];
+    //     }
+    //     $variables = array();
+    //     $variables['name'] = _getsingleuser($userid, '_username');
+    //     $variables['price'] = _getSingleMembership($memberid, '_price');
+    //     $variables['product'] = _getSingleMembership($memberid, '_membershipname');
+    //     $variables['date'] = date('M j, Y');
+    //     $variables['companyname'] = _siteconfig('_sitetitle');
+    //     $variables['paymentid'] = $_SESSION['transid'];
+    //     $sendmail = _usetemplate($template, $variables);
+    //     $message = 'Thank you for your purchase with ' . _siteconfig('_sitetitle') . '. We have mailed your order details on ' . _getsingleuser($userid, '_useremail') . '';
+    //     _notifyuser(_getsingleuser($userid, '_useremail'), _getsingleuser($userid, '_userphone'), $sendmail, $message, 'Purchase Completed');
+    // }
 }
 
 
