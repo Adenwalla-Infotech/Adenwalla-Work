@@ -7,7 +7,6 @@ function _removemembership(){
     include('../includes/_config.php');
     $date = date('Y-m-d');
     $sql = "SELECT * FROM `tblusers` WHERE `_usermemsleft` = '$date'";
-    echo $sql;
     $query = mysqli_query($conn,$sql);
     if($query){
         $count = mysqli_num_rows($query);
@@ -44,6 +43,7 @@ function _renewalreminder($time){
     $date = strtotime(date('Y-m-d'));
     $duration = date("Y-m-d", strtotime("+$time days", $date));
     $sql = "SELECT * FROM `tblusers` WHERE `_usermemsleft` = '$duration'";
+    echo $sql;
     $query = mysqli_query($conn,$sql);
     if($query){
         $count = mysqli_num_rows($query);

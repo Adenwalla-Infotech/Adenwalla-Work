@@ -12,13 +12,12 @@
         <span class="menu-title">Memberships</span>
       </a>
     </li>
-    <li class="nav-item">
+    <!-- <li class="nav-item">
       <a class="nav-link" href="myinvoice">
-        <!-- <i class="mdi mdi-wallet-membership menu-icon"></i> -->
         <i class="mdi mdi-cash-multiple menu-icon"></i>
         <span class="menu-title">My Invoice</span>
       </a>
-    </li>
+    </li> -->
     <li class="nav-item">
       <a class="nav-link" href="mytranscations">
         <!-- <i class="mdi mdi-wallet-membership menu-icon"></i> -->
@@ -179,9 +178,8 @@
           </ul>
         </div>
       </li>
-    <li class="nav-item">
+    <!-- <li class="nav-item">
         <a class="nav-link" data-toggle="collapse" href="#ui-invoice" aria-expanded="false" aria-controls="ui-basic">
-          <!-- <i class="mdi mdi-wallet-membership menu-icon"></i> -->
           <i class="mdi mdi-cash-multiple menu-icon"></i>
           <span class="menu-title">Invoice</span>
           <i class="menu-arrow"></i>
@@ -192,10 +190,9 @@
             <li class="nav-item"> <a class="nav-link" href="manage-invoice">Manage Invoice</a></li>
           </ul>
         </div>
-      </li>
+      </li> -->
     <li class="nav-item">
         <a class="nav-link" data-toggle="collapse" href="#ui-course" aria-expanded="false" aria-controls="ui-basic">
-          <!-- <i class="mdi mdi-wallet-membership menu-icon"></i> -->
           <i class="mdi mdi-cash-multiple menu-icon"></i>
           <span class="menu-title">All Courses</span>
           <i class="menu-arrow"></i>
@@ -209,7 +206,6 @@
       </li>
     <li class="nav-item">
         <a class="nav-link" data-toggle="collapse" href="#ui-Lesson" aria-expanded="false" aria-controls="ui-basic">
-          <!-- <i class="mdi mdi-wallet-membership menu-icon"></i> -->
           <i class="mdi mdi-cash-multiple menu-icon"></i>
           <span class="menu-title">Lesson Plan</span>
           <i class="menu-arrow"></i>
