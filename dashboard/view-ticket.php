@@ -106,7 +106,7 @@ if(isset($_POST['statustype'])){
                                         
 
                                         if($type=='open'){?><option value="open" selected>Open</option><?php }
-                                        if($type=='pending'){?><?php }
+                                        if($type=='pending'){?><option value="pending" selected>Pending</option><?php }
                                         if($type=='resolved'){?><option value="resolved" selected>Resolved</option><?php }
                                         if($type=='closed'){?><option value="closed" selected>Closed</option><?php }
                                         if($type!='open'){?><option value="open">Open</option><?php }

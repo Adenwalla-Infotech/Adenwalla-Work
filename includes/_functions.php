@@ -1,10 +1,11 @@
 <?php
 
-/* Dashboard Functions */ 
-function _getdashtotal($param,$active,$status){
+// Dashboard Functions 
+function _getdashtotal($param, $active, $status)
+{
     require('_config.php');
     $sql = "SELECT * FROM `$param` WHERE `$active` = '$status'";
-    $query = mysqli_query($conn,$sql);
+    $query = mysqli_query($conn, $sql);
     $count = mysqli_num_rows($query);
     return $count;
 }
@@ -140,18 +141,18 @@ function _verifyotp($verifyotp)
             if ($query) {
                 $_SESSION['signup_success'] = true;
                 $sql = "SELECT * FROM `tblemailtemplates`";
-                $query = mysqli_query($conn,$sql);
-                foreach($query as $data){
+                $query = mysqli_query($conn, $sql);
+                foreach ($query as $data) {
                     $template = $data['_signuptemplate'];
                 }
                 $variables = array();
                 $variables['name'] = $_SESSION['temp_username'];
                 $variables['companyname'] = _siteconfig('_sitetitle');
-                $sendmail = _usetemplate($template,$variables);
+                $sendmail = _usetemplate($template, $variables);
                 $subject = "Account Created Successfully";
                 $userphone = $_SESSION['temp_phone'];
-                $message = 'Thank you for creating account with '._siteconfig('_sitetitle').'. Kindy Login to Continue';
-                _notifyuser($useremail, $userphone, $sendmail,$message, $subject);
+                $message = 'Thank you for creating account with ' . _siteconfig('_sitetitle') . '. Kindy Login to Continue';
+                _notifyuser($useremail, $userphone, $sendmail, $message, $subject);
                 echo "<script>";
                 echo "window.location.href = 'login'";
                 echo "</script>";
@@ -362,7 +363,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_category` varchar(255) NOT NULL,
                 `_subcategory` varchar(255) NOT NULL,
                 `_useremail` varchar(255) NOT NULL,
-                `_status` enum('open','closed','resolved') NOT NULL DEFAULT 'open',
+                `_status` enum('open','closed','pending','resolved') NOT NULL DEFAULT 'open',
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
@@ -530,7 +531,52 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
 
-            $tables = [$admin_table, $sms_config, $email_config, $site_config, $payment_config, $tickets_table, $ticket_comment, $contact_table, $category_table, $subcategory_table, $blog_table, $currency_table, $tax_table, $payment_trans, $coupon_table, $coupon_trans, $membership_table, $templates, $invoice, $invoiceitems];
+
+            $course = "CREATE TABLE IF NOT EXISTS `tblcourse` (
+                `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                `_coursename` text NOT NULL,
+                `_coursedescription` text NOT NULL,
+                `_whatlearn` text NOT NULL,
+                `_requirements` text NOT NULL,
+                `_capacity` varchar(50) NOT NULL,
+                `_enrollstatus` varchar(50) NOT NULL,
+                `_thumbnail` varchar(100) NOT NULL,
+                `_banner` varchar(100) NOT NULL,
+                `_pricing` varchar(50) NOT NULL,
+                `_status` varchar(50) NOT NULL,
+                `_teacheremailid` varchar(50) NOT NULL,
+                `_categoryid` varchar(50) NOT NULL,
+                `_subcategoryid` varchar(50) NOT NULL,
+                `_coursetype` varchar(50) NOT NULL,
+                `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                `UpdationDate` datetime NULL ON UPDATE current_timestamp()
+            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
+
+            $lessondb = "CREATE TABLE IF NOT EXISTS `tbllessons` (
+                `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                `_courseid` varchar(55) NOT NULL,
+                `_lessonname` text NOT NULL,
+                `_lessondescription` text NOT NULL,
+                `_status` varchar(55) NOT NULL,
+                `_availablity` varchar(55) NOT NULL,
+                `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                `UpdationDate` datetime NULL ON UPDATE current_timestamp()
+            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
+
+            $slidesdb = "CREATE TABLE IF NOT EXISTS `tblslides` (
+                `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                `_courseid` varchar(55) NOT NULL,
+                `_slideurl` varchar(55) NOT NULL,
+                `_caption` varchar(55) NOT NULL,
+                `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                `UpdationDate` datetime NULL ON UPDATE current_timestamp()
+            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
+
+        
+
+
+
+            $tables = [$admin_table, $sms_config, $email_config, $site_config, $payment_config, $tickets_table, $ticket_comment, $contact_table, $category_table, $subcategory_table, $blog_table, $currency_table, $tax_table, $payment_trans, $coupon_table, $coupon_trans, $membership_table, $templates, $invoice, $invoiceitems, $course, $lessondb, $slidesdb];
 
             foreach ($tables as $k => $sql) {
                 $query = @$temp_conn->query($sql);
@@ -617,16 +663,16 @@ function _createuser($username, $useremail, $usertype, $userphone, $isactive, $i
                 if ($query) {
                     if ($notify) {
                         $sql = "SELECT * FROM `tblemailtemplates`";
-                        $query = mysqli_query($conn,$sql);
-                        foreach($query as $data){
+                        $query = mysqli_query($conn, $sql);
+                        foreach ($query as $data) {
                             $template = $data['_signuptemplate'];
                         }
                         $variables = array();
                         $variables['name'] = $username;
                         $variables['companyname'] = _siteconfig('_sitetitle');
-                        $sendmail = _usetemplate($template,$variables);
-                        $message = 'Thank you for creating account with '._siteconfig('_sitetitle').'. Kindy Login to Continue';
-                        _notifyuser($useremail, $userphone, $sendmail,$message, $subject);
+                        $sendmail = _usetemplate($template, $variables);
+                        $message = 'Thank you for creating account with ' . _siteconfig('_sitetitle') . '. Kindy Login to Continue';
+                        _notifyuser($useremail, $userphone, $sendmail, $message, $subject);
                         $alert = new PHPAlert();
                         $alert->success("User Created");
                     } else {
@@ -741,7 +787,7 @@ function _notifyuser($useremail = '', $userphone = '', $sendmail = '', $message 
 
             $mail->Subject = $subject;
             $mail->Body = $sendmail;
-            $mail->IsHTML(true); 
+            $mail->IsHTML(true);
             if ($mail->send()) {
                 $_SESSION['send_mail'] = true;
             }
@@ -1615,7 +1661,7 @@ function _showCategoryOptions($_categoryID = '')
         if ($query) {
         ?>
             <label for="categoryId" class="form-label">Select Category</label>
-            <select style="height: 40px;" id="categoryId" name="categoryId" onClick="getSubCategory(this.options[this.selectedIndex].value)" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
+            <select style="height: 40px;" id="categoryId" name="categoryId" onClick="getSubCategory(this.options[this.selectedIndex].value)" class="form-control form-control-lg"  required>
 
                 <option selected disabled value="">Category</option>
 
@@ -1647,7 +1693,7 @@ function _showCategoryOptions($_categoryID = '')
         $query = mysqli_query($conn, $sql);
         if ($query) { ?>
             <label for="categoryId" class="form-label">Select Category</label>
-            <select style="height: 46px;" id="categoryId" name="categoryId" onClick="getSubCategory(this.options[this.selectedIndex].value)" class="form-control form-control-lg" id="exampleFormControlSelect2" required>
+            <select style="height: 46px;" id="categoryId" name="categoryId" onClick="getSubCategory(this.options[this.selectedIndex].value)" class="form-control form-control-lg"  required>
                 <option selected disabled value="">Select Category</option>
                 <?php
             foreach ($query as $data) {
@@ -1658,7 +1704,7 @@ function _showCategoryOptions($_categoryID = '')
                 ?>
 
             </select>
-            <div class="invalid-feedback">Please select proper sub-category</div>
+            <div class="invalid-feedback">Please select proper category</div>
         <?php
         }
     }
@@ -1926,7 +1972,8 @@ function _getmarkup($conversion = '', $status = '', $limit = '', $startfrom = ''
     }
 }
 
-function _getmarkupOnlyCurrency(){
+function _getmarkupOnlyCurrency()
+{
 
     require('_config.php');
 
@@ -1936,15 +1983,14 @@ function _getmarkupOnlyCurrency(){
     $query = mysqli_query($conn, $sql);
 
     if ($query) {
-    
 
-    foreach ($query as $data) { 
+
+        foreach ($query as $data) {
         ?>
-                <option value="<?php echo $data['_conversioncurrency']; ?>" ><?php echo $data['_conversioncurrency']; ?></option>
-        <?php 
+            <option value="<?php echo $data['_conversioncurrency']; ?>"><?php echo $data['_conversioncurrency']; ?></option>
+        <?php
         }
     }
-
 }
 
 function _conversion($amount, $currency)
@@ -2406,31 +2452,31 @@ function _purchasememebership($userid, $memberid)
     $date = strtotime(date('Y-m-d H:i:s'));
     $enddata = date("Y-m-d", strtotime("+$duration month", $date));
     $sql = "UPDATE `tblusers` SET `_usermembership`='$memberid',`_usermemstart`='$date',`_usermemsleft`='$enddata' WHERE `_id` = $userid";
-    $query = mysqli_query($conn,$sql);
-    if($query){
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
         $sql = "SELECT * FROM `tblemailtemplates`";
-        $query = mysqli_query($conn,$sql);
-        foreach($query as $data){
+        $query = mysqli_query($conn, $sql);
+        foreach ($query as $data) {
             $template = $data['_purchasetemplate'];
         }
         $variables = array();
-        $variables['name'] = _getsingleuser($userid,'_username');
+        $variables['name'] = _getsingleuser($userid, '_username');
         $variables['price'] = _getSingleMembership($memberid, '_price');
         $variables['product'] = _getSingleMembership($memberid, '_membershipname');
         $variables['date'] = date('M j, Y');
         $variables['companyname'] = _siteconfig('_sitetitle');
         $variables['paymentid'] = $_SESSION['transid'];
-        $sendmail = _usetemplate($template,$variables);
-        $message = 'Thank you for your purchase with '._siteconfig('_sitetitle').'. We have mailed your order details on '._getsingleuser($userid,'_useremail').'';
-        _notifyuser(_getsingleuser($userid,'_useremail'),_getsingleuser($userid,'_userphone'),$sendmail,$message,'Purchase Completed');
+        $sendmail = _usetemplate($template, $variables);
+        $message = 'Thank you for your purchase with ' . _siteconfig('_sitetitle') . '. We have mailed your order details on ' . _getsingleuser($userid, '_useremail') . '';
+        _notifyuser(_getsingleuser($userid, '_useremail'), _getsingleuser($userid, '_userphone'), $sendmail, $message, 'Purchase Completed');
     }
 }
 
 
-function _usetemplate($template,$data){
-    foreach($data as $key => $value)
-    {
-        $template = str_replace('{{ '.$key.' }}', $value, $template);
+function _usetemplate($template, $data)
+{
+    foreach ($data as $key => $value) {
+        $template = str_replace('{{ ' . $key . ' }}', $value, $template);
     }
 
     return $template;
@@ -2674,7 +2720,7 @@ function _updateEmailTemplate($templateName, $templateCode)
 
     require('_config.php');
 
-    $emailtemp = $conn -> real_escape_string($templateCode);
+    $emailtemp = $conn->real_escape_string($templateCode);
     $sql = "UPDATE `tblemailtemplates` SET `$templateName`='" . $emailtemp . "' WHERE `_id` = 2 ";
 
     $query = mysqli_query($conn, $sql);
@@ -2687,7 +2733,8 @@ function _updateEmailTemplate($templateName, $templateCode)
     }
 }
 
-function _getSingleEmailTemplate($templateName){
+function _getSingleEmailTemplate($templateName)
+{
     require('_config.php');
     $sql = "SELECT * FROM `tblemailtemplates` WHERE `_id` = 2 ";
     $query = mysqli_query($conn, $sql);
@@ -2701,7 +2748,7 @@ function _getSingleEmailTemplate($templateName){
 
 // Invoice
 
-function _createInvoice($_clientname, $_clientemail, $_clientnumber, $_clientaddress, $_invoicenote,$_refno, $_duedate,$_paymentstatus)
+function _createInvoice($_clientname, $_clientemail, $_clientnumber, $_clientaddress, $_invoicenote, $_refno, $_duedate, $_paymentstatus)
 {
 
     require('_config.php');
@@ -2728,24 +2775,21 @@ function _getInvoice($clientemail = '', $refno = '', $startfrom = '', $limit = '
 
 
 
-    if($clientemail != '' && $refno == ''){
+    if ($clientemail != '' && $refno == '') {
 
         $sql = "SELECT * FROM `tblinvoice` where `_clientemail` LIKE '%$clientemail%' ";
-
     }
 
-    if($clientemail == '' && $refno != ''){
+    if ($clientemail == '' && $refno != '') {
 
         $sql = "SELECT * FROM `tblinvoice` where `_refno` LIKE '%$refno%' ";
-
     }
 
-    if($clientemail == '' && $refno == '' ){
+    if ($clientemail == '' && $refno == '') {
 
         $sql = "SELECT * FROM `tblinvoice` ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
-
     }
- 
+
 
 
 
@@ -2758,28 +2802,27 @@ function _getInvoice($clientemail = '', $refno = '', $startfrom = '', $limit = '
                 <td><?php echo $data['_id']; ?></td>
                 <td><?php echo $data['_clientname']; ?></td>
                 <td><?php echo $data['_clientemail']; ?></td>
-                
+
                 <?php
-                    if($data['_paymentstatus']=='UnPaid'){
-                        ?>
-                        <td>
-                            <span style="background-color:#dd4949; color:#fff; padding:3px 5px; border-radius:10px; " >
-                                <?php echo $data['_paymentstatus']; ?>
-                            </span>
-                        </td>
-                        <?php
-                    }
-                    else{
-                        ?>
-                            <td>
-                            <span style="background-color:#86bd68; color:#fff; padding:3px 5px; border-radius:10px; " >
-                                <?php echo $data['_paymentstatus']; ?>
-                            </span>
-                            </td>
-                        <?php
-                    }
+            if ($data['_paymentstatus'] == 'UnPaid') {
                 ?>
-                
+                    <td>
+                        <span style="background-color:#dd4949; color:#fff; padding:3px 5px; border-radius:10px; ">
+                            <?php echo $data['_paymentstatus']; ?>
+                        </span>
+                    </td>
+                <?php
+            } else {
+                ?>
+                    <td>
+                        <span style="background-color:#86bd68; color:#fff; padding:3px 5px; border-radius:10px; ">
+                            <?php echo $data['_paymentstatus']; ?>
+                        </span>
+                    </td>
+                <?php
+            }
+                ?>
+
 
                 <td><?php echo $data['_refno']; ?></td>
                 <td><?php echo date("M j, Y", strtotime($data['_duedate'])); ?></td>
@@ -2816,28 +2859,27 @@ function _viewInvoice($startfrom = '', $limit = '')
     $query = mysqli_query($conn, $sql);
     if ($query) {
         foreach ($query as $data) {
-            ?>
+        ?>
             <tr>
                 <td><?php echo $data['_id']; ?></td>
                 <?php
-                    if($data['_paymentstatus']=='UnPaid'){
-                        ?>
-                        <td>
-                            <span style="background-color:#dd4949; color:#fff; padding:3px 5px; border-radius:10px; " >
-                                <?php echo $data['_paymentstatus']; ?>
-                            </span>
-                        </td>
-                        <?php
-                    }
-                    else{
-                        ?>
-                           <td>
-                           <span style="background-color:#86bd68; color:#fff; padding:3px 5px; border-radius:10px; " >
-                                <?php echo $data['_paymentstatus']; ?>
-                            </span>
-                            </td>
-                        <?php
-                    }
+            if ($data['_paymentstatus'] == 'UnPaid') {
+                ?>
+                    <td>
+                        <span style="background-color:#dd4949; color:#fff; padding:3px 5px; border-radius:10px; ">
+                            <?php echo $data['_paymentstatus']; ?>
+                        </span>
+                    </td>
+                <?php
+            } else {
+                ?>
+                    <td>
+                        <span style="background-color:#86bd68; color:#fff; padding:3px 5px; border-radius:10px; ">
+                            <?php echo $data['_paymentstatus']; ?>
+                        </span>
+                    </td>
+                <?php
+            }
                 ?>
                 <td><?php echo date("M j, Y", strtotime($data['_duedate'])); ?></td>
                 <td>
@@ -2877,7 +2919,7 @@ function _getSingleInvoice($id, $param)
 }
 
 
-function _updateInvoice($_id, $_clientname, $_clientemail, $_clientnumber, $_clientaddress, $_invoicenote, $_duedate ,$_paymentstatus )
+function _updateInvoice($_id, $_clientname, $_clientemail, $_clientnumber, $_clientaddress, $_invoicenote, $_duedate, $_paymentstatus)
 {
 
     require('_config.php');
@@ -2966,11 +3008,11 @@ function _getInvoiceItems($invoiceno, $startfrom = '', $limit = '')
                     ?>
                 </td>
                 <td>
-                    <span style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box" onclick="callEditItem(<?php echo $data['_invoiceno'];?>,<?php echo $data['_id'];?>)" ></span>
-                    <a href='edit-invoice?invoiceno=<?php echo $invoiceno?>&itemno=<?php echo $data['_id'];  ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
+                    <span style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box" onclick="callEditItem(<?php echo $data['_invoiceno']; ?>,<?php echo $data['_id']; ?>)"></span>
+                    <a href='edit-invoice?invoiceno=<?php echo $invoiceno ?>&itemno=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
                 </td>
             </tr>
-<?php
+        <?php
         }
     }
 }
@@ -3024,9 +3066,10 @@ function _deleteInvoiceItems($invoiceno, $id)
 
 
 // View Transcation
-function _viewTranscation($useremail, $startfrom = '', $limit = ''){
+function _viewTranscation($useremail, $startfrom = '', $limit = '')
+{
 
-    
+
     require('_config.php');
 
 
@@ -3043,8 +3086,19 @@ function _viewTranscation($useremail, $startfrom = '', $limit = ''){
                 <td><?php echo $data['_producttitle']; ?></td>
                 <td><?php echo $data['_amount']; ?></td>
                 <td><?php echo $data['_producttype']; ?></td>
-                <td><?php echo $data['_couponcode']; ?></td>
-                <td><?php echo $data['_status']; ?></td>
+                <td>
+                    <?php
+
+            $couponcode = $data['_couponcode'];
+
+            if ($couponcode) {
+                echo $couponcode;
+            } else {
+                echo "No Coupon Code Applied";
+            }
+
+                    ?>
+                </td>
                 <td>
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
                 </td>
@@ -3052,8 +3106,465 @@ function _viewTranscation($useremail, $startfrom = '', $limit = ''){
         <?php
         }
     }
-
 }
+
+// Course //
+
+function _createCourse($coursename, $courseDesc, $whatlearn, $requirements, $capacity, $enrollstatus, $thumbnail, $banner, $pricing, $status, $teacheremailid, $categoryid, $subcategoryid, $coursetype)
+{
+
+
+    require('_config.php');
+
+    $sql = "INSERT INTO `tblcourse`(`_coursename`,`_coursedescription`,`_whatlearn`,`_requirements`,`_capacity`,`_enrollstatus`,`_thumbnail`,`_banner`,`_pricing`,`_status`,`_teacheremailid`,`_categoryid`,`_subcategoryid`,`_coursetype`) VALUES ('$coursename','$courseDesc','$whatlearn','$requirements','$capacity','$enrollstatus','$thumbnail','$banner','$pricing','$status','$teacheremailid','$categoryid','$subcategoryid','$coursetype')";
+
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $_SESSION['course_success'] = true;
+        header("location:");
+    } else {
+        $_SESSION['course_error'] = false;
+        header("location:");
+    }
+}
+
+
+
+function _getSingleCourse($id, $param)
+{
+
+    require('_config.php');
+    $sql = "SELECT * FROM `tblcourse` WHERE `_id`='$id' ";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        foreach ($query as $data) {
+            return $data[$param];
+        }
+    }
+}
+
+
+function _getCourse($coursename = '', $teacheremailid = '', $startfrom = '', $limit = '')
+{
+
+    require('_config.php');
+
+
+    if ($coursename && !$teacheremailid) {
+        $sql = "SELECT * FROM `tblcourse` where `_coursename` LIKE '%$coursename%' ";
+    }
+
+    if (!$coursename && $teacheremailid) {
+        $sql = "SELECT * FROM `tblcourse` where `_teacheremailid` LIKE '%$teacheremailid%' ";
+    }
+
+    if (!$coursename && !$teacheremailid) {
+        $sql = "SELECT * FROM `tblcourse` ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
+    }
+
+
+
+
+    $query = mysqli_query($conn, $sql);
+
+    if ($query) {
+        foreach ($query as $data) {
+        ?>
+            <tr>
+                <td><?php echo $data['_id']; ?></td>
+                <td><?php echo $data['_coursename']; ?></td>
+                <td><?php echo $data['_teacheremailid']; ?></td>
+                <td><?php echo $data['_coursetype']; ?></td>
+                <td><?php echo $data['_status']; ?></td>
+                <td>
+                    <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
+                </td>
+                <td>
+                    <?php
+            if (strtotime($data['UpdationDate']) == '') {
+                echo "Not Updated Yet";
+            } else {
+                echo date("M j, Y", strtotime($data['UpdationDate']));
+            }
+                    ?>
+                </td>
+                <td>
+                    <a href="edit-course.php?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
+                    <a href='manage-course?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
+                </td>
+            </tr>
+        <?php
+        }
+    }
+}
+
+function _showCourses($_courseid = '')
+{
+
+    require('_config.php');
+
+
+    if ($_courseid != '') {
+
+        $sql = "SELECT * FROM `tblcourse`  ";
+
+        $query = mysqli_query($conn, $sql);
+        if ($query) {
+        ?>
+            <label for="courseid" class="form-label">Select Course</label>
+            <select style="height: 40px;" id="courseid" name="courseid" class="form-control form-control-lg"  required>
+
+                <option selected disabled value="">Course</option>
+
+                <?php
+            foreach ($query as $data) {
+
+                $currentId = $data['_id'];
+
+                if ($_courseid == $currentId) {
+                ?>
+                        <option value="<?php echo $data['_id']; ?>" selected> <?php echo $data['_coursename']; ?> </option>
+                    <?php
+                } else {
+                    ?>
+                        <option value="<?php echo $data['_id']; ?>"> <?php echo $data['_coursename']; ?> </option>
+                <?php
+                }
+            }
+                ?>
+
+            </select>
+            <div class="invalid-feedback">Please select proper course</div>
+        <?php
+
+
+        }
+    } else {
+        $sql = "SELECT * FROM `tblcourse`";
+        $query = mysqli_query($conn, $sql);
+        if ($query) { ?>
+            <label for="courseid" class="form-label">Select Course</label>
+            <select style="height: 46px;" id="courseid" name="courseid" class="form-control form-control-lg" required>
+                <option selected disabled value="">Course</option>
+                <?php
+            foreach ($query as $data) {
+                ?>
+                    <option value="<?php echo $data['_id']; ?>"> <?php echo $data['_coursename']; ?> </option>
+                <?php
+            }
+                ?>
+
+            </select>
+            <div class="invalid-feedback">Please select proper course</div>
+        <?php
+        }
+    }
+}
+
+
+function _updateCourse($_id, $coursename, $courseDesc, $whatlearn, $requirements, $capacity, $enrollstatus, $thumbnail, $banner, $pricing, $status, $teacheremailid, $categoryid, $subcategoryid, $coursetype)
+{
+
+    require('_config.php');
+
+
+    $sql = "UPDATE `tblcourse` SET `_coursename`='$coursename' ,`_coursedescription`='$courseDesc' , `_whatlearn`='$whatlearn',`_requirements`='$requirements' ,`_capacity`='$capacity' , `_enrollstatus`='$enrollstatus',`_thumbnail`='$thumbnail' ,`_banner`='$banner' , `_pricing`='$pricing',`_status`='$status' ,`_teacheremailid`='$teacheremailid' , `_categoryid`='$categoryid',`_subcategoryid`='$subcategoryid' , `_coursetype`='$coursetype' WHERE `_id` = '$_id' ";
+
+
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $_SESSION['course_success'] = true;
+        header("location:");
+    } else {
+        $_SESSION['course_error'] = false;
+        header("location:");
+    }
+}
+
+
+
+function _deleteCourse($id)
+{
+    require('_config.php');
+    require('_alert.php');
+
+    $sql = "DELETE FROM `tblcourse` WHERE `_id`='$id' ";
+    $query = mysqli_query($conn, $sql);
+
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->success("Course Delete");
+    } else {
+        $alert = new PHPAlert();
+        $alert->warn("Deletion Failed");
+    }
+}
+
+
+
+
+// Lessons //
+function _createLesson($_courseid, $_lessonname, $_lessondescription, $_status, $_availablity)
+{
+
+
+    require('_config.php');
+
+    $sql = "INSERT INTO `tbllessons`(`_courseid`,`_lessonname`,`_lessondescription`,`_status`,`_availablity`) VALUES ('$_courseid','$_lessonname','$_lessondescription','$_status','$_availablity')";
+
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $_SESSION['course_success'] = true;
+        header("location:");
+    } else {
+        $_SESSION['course_error'] = false;
+        header("location:");
+    }
+}
+
+
+function _getSingleLesson($id, $param)
+{
+
+    require('_config.php');
+    $sql = "SELECT * FROM `tbllessons` WHERE `_id`='$id' ";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        foreach ($query as $data) {
+            return $data[$param];
+        }
+    }
+}
+
+
+
+function _getLessons($coursename = '', $teacheremailid = '', $startfrom = '', $limit = '')
+{
+
+    require('_config.php');
+
+
+    if ($coursename && !$teacheremailid) {
+        $sql = "SELECT * FROM `tblcourse` where `_coursename` LIKE '%$coursename%' ";
+    }
+
+    if (!$coursename && $teacheremailid) {
+        $sql = "SELECT * FROM `tblcourse` where `_teacheremailid` LIKE '%$teacheremailid%' ";
+    }
+
+    if (!$coursename && !$teacheremailid) {
+        $sql = "SELECT * FROM `tbllessons` ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
+    }
+
+
+
+
+    $query = mysqli_query($conn, $sql);
+
+    if ($query) {
+        foreach ($query as $data) {
+        ?>
+            <tr>
+                <td><?php echo $data['_id']; ?></td>
+
+                <td>
+                    <?php
+
+            $courseid = $data['_courseid'];
+            echo _getSingleCourse($courseid, '_coursename');
+
+                    ?>
+                </td>
+
+                <td><?php echo $data['_lessondescription']; ?></td>
+                <td><?php echo $data['_status']; ?></td>
+                <td><?php echo $data['_availablity']; ?></td>
+                <td>
+                    <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
+                </td>
+                <td>
+                    <?php
+            if (strtotime($data['UpdationDate']) == '') {
+                echo "Not Updated Yet";
+            } else {
+                echo date("M j, Y", strtotime($data['UpdationDate']));
+            }
+                    ?>
+                </td>
+                <td>
+                    <a href="edit-lesson.php?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
+                    <a href='manage-lesson?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
+                </td>
+            </tr>
+        <?php
+        }
+    }
+}
+
+function _updateLesson($_id, $_courseid, $_lessonname, $_lessondescription, $_status, $_availablity)
+{
+
+    require('_config.php');
+
+
+    $sql = "UPDATE `tbllessons` SET `_courseid`='$_courseid' ,`_lessonname`='$_lessonname' ,`_lessondescription`='$_lessondescription' , `_status`='$_status',`_availablity`='$_availablity'  WHERE `_id` = '$_id' ";
+
+
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $_SESSION['course_success'] = true;
+        header("location:");
+    } else {
+        $_SESSION['course_error'] = false;
+        header("location:");
+    }
+}
+
+
+
+function _deleteLesson($id)
+{
+    require('_config.php');
+    require('_alert.php');
+
+    $sql = "DELETE FROM `tbllessons` WHERE `_id`='$id' ";
+    $query = mysqli_query($conn, $sql);
+
+    if ($query) {
+        $alert = new PHPAlert();
+        $alert->success("Lesson Delete");
+    } else {
+        $alert = new PHPAlert();
+        $alert->warn("Deletion Failed");
+    }
+}
+
+
+
+
+// Slides //
+function _createSlide($_courseid, $_slideurl, $_caption)
+{
+
+
+    require('_config.php');
+
+    $sql = "INSERT INTO `tblslides` (`_courseid`,`_slideurl`,`_caption`) VALUES ('$_courseid','$_slideurl','$_caption')";
+
+    $query = mysqli_query($conn, $sql);
+
+    if ($query) {
+        $_SESSION['slide_success'] = true;
+        header("location:");
+    } else {
+        $_SESSION['slide_error'] = false;
+        header("location:");
+    }
+}
+
+
+function _getSingleSlide($id, $courseid ,$param)
+{
+
+    require('_config.php');
+    $sql = "SELECT * FROM `tblslides` WHERE `_id`='$id' ";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        foreach ($query as $data) {
+            return $data[$param];
+        }
+    }
+}
+
+
+
+function _getSlides($id,$startfrom = '', $limit = '')
+{
+
+    require('_config.php');
+
+
+    $sql = "SELECT * FROM `tblslides` where `_courseid`='$id' ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
+
+    $query = mysqli_query($conn, $sql);
+
+    if ($query) {
+        foreach ($query as $data) {
+        ?>
+            <tr>
+                <td><?php echo $data['_id']; ?></td>
+                
+                <td>
+                    <?php
+
+                        $courseid = $data['_courseid'];
+                        echo _getSingleCourse($courseid, '_coursename');
+
+                    ?>
+                </td>
+                
+                <td> 
+                    <a href="../uploads/banner/<?php echo $data['_slideurl']; ?>" target="_blank" class="mdi mdi-eye"></a>
+                </td>
+                <td>
+                    <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
+                </td>
+                <td>
+                    <?php
+            if (strtotime($data['UpdationDate']) == '') {
+                echo "Not Updated Yet";
+            } else {
+                echo date("M j, Y", strtotime($data['UpdationDate']));
+            }
+                    ?>
+                </td>
+                <td>
+                    <span style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box" onclick="callEditSlide(<?php echo $data['_courseid']; ?>,<?php echo $data['_id']; ?>)"></span>
+                    
+                    <a href='edit-course?id=<?php echo $data['_courseid']; ?>&slideid=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
+                </td>
+            </tr>
+        <?php
+        }
+    }
+}
+
+
+function _updateSlide($_id, $_courseid, $_slideurl , $_caption)
+{
+
+    require('_config.php');
+
+    $sql = "UPDATE `tblslides` SET `_slideurl`='$_slideurl' ,`_caption`='$_caption'   WHERE `_id` = '$_id' AND `_courseid`='$_courseid' ";
+    $query = mysqli_query($conn, $sql);
+
+
+    if ($query) {
+        $_SESSION['slide_update_success'] = true;
+        header("location:");
+    } else {
+        $_SESSION['slide_update_error'] = false;
+        header("location:");
+    }
+}
+
+
+
+function _deleteSlide($id,$_courseid)
+{
+    require('_config.php');
+   
+
+    $sql = "DELETE FROM `tblslides` WHERE `_id`='$id' AND `_courseid`='$_courseid' ";
+    $query = mysqli_query($conn, $sql);
+
+    if ($query) {
+        $_SESSION['course_success'] = true;
+        header("location:edit-course?id=$_courseid");
+    } 
+}
+
+
 
 
 

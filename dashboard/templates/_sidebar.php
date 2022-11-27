@@ -193,6 +193,34 @@
           </ul>
         </div>
       </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#ui-course" aria-expanded="false" aria-controls="ui-basic">
+          <!-- <i class="mdi mdi-wallet-membership menu-icon"></i> -->
+          <i class="mdi mdi-cash-multiple menu-icon"></i>
+          <span class="menu-title">All Courses</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="ui-course">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="create-course.php">Create Course</a></li>
+            <li class="nav-item"> <a class="nav-link" href="manage-course">Manage Course</a></li>
+          </ul>
+        </div>
+      </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#ui-Lesson" aria-expanded="false" aria-controls="ui-basic">
+          <!-- <i class="mdi mdi-wallet-membership menu-icon"></i> -->
+          <i class="mdi mdi-cash-multiple menu-icon"></i>
+          <span class="menu-title">Lesson Plan</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="ui-Lesson">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="add-lesson.php">Add Lesson Plan</a></li>
+            <li class="nav-item"> <a class="nav-link" href="manage-lesson">Manage Lesson Plan</a></li>
+          </ul>
+        </div>
+      </li>
       <?php } ?>
   </ul>
 </nav>
