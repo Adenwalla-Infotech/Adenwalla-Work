@@ -761,7 +761,7 @@ function _notifyuser($useremail = '', $userphone = '', $sendmail = '', $message 
             $mail->isSMTP();
             foreach ($query as $data) {
                 //Enable SMTP debugging.
-                $mail->SMTPDebug = 10;                                       
+                // $mail->SMTPDebug = 10;                                       
                 //Set SMTP host name                          
                 $mail->Host = $data['_hostname'];
                 //Set this to true if SMTP host requires authentication to send email
