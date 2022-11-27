@@ -786,10 +786,11 @@ function _notifyuser($useremail = '', $userphone = '', $sendmail = '', $message 
 
             $mail->Subject = $subject;
             $mail->Body = $sendmail;
-            print_r($mail);
             $mail->IsHTML(true);
             if ($mail->send()) {
                 $_SESSION['send_mail'] = true;
+            }else{
+                echo 'Mailer Error: ' . $mail->ErrorInfo;
             }
         }
     }
