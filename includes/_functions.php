@@ -695,104 +695,104 @@ use PHPMailer\PHPMailer\Exception;
 function _notifyuser($useremail = '', $userphone = '', $sendmail = '', $message = '', $subject = '')
 {
     require('_config.php');
-    // if ($userphone != '') {
-    //     $sql = "SELECT * FROM `tblsmsconfig` WHERE `_supplierstatus` = 'true'";
-    //     $query = mysqli_query($conn, $sql);
-    //     $count = mysqli_num_rows($query);
-    //     if ($count > 0) {
-    //         foreach ($query as $data) {
-    //             $baseurl = $data['_baseurl'];
-    //             $apikey = $data['_apikey'];
-    //         }
-
-    //         $fields = array(
-    //             "message" => $message,
-    //             "sender_id" => "FSTSMS",
-    //             "language" => "english",
-    //             "route" => "v3",
-    //             "numbers" => $userphone,
-    //         );
-
-    //         $curl = curl_init();
-
-    //         curl_setopt_array(
-    //             $curl,
-    //             array(
-    //                 CURLOPT_URL => $baseurl,
-    //                 CURLOPT_RETURNTRANSFER => true,
-    //                 CURLOPT_ENCODING => "",
-    //                 CURLOPT_MAXREDIRS => 10,
-    //                 CURLOPT_TIMEOUT => 30,
-    //                 CURLOPT_SSL_VERIFYHOST => 0,
-    //                 CURLOPT_SSL_VERIFYPEER => 0,
-    //                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-    //                 CURLOPT_CUSTOMREQUEST => "POST",
-    //                 CURLOPT_POSTFIELDS => json_encode($fields),
-    //                 CURLOPT_HTTPHEADER => array(
-    //                     "authorization: $apikey",
-    //                     "accept: */*",
-    //                     "cache-control: no-cache",
-    //                     "content-type: application/json"
-    //                 ),
-    //             )
-    //         );
-
-    //         $response = curl_exec($curl);
-    //         $err = curl_error($curl);
-
-    //         curl_close($curl);
-
-    //         if ($err) {
-    //             $alert = new PHPAlert();
-    //             $alert->warn("SMS not sent");
-    //         } else {
-    //             $_SESSION['template_success'] = true;
-    //         }
-    //     }
-    // }
-    if ($useremail != '') {
-        $sql = "SELECT * FROM `tblemailconfig` WHERE `_supplierstatus` = 'true'";
+    if ($userphone != '') {
+        $sql = "SELECT * FROM `tblsmsconfig` WHERE `_supplierstatus` = 'true'";
         $query = mysqli_query($conn, $sql);
         $count = mysqli_num_rows($query);
-        if ($count == 1) {
-            require_once "../vendor/autoload.php";
-            $mail = new PHPMailer(true); //Argument true in constructor enables exceptions
-            //Set PHPMailer to use SMTP.
-            $mail->isSMTP();
+        if ($count > 0) {
             foreach ($query as $data) {
-                //Enable SMTP debugging.
-                // $mail->SMTPDebug = 10;                                       
-                //Set SMTP host name                          
-                $mail->Host = $data['_hostname'];
-                //Set this to true if SMTP host requires authentication to send email
-                $mail->SMTPAuth = $data['_smtpauth'];
-                //Provide username and password     
-                $mail->Username = $data['_emailaddress'];
-                $mail->Password = $data['_emailpassword'];
-                //If SMTP requires TLS encryption then set it
-                $mail->SMTPSecure = "ssl";
-                //Set TCP port to connect to
-                $mail->Port = $data['_hostport'];
-
-                $mail->From = $data['_emailaddress'];
-                $mail->FromName = $data['_sendername'];
+                $baseurl = $data['_baseurl'];
+                $apikey = $data['_apikey'];
             }
-            //To address and namS
-            $mail->addAddress($useremail); //Recipient name is optional
 
-            //Address to which recipient will reply
-            $mail->addReplyTo($data['_emailaddress'], "Reply");
+            $fields = array(
+                "message" => $message,
+                "sender_id" => "FSTSMS",
+                "language" => "english",
+                "route" => "v3",
+                "numbers" => $userphone,
+            );
 
-            $mail->isHTML(true);
+            $curl = curl_init();
 
-            $mail->Subject = $subject;
-            $mail->Body = $sendmail;
-            $mail->IsHTML(true);
-            if ($mail->send()) {
-                $_SESSION['send_mail'] = true;
+            curl_setopt_array(
+                $curl,
+                array(
+                    CURLOPT_URL => $baseurl,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => "",
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 30,
+                    CURLOPT_SSL_VERIFYHOST => 0,
+                    CURLOPT_SSL_VERIFYPEER => 0,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => "POST",
+                    CURLOPT_POSTFIELDS => json_encode($fields),
+                    CURLOPT_HTTPHEADER => array(
+                        "authorization: $apikey",
+                        "accept: */*",
+                        "cache-control: no-cache",
+                        "content-type: application/json"
+                    ),
+                )
+            );
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+                $alert = new PHPAlert();
+                $alert->warn("SMS not sent");
+            } else {
+                $_SESSION['template_success'] = true;
             }
         }
     }
+    // if ($useremail != '') {
+    //     $sql = "SELECT * FROM `tblemailconfig` WHERE `_supplierstatus` = 'true'";
+    //     $query = mysqli_query($conn, $sql);
+    //     $count = mysqli_num_rows($query);
+    //     if ($count == 1) {
+    //         require_once "../vendor/autoload.php";
+    //         $mail = new PHPMailer(true); //Argument true in constructor enables exceptions
+    //         //Set PHPMailer to use SMTP.
+    //         $mail->isSMTP();
+    //         foreach ($query as $data) {
+    //             //Enable SMTP debugging.
+    //             // $mail->SMTPDebug = 10;                                       
+    //             //Set SMTP host name                          
+    //             $mail->Host = $data['_hostname'];
+    //             //Set this to true if SMTP host requires authentication to send email
+    //             $mail->SMTPAuth = $data['_smtpauth'];
+    //             //Provide username and password     
+    //             $mail->Username = $data['_emailaddress'];
+    //             $mail->Password = $data['_emailpassword'];
+    //             //If SMTP requires TLS encryption then set it
+    //             $mail->SMTPSecure = "ssl";
+    //             //Set TCP port to connect to
+    //             $mail->Port = $data['_hostport'];
+
+    //             $mail->From = $data['_emailaddress'];
+    //             $mail->FromName = $data['_sendername'];
+    //         }
+    //         //To address and namS
+    //         $mail->addAddress($useremail); //Recipient name is optional
+
+    //         //Address to which recipient will reply
+    //         $mail->addReplyTo($data['_emailaddress'], "Reply");
+
+    //         $mail->isHTML(true);
+
+    //         $mail->Subject = $subject;
+    //         $mail->Body = $sendmail;
+    //         $mail->IsHTML(true);
+    //         if ($mail->send()) {
+    //             $_SESSION['send_mail'] = true;
+    //         }
+    //     }
+    // }
 }
 
 function _getuser($username = '', $usertype = '', $limit = '', $startfrom = '')
