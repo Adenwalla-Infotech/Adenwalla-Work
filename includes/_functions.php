@@ -2452,6 +2452,7 @@ function _purchasememebership($userid, $memberid)
     $date = strtotime(date('Y-m-d H:i:s'));
     $enddata = date("Y-m-d", strtotime("+$duration month", $date));
     $sql = "UPDATE `tblusers` SET `_usermembership`='$memberid',`_usermemstart`='$date',`_usermemsleft`='$enddata' WHERE `_id` = $userid";
+    echo $sql;
     $query = mysqli_query($conn, $sql);
     if ($query) {
         echo 'query runninhg';
