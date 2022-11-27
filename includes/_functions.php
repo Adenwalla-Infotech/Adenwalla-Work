@@ -2448,10 +2448,11 @@ function _purchasememebership($userid, $memberid)
 {
     require('_config.php');
     $duration = _getSingleMembership($memberid, '_duration');
-    date_default_timezone_set('Africa/Nairobi');
+    date_default_timezone_set('Asia/Kolkata');
     $date = strtotime(date('Y-m-d H:i:s'));
+    $today = date('Y-m-d H:i:s');
     $enddata = date("Y-m-d", strtotime("+$duration month", $date));
-    $sql = "UPDATE `tblusers` SET `_usermembership`='$memberid',`_usermemstart`='$date',`_usermemsleft`='$enddata' WHERE `_id` = $userid";
+    $sql = "UPDATE `tblusers` SET `_usermembership`='$memberid',`_usermemstart`='$today',`_usermemsleft`='$enddata' WHERE `_id` = $userid";
     echo $sql;
     $query = mysqli_query($conn, $sql);
     if ($query) {
