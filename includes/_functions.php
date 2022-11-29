@@ -554,6 +554,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_evuluationlink` varchar(50) NOT NULL,
                 `_startdate` varchar(255)  NOT NULL,
                 `_enddate` varchar(255)  NOT NULL,
+                `_discountprice` varchar(50)  NOT NULL,
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
@@ -581,7 +582,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
 
-        
+
 
 
 
@@ -798,17 +799,17 @@ function _notifyuser($useremail = '', $userphone = '', $sendmail = '', $message 
             $mail->IsHTML(true);
             if ($mail->send()) {
                 $_SESSION['send_mail'] = true;
-            }else{
+            } else {
                 echo 'Mailer Error: ' . $mail->ErrorInfo;
             }
         }
     }
 }
 
-function _getuser($username = '', $usertype = '', $limit = '', $startfrom = '')
+function _getuser($username = '', $usertype = '', $createdat = '', $limit = '', $startfrom = '')
 {
     require('_config.php');
-    if ($usertype != '' && $username == '') {
+    if ($usertype != '') {
         $sql = "SELECT * FROM `tblusers` WHERE `_usertype` = '$usertype'";
         $query = mysqli_query($conn, $sql);
         if ($query) {
@@ -917,7 +918,64 @@ function _getuser($username = '', $usertype = '', $limit = '', $startfrom = '')
                 </tr>
             <?php }
         }
-    } else {
+    }
+
+    if ($createdat != '') {
+
+        $sql = "SELECT * FROM `tblusers` WHERE `CreationDate`='2022-11-29 13:58:01'";
+        $query = mysqli_query($conn, $sql);
+        if ($query) {
+            foreach ($query as $data) { ?>
+                <tr>
+                    <td><?php echo $data['_username']; ?></td>
+                    <td><?php echo $data['_useremail']; ?></td>
+                    <td>
+                        <?php
+                if ($data['_usertype'] == 0) { ?>
+                            <span>Student</span>
+                        <?php }
+                if ($data['_usertype'] == 1) { ?>
+                            <span>Teacher</span>
+                        <?php }
+                if ($data['_usertype'] == 2) { ?>
+                            <span>Site Admin</span>
+                        <?php } ?>
+                    </td>
+                    <td>
+                        <label class="checkbox-inline form-switch">
+                            <?php
+                if ($data['_userstatus'] == true) { ?><input disabled role="switch" name="isactive" value="true" checked type="checkbox"><?php }
+                if ($data['_userstatus'] != true) { ?><input disabled role="switch" name="isactive" value="true" type="checkbox"><?php }
+                                                                    ?>
+                        </label>
+                    </td>
+                    <td>
+                        <label class="checkbox-inline">
+                            <?php
+                if ($data['_userverify'] == true) { ?><input disabled role="switch" name="isactive" value="true" checked type="checkbox"><?php }
+                if ($data['_userverify'] != true) { ?><input disabled role="switch" name="isactive" value="true" type="checkbox"><?php }
+                                                                    ?>
+                        </label>
+                    </td>
+                    <td>
+                        <?php echo date("F j, Y", strtotime($data['CreationDate'])); ?>
+                    </td>
+                    <td>
+                        <?php
+                if (strtotime($data['UpdationDate']) == '') {
+                    echo "Not Updated Yet";
+                } else {
+                    echo date("M j, Y", strtotime($data['UpdationDate']));
+                }
+                        ?>
+                    </td>
+                    <td><a href="edit-user?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
+                        <a href='manage-users?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
+                    </td>
+                </tr>
+            <?php }
+        }
+    } else if ($username == '' && $usertype == '' && $createdat == '') {
         $sql = "SELECT * FROM `tblusers` ORDER BY `CreationDate` DESC LIMIT $startfrom, $limit";
         $query = mysqli_query($conn, $sql);
         if ($query) {
@@ -2658,13 +2716,13 @@ function _updateCouponTranscation($_id, $couponname, $couponamount, $useremail)
     }
 }
 
-function _payment($amount, $currency, $coupon = '',$prod,$prodid)
+function _payment($amount, $currency, $coupon = '', $prod, $prodid)
 {
-    if($prod == 'membership'){
-        $prodname = _getSingleMembership($prodid,'_membershipname');
+    if ($prod == 'membership') {
+        $prodname = _getSingleMembership($prodid, '_membershipname');
     }
-    if($prod == 'invoice'){
-        $prodname = _getSingleInvoice($prodid,'_refno');
+    if ($prod == 'invoice') {
+        $prodname = _getSingleInvoice($prodid, '_refno');
     }
     require('_config.php');
     $useremail = $_SESSION['userEmailId'];
@@ -2706,7 +2764,7 @@ function _getproduct($id, $type)
             <?php }
         }
     }
-    if($type == 'invoice'){
+    if ($type == 'invoice') {
         $sql = "SELECT * FROM `tblinvoice` WHERE `_id` = $id";
         $query = mysqli_query($conn, $sql);
         if ($query) {
@@ -2865,7 +2923,7 @@ function _viewInvoice($startfrom = '', $limit = '')
 
     require('_config.php');
     $userid = $_SESSION['userId'];
-    $useremail = _getsingleuser($userid,'_useremail');
+    $useremail = _getsingleuser($userid, '_useremail');
     $sql = "SELECT * FROM `tblinvoice` WHERE `_clientemail` = '$useremail' ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
     $query = mysqli_query($conn, $sql);
     if ($query) {
@@ -3121,13 +3179,13 @@ function _viewTranscation($useremail, $startfrom = '', $limit = '')
 
 // Course //
 
-function _createCourse($coursename, $courseDesc, $whatlearn, $requirements,$eligibitycriteria, $capacity, $enrollstatus, $thumbnail, $banner, $pricing, $status, $teacheremailid, $categoryid, $subcategoryid, $coursetype, $coursechannel, $courselevel, $evuluationlink, $startdate, $enddate)
+function _createCourse($coursename, $courseDesc, $whatlearn, $requirements, $eligibitycriteria, $capacity, $enrollstatus, $thumbnail, $banner, $pricing, $status, $teacheremailid, $categoryid, $subcategoryid, $coursetype, $coursechannel, $courselevel, $evuluationlink, $startdate, $enddate, $discountprice)
 {
 
 
     require('_config.php');
 
-    $sql = "INSERT INTO `tblcourse`(`_coursename`,`_coursedescription`,`_whatlearn`,`_requirements`,`_eligibilitycriteria`,`_capacity`,`_enrollstatus`,`_thumbnail`,`_banner`,`_pricing`,`_status`,`_teacheremailid`,`_categoryid`,`_subcategoryid`,`_coursetype`,`_coursechannel`,`_courselevel`,`_evuluationlink`,`_startdate`,`_enddate`) VALUES ('$coursename','$courseDesc','$whatlearn','$requirements','$eligibitycriteria','$capacity','$enrollstatus','$thumbnail','$banner','$pricing','$status','$teacheremailid','$categoryid','$subcategoryid','$coursetype','$coursechannel','$courselevel','$evuluationlink','$startdate','$enddate')";
+    $sql = "INSERT INTO `tblcourse`(`_coursename`,`_coursedescription`,`_whatlearn`,`_requirements`,`_eligibilitycriteria`,`_capacity`,`_enrollstatus`,`_thumbnail`,`_banner`,`_pricing`,`_status`,`_teacheremailid`,`_categoryid`,`_subcategoryid`,`_coursetype`,`_coursechannel`,`_courselevel`,`_evuluationlink`,`_startdate`,`_enddate`,`_discountprice`) VALUES ('$coursename','$courseDesc','$whatlearn','$requirements','$eligibitycriteria','$capacity','$enrollstatus','$thumbnail','$banner','$pricing','$status','$teacheremailid','$categoryid','$subcategoryid','$coursetype','$coursechannel','$courselevel','$evuluationlink','$startdate','$enddate','$discountprice')";
 
     $query = mysqli_query($conn, $sql);
     if ($query) {
@@ -3185,9 +3243,9 @@ function _getCourse($coursename = '', $teacheremailid = '', $startfrom = '', $li
                 <td><?php echo $data['_id']; ?></td>
                 <td><?php echo $data['_coursename']; ?></td>
                 <td>
-                    <?php 
-                        $teacherid = $data['_teacheremailid'];
-                        echo _getSingleUser($teacherid,'_useremail');
+                    <?php
+            $teacherid = $data['_teacheremailid'];
+            echo _getSingleUser($teacherid, '_useremail');
                     ?>
                 </td>
                 <td><?php echo $data['_coursetype']; ?></td>
@@ -3278,13 +3336,13 @@ function _showCourses($_courseid = '')
 }
 
 
-function _updateCourse($_id, $coursename, $courseDesc, $whatlearn, $requirements,$eligibitycriteria, $capacity, $enrollstatus, $thumbnail, $banner, $pricing, $status, $teacheremailid, $categoryid, $subcategoryid, $coursetype, $coursechannel, $courselevel, $evuluationlink, $startdate, $enddate)
+function _updateCourse($_id, $coursename, $courseDesc, $whatlearn, $requirements, $eligibitycriteria, $capacity, $enrollstatus, $thumbnail, $banner, $pricing, $status, $teacheremailid, $categoryid, $subcategoryid, $coursetype, $coursechannel, $courselevel, $evuluationlink, $startdate, $enddate, $discountprice)
 {
 
     require('_config.php');
 
 
-    $sql = "UPDATE `tblcourse` SET `_coursename`='$coursename' ,`_coursedescription`='$courseDesc' , `_whatlearn`='$whatlearn',`_requirements`='$requirements' ,`_eligibilitycriteria`='$eligibitycriteria',`_capacity`='$capacity' , `_enrollstatus`='$enrollstatus',`_thumbnail`='$thumbnail' ,`_banner`='$banner' , `_pricing`='$pricing',`_status`='$status' ,`_teacheremailid`='$teacheremailid' , `_categoryid`='$categoryid',`_subcategoryid`='$subcategoryid' , `_coursetype`='$coursetype' , `_coursechannel`='$coursechannel' , `_courselevel`='$courselevel' , `_evuluationlink`='$evuluationlink' , `_startdate`='$startdate' , `_enddate`='$enddate' WHERE `_id` = '$_id' ";
+    $sql = "UPDATE `tblcourse` SET `_coursename`='$coursename' ,`_coursedescription`='$courseDesc' , `_whatlearn`='$whatlearn',`_requirements`='$requirements' ,`_eligibilitycriteria`='$eligibitycriteria',`_capacity`='$capacity' , `_enrollstatus`='$enrollstatus',`_thumbnail`='$thumbnail' ,`_banner`='$banner' , `_pricing`='$pricing',`_status`='$status' ,`_teacheremailid`='$teacheremailid' , `_categoryid`='$categoryid',`_subcategoryid`='$subcategoryid' , `_coursetype`='$coursetype' , `_coursechannel`='$coursechannel' , `_courselevel`='$courselevel' , `_evuluationlink`='$evuluationlink' , `_startdate`='$startdate' , `_enddate`='$enddate' , `_discountprice`='$discountprice' WHERE `_id` = '$_id' ";
 
 
     $query = mysqli_query($conn, $sql);
@@ -3418,7 +3476,7 @@ function _getLessons($coursename = '', $teacheremailid = '', $startfrom = '', $l
     }
 }
 
-function _updateLesson($_id, $_courseid, $_lessonname,  $_lessontype, $_lessonurl, $_recordedfilename, $_lessondescription, $_status, $_availablity)
+function _updateLesson($_id, $_courseid, $_lessonname, $_lessontype, $_lessonurl, $_recordedfilename, $_lessondescription, $_status, $_availablity)
 {
 
     require('_config.php');
@@ -3480,7 +3538,7 @@ function _createSlide($_courseid, $_slideurl, $_caption)
 }
 
 
-function _getSingleSlide($id, $courseid ,$param)
+function _getSingleSlide($id, $courseid, $param)
 {
 
     require('_config.php');
@@ -3495,7 +3553,7 @@ function _getSingleSlide($id, $courseid ,$param)
 
 
 
-function _getSlides($id,$startfrom = '', $limit = '')
+function _getSlides($id, $startfrom = '', $limit = '')
 {
 
     require('_config.php');
@@ -3514,8 +3572,8 @@ function _getSlides($id,$startfrom = '', $limit = '')
                 <td>
                     <?php
 
-                        $courseid = $data['_courseid'];
-                        echo _getSingleCourse($courseid, '_coursename');
+            $courseid = $data['_courseid'];
+            echo _getSingleCourse($courseid, '_coursename');
 
                     ?>
                 </td>
@@ -3547,7 +3605,7 @@ function _getSlides($id,$startfrom = '', $limit = '')
 }
 
 
-function _updateSlide($_id, $_courseid, $_slideurl , $_caption)
+function _updateSlide($_id, $_courseid, $_slideurl, $_caption)
 {
 
     require('_config.php');
@@ -3567,10 +3625,10 @@ function _updateSlide($_id, $_courseid, $_slideurl , $_caption)
 
 
 
-function _deleteSlide($id,$_courseid)
+function _deleteSlide($id, $_courseid)
 {
     require('_config.php');
-   
+
 
     $sql = "DELETE FROM `tblslides` WHERE `_id`='$id' AND `_courseid`='$_courseid' ";
     $query = mysqli_query($conn, $sql);
@@ -3578,31 +3636,31 @@ function _deleteSlide($id,$_courseid)
     if ($query) {
         $_SESSION['course_success'] = true;
         header("location:edit-course?id=$_courseid");
-    } 
+    }
 }
 
 
 // Get Teachers
 
-function _getTeachers($id=''){
+function _getTeachers($id = '')
+{
 
     include("../includes/_config.php");
 
 
-    if($id != ''){
+    if ($id != '') {
 
         $query = mysqli_query($conn, "SELECT * FROM tblusers WHERE _usertype='1' ");
-    
+
         while ($row = mysqli_fetch_array($query)) {
-            
+
             $rowId = $row['_id'];
 
-            if($id==$rowId){
-                ?>
+            if ($id == $rowId) {
+        ?>
                 <option value="<?php echo htmlentities($row['_id']); ?>" selected ><?php echo htmlentities($row['_useremail']); ?></option>
                 <?php
-            }
-            else{
+            } else {
                 ?>
                 <option value="<?php echo htmlentities($row['_id']); ?>"><?php echo htmlentities($row['_useremail']); ?></option>
                 <?php
@@ -3610,17 +3668,16 @@ function _getTeachers($id=''){
 
         }
 
-    }
-    else{
+    } else {
         $query = mysqli_query($conn, "SELECT * FROM tblusers WHERE _usertype='1' ");
-    
+
         while ($row = mysqli_fetch_array($query)) {
-            ?>
+                ?>
                 <option value="<?php echo htmlentities($row['_id']); ?>"><?php echo htmlentities($row['_useremail']); ?></option>
             <?php
         }
     }
-   
+
 
 
 }
@@ -3628,4 +3685,4 @@ function _getTeachers($id=''){
 
 
 
-?>
+            ?>

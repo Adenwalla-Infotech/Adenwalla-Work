@@ -61,6 +61,8 @@ if (isset($_POST['submit'])) {
     $startdate = $_POST['startdate'];
     $enddate = $_POST['enddate'];
 
+    $discountprice = $_POST['discountprice'];
+
 
     if ($_FILES["thumbnail"]["name"] != '') {
         $thumbnail = $_FILES["thumbnail"]["name"];
@@ -104,7 +106,7 @@ if (isset($_POST['submit'])) {
         $enrollstatus = false;
     }
 
-    _updateCourse($id, $coursename, $courseDesc, $whatlearn, $requirements,$eligibitycriteria, $capacity, $enrollstatus, $thumbnailimg, $bannerimg, $pricing, $isactive, $teacheremailid, $categoryid, $subcategoryid, $coursetype, $coursechannel, $courselevel, $evaluationlink, $startdate, $enddate);
+    _updateCourse($id, $coursename, $courseDesc, $whatlearn, $requirements,$eligibitycriteria, $capacity, $enrollstatus, $thumbnailimg, $bannerimg, $pricing, $isactive, $teacheremailid, $categoryid, $subcategoryid, $coursetype, $coursechannel, $courselevel, $evaluationlink, $startdate, $enddate ,$discountprice);
 }
 
 $record_per_page = 5;
@@ -436,6 +438,14 @@ if (isset($_POST['editSlide'])) {
                                                 id="coursechannel"
                                                 value="<?php echo _getSingleCourse($id, '_coursechannel') ?>" required>
                                             <div class="invalid-feedback">Please type correct course channel</div>
+                                        </div>
+
+                                        <div class="col-lg-6">
+                                            <label for="discountprice" class="form-label">Discount Price</label>
+                                            <input type="text" class="form-control" name="discountprice" id="discountprice"
+                                            placeholder="Discount Price"
+                                            value="<?php echo _getSingleCourse($id, '_discountprice') ?>" required>
+                                            <div class="invalid-feedback">Please type correct course discount price</div>
                                         </div>
                                     </div>
 

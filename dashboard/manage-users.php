@@ -78,11 +78,13 @@ $start_from = ($page-1)*$record_per_page;
                       </div>
                       <div class="col-lg-3" style="margin-bottom: 20px;">
                         <select style="height: 40px;" name="usertype" class="form-control form-control-sm" id="exampleFormControlSelect2" required>
-                            <option>Account Type</option>
                             <option value="0">Student</option>
                             <option value="1">Teacher</option>
                             <option value="2">Site Admin</option>
                         </select>
+                      </div>
+                      <div class="col-lg-3" style="margin-bottom: 20px;">
+                        <input type="date" class="form-control form-control-sm" name="createdat" >
                       </div>
                       <div class="col-lg-2" style="margin-bottom: 20px;">
                         <button name="search" class="btn btn-block btn-primary btn-sm font-weight-medium auth-form-btn" style="height:40px" name="submit"><i class="mdi mdi-account-search"></i>&nbsp;SEARCH</button>
@@ -109,10 +111,24 @@ $start_from = ($page-1)*$record_per_page;
                           <tbody style="text-align: left;margin-left: 30px">
                             <?php
                               if(isset($_POST['search'])){
-                                _getuser($_POST['useremail'],$_POST['usertype']);
+
+                                $useremail = $_POST['useremail'];
+                                $usertype = $_POST['usertype'];
+                                $createdat = $_POST['createdat'];
+
+                                if($useremail != ''){
+                                  _getuser($useremail, '','','','');
+                                }
+                                else if($usertype != ''){
+                                  _getuser('', $usertype,'','','');
+                                }
+                                else if($createdat != ''){
+                                  _getuser('','',$createdat,'','');
+                                }
+
                               }
                               if(!isset($_POST['search'])){
-                                _getuser('','',$record_per_page,$start_from);
+                                _getuser('','','',$record_per_page,$start_from);
                               }  
                             ?>
                           </tbody>
