@@ -47,12 +47,19 @@ if (isset($_POST['submit'])) {
     $courseDesc = $_POST['courseDesc'];
     $whatlearn = $_POST['whatlearn'];
     $requirements = $_POST['requirements'];
+    $eligibitycriteria = $_POST['eligibitycriteria'];
     $capacity = $_POST['capacity'];
     $pricing = $_POST['pricing'];
     $teacheremailid = $_POST['teacheremailid'];
     $categoryid = $_POST['categoryId'];
     $subcategoryid = $_POST['subcategoryId'];
     $coursetype = $_POST['coursetype'];
+
+    $coursechannel = $_POST['coursechannel'];
+    $evaluationlink = $_POST['evaluationlink'];
+    $courselevel = $_POST['courselevel'];
+    $startdate = $_POST['startdate'];
+    $enddate = $_POST['enddate'];
 
 
     if ($_FILES["thumbnail"]["name"] != '') {
@@ -66,6 +73,9 @@ if (isset($_POST['submit'])) {
             move_uploaded_file($_FILES["thumbnail"]["tmp_name"], "../uploads/coursethumbnail/" . $thumbnailimg);
         }
     }
+    else{
+        $thumbnailimg = _getSingleCourse($id,'_thumbnail');
+    }
 
     if ($_FILES["banner"]["name"] != '') {
         $banner = $_FILES["banner"]["name"];
@@ -78,7 +88,9 @@ if (isset($_POST['submit'])) {
             move_uploaded_file($_FILES["banner"]["tmp_name"], "../uploads/coursebanner/" . $bannerimg);
         }
     }
-
+    else{
+        $bannerimg = _getSingleCourse($id,'_banner');
+    }
 
     if (isset($_POST['isactive'])) {
         $isactive = $_POST['isactive'];
@@ -92,7 +104,7 @@ if (isset($_POST['submit'])) {
         $enrollstatus = false;
     }
 
-    _updateCourse($id, $coursename, $courseDesc, $whatlearn, $requirements, $capacity, $enrollstatus, $thumbnailimg, $bannerimg, $pricing, $isactive, $teacheremailid, $categoryid, $subcategoryid, $coursetype);
+    _updateCourse($id, $coursename, $courseDesc, $whatlearn, $requirements,$eligibitycriteria, $capacity, $enrollstatus, $thumbnailimg, $bannerimg, $pricing, $isactive, $teacheremailid, $categoryid, $subcategoryid, $coursetype, $coursechannel, $courselevel, $evaluationlink, $startdate, $enddate);
 }
 
 $record_per_page = 5;
@@ -185,9 +197,9 @@ if (isset($_POST['editSlide'])) {
     <!-- Plugin css for this page -->
     <script src="../assets/plugins/tinymce/js/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
     <script>
-        tinymce.init({
-            selector: '#mytextarea'
-        });
+    tinymce.init({
+        selector: '#mytextarea'
+    });
     </script>
     <!-- End plugin css for this page -->
     <!-- inject:css -->
@@ -302,11 +314,15 @@ if (isset($_POST['editSlide'])) {
                                     <div class="row g-3">
                                         <div class="col-lg-6">
                                             <label for="teacheremailid" class="form-label">Teacher Email</label>
-                                            <input type="email" class="form-control" placeholder="Teacher Email"
-                                                aria-label="Teacher Email" id="teacheremailid" name="teacheremailid"
-                                                value="<?php echo _getSingleCourse($id, '_teacheremailid') ?>" required>
-                                            <div class="invalid-feedback">Please type correct teacher name</div>
+                                            <select id="teacheremailid" name="teacheremailid"
+                                                class="form-control select2" required>
+                                                <?php 
+                                                        $teacherid = _getSingleCourse($id, '_teacheremailid');
+                                                        _getTeachers($teacherid);
+                                                ?>
+                                            </select>
                                         </div>
+
                                         <div class="col-lg-6">
                                             <label for="coursetype" class="form-label">Course Type</label>
                                             <select name="coursetype" id="coursetype" class="form-control" required>
@@ -349,6 +365,77 @@ if (isset($_POST['editSlide'])) {
                                                 value="<?php echo _getSingleCourse($id, '_capacity') ?>"
                                                 placeholder="Capacity" required>
                                             <div class="invalid-feedback">Please type correct capacity</div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="row g-3" style="margin-top: 20px;">
+                                        <div class="col-lg-6">
+                                            <label for="courselevel" class="form-label">Course Level</label>
+                                            <select name="courselevel" id="courselevel" class="form-control  " required>
+                                                <?php
+                                                
+                                                    $level =  _getSingleCourse($id, '_courselevel') ;
+
+                                                    if($level=='Beginner'){
+                                                        ?>
+                                                            <option selected value="Beginner">Beginner</option>
+                                                            <option value="Intermediate">Intermediate</option>
+                                                            <option value="Advanced">Advanced</option>
+                                                        <?php
+                                                    }
+                                                    if($level=='Intermediate'){
+                                                        ?>
+                                                            <option value="Beginner">Beginner</option>
+                                                            <option selected value="Intermediate">Intermediate</option>
+                                                            <option value="Advanced">Advanced</option>
+                                                        <?php
+                                                    }
+                                                    if($level=='Advanced'){
+                                                        ?>
+                                                            <option value="Beginner">Beginner</option>
+                                                            <option value="Intermediate">Intermediate</option>
+                                                            <option selected value="Advanced">Advanced</option>
+                                                        <?php
+                                                    }
+
+                                                ?>
+
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <label for="evaluationlink" class="form-label">Evaluation Link</label>
+                                            <input type="text" class="form-control" name="evaluationlink"
+                                                id="evaluationlink"
+                                                value="<?php echo _getSingleCourse($id, '_evuluationlink') ?>" required>
+                                            <div class="invalid-feedback">Please type correct link</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row g-3" style="margin-top: 20px;">
+                                        <div class="col-lg-6">
+                                            <label for="startdate" class="form-label">Start Date</label>
+                                            <input type="date" class="form-control" name="startdate" id="startdate"
+                                                value="<?php echo _getSingleCourse($id, '_startdate') ?>" required>
+                                            <div class="invalid-feedback">Please type correct date</div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <label for="enddate" class="form-label">End Date</label>
+                                            <input type="date" class="form-control" name="enddate" id="enddate"
+                                                value="<?php echo _getSingleCourse($id, '_enddate') ?>" required>
+                                            <div class="invalid-feedback">Please type correct date</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row g-3" style="margin-top: 20px;">
+
+                                        <div class="col-lg-6">
+                                            <label for="coursechannel" class="form-label">Course Channel</label>
+                                            <input type="text" class="form-control" name="coursechannel"
+                                                id="coursechannel"
+                                                value="<?php echo _getSingleCourse($id, '_coursechannel') ?>" required>
+                                            <div class="invalid-feedback">Please type correct course channel</div>
                                         </div>
                                     </div>
 
@@ -407,8 +494,7 @@ if (isset($_POST['editSlide'])) {
 
                                         <div class="col-lg-6" style="margin-bottom: 20px;">
                                             <label for="thumbnail" class="form-label">Thumbnail Image</label>
-                                            <input class="form-control" name="thumbnail" type="file" id="thumbnail"
-                                                required>
+                                            <input class="form-control" name="thumbnail" type="file" id="thumbnail">
                                             <a href="../uploads/coursethumbnail/<?php echo _getSingleCourse($id, '_thumbnail'); ?>"
                                                 target="_blank">Open Featured Image &nbsp;<svg
                                                     xmlns="http://www.w3.org/2000/svg" style="width: 15px;"
@@ -422,7 +508,7 @@ if (isset($_POST['editSlide'])) {
 
                                         <div class="col-lg-6" style="margin-bottom: 20px;">
                                             <label for="banner" class="form-label">Banner Image</label>
-                                            <input class="form-control" name="banner" type="file" id="banner" required>
+                                            <input class="form-control" name="banner" type="file" id="banner">
                                             <a href="../uploads/coursebanner/<?php echo _getSingleCourse($id, '_banner'); ?>"
                                                 target="_blank">Open Featured Image &nbsp;<svg
                                                     xmlns="http://www.w3.org/2000/svg" style="width: 15px;"
@@ -438,7 +524,8 @@ if (isset($_POST['editSlide'])) {
                                     <div class="row" style="margin-top: 30px;">
                                         <div class="col">
                                             <label for="coursename" class="form-label">Course Name</label>
-                                            <input class="form-control" name="coursename" type="text" id="coursename" value="<?php echo _getSingleCourse($id, '_coursename') ?>" required>
+                                            <input class="form-control" name="coursename" type="text" id="coursename"
+                                                value="<?php echo _getSingleCourse($id, '_coursename') ?>" required>
                                             <div class="invalid-feedback">Please type correct course name</div>
                                         </div>
                                     </div>
@@ -448,6 +535,15 @@ if (isset($_POST['editSlide'])) {
                                             <textarea name="courseDesc" id="mytextarea" style="width:100%"
                                                 rows="10"><?php echo _getSingleCourse($id, '_coursedescription') ?></textarea>
                                             <div class="invalid-feedback">Please type correct course desc</div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top: 30px;">
+                                        <div class="col">
+                                            <label for="eligibitycriteria" class="form-label">Course Eligibility
+                                                Criteria</label>
+                                            <textarea name="eligibitycriteria" id="mytextarea" style="width:100%"
+                                                rows="10"><?php echo _getSingleCourse($id, '_eligibilitycriteria') ?></textarea>
+                                            <div class="invalid-feedback">Please type correct criteria</div>
                                         </div>
                                     </div>
                                     <div class="row" style="margin-top: 30px;">
@@ -618,36 +714,35 @@ if (isset($_POST['editSlide'])) {
 
 
         <script>
-            const getSubCategory = (val) => {
-                $.ajax({
-                    type: "POST",
-                    url: "getSubCategory.php",
-                    data: 'catid=' + val,
-                    success: function (data) {
-                        $(`#subcategoryId`).html(data);
-                    }
-                });
-            }
+        const getSubCategory = (val) => {
+            $.ajax({
+                type: "POST",
+                url: "getSubCategory.php",
+                data: 'catid=' + val,
+                success: function(data) {
+                    $(`#subcategoryId`).html(data);
+                }
+            });
+        }
 
-            const callEditSlide = (courseid, slideid) => {
+        const callEditSlide = (courseid, slideid) => {
 
 
-                $.ajax({
-                    type: "POST",
-                    url: `editslidebanner.php`,
-                    data: {
-                        "edit": true,
-                        "courseid": courseid,
-                        "slideid": slideid,
-                    },
-                    success: function (data) {
-                        $(`#editBannerBody`).html(data);
-                        $(`#editBanner`).modal("show");
-                    }
-                });
+            $.ajax({
+                type: "POST",
+                url: `editslidebanner.php`,
+                data: {
+                    "edit": true,
+                    "courseid": courseid,
+                    "slideid": slideid,
+                },
+                success: function(data) {
+                    $(`#editBannerBody`).html(data);
+                    $(`#editBanner`).modal("show");
+                }
+            });
 
-            }
-
+        }
         </script>
 
 
@@ -658,8 +753,8 @@ if (isset($_POST['editSlide'])) {
 <!-- endinject -->
 <!-- Plugin js for this page -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
-    crossorigin="anonymous"></script>
+    integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous">
+</script>
 <!-- End plugin js for this page -->
 <!-- inject:js -->
 <script src="../assets/js/off-canvas.js"></script>

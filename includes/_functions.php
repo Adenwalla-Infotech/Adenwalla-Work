@@ -538,6 +538,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_coursedescription` text NOT NULL,
                 `_whatlearn` text NOT NULL,
                 `_requirements` text NOT NULL,
+                `_eligibilitycriteria` text NOT NULL,
                 `_capacity` varchar(50) NOT NULL,
                 `_enrollstatus` varchar(50) NOT NULL,
                 `_thumbnail` varchar(100) NOT NULL,
@@ -548,6 +549,11 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_categoryid` varchar(50) NOT NULL,
                 `_subcategoryid` varchar(50) NOT NULL,
                 `_coursetype` varchar(50) NOT NULL,
+                `_coursechannel` varchar(50) NOT NULL,
+                `_courselevel` varchar(50) NOT NULL,
+                `_evuluationlink` varchar(50) NOT NULL,
+                `_startdate` varchar(255)  NOT NULL,
+                `_enddate` varchar(255)  NOT NULL,
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
@@ -556,6 +562,9 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
                 `_courseid` varchar(55) NOT NULL,
                 `_lessonname` text NOT NULL,
+                `_lessontype` varchar(55) NOT NULL,
+                `_lessonurl` varchar(55) NOT NULL,
+                `_recordedfilename` varchar(55) NOT NULL,
                 `_lessondescription` text NOT NULL,
                 `_status` varchar(55) NOT NULL,
                 `_availablity` varchar(55) NOT NULL,
@@ -3112,13 +3121,13 @@ function _viewTranscation($useremail, $startfrom = '', $limit = '')
 
 // Course //
 
-function _createCourse($coursename, $courseDesc, $whatlearn, $requirements, $capacity, $enrollstatus, $thumbnail, $banner, $pricing, $status, $teacheremailid, $categoryid, $subcategoryid, $coursetype)
+function _createCourse($coursename, $courseDesc, $whatlearn, $requirements,$eligibitycriteria, $capacity, $enrollstatus, $thumbnail, $banner, $pricing, $status, $teacheremailid, $categoryid, $subcategoryid, $coursetype, $coursechannel, $courselevel, $evuluationlink, $startdate, $enddate)
 {
 
 
     require('_config.php');
 
-    $sql = "INSERT INTO `tblcourse`(`_coursename`,`_coursedescription`,`_whatlearn`,`_requirements`,`_capacity`,`_enrollstatus`,`_thumbnail`,`_banner`,`_pricing`,`_status`,`_teacheremailid`,`_categoryid`,`_subcategoryid`,`_coursetype`) VALUES ('$coursename','$courseDesc','$whatlearn','$requirements','$capacity','$enrollstatus','$thumbnail','$banner','$pricing','$status','$teacheremailid','$categoryid','$subcategoryid','$coursetype')";
+    $sql = "INSERT INTO `tblcourse`(`_coursename`,`_coursedescription`,`_whatlearn`,`_requirements`,`_eligibilitycriteria`,`_capacity`,`_enrollstatus`,`_thumbnail`,`_banner`,`_pricing`,`_status`,`_teacheremailid`,`_categoryid`,`_subcategoryid`,`_coursetype`,`_coursechannel`,`_courselevel`,`_evuluationlink`,`_startdate`,`_enddate`) VALUES ('$coursename','$courseDesc','$whatlearn','$requirements','$eligibitycriteria','$capacity','$enrollstatus','$thumbnail','$banner','$pricing','$status','$teacheremailid','$categoryid','$subcategoryid','$coursetype','$coursechannel','$courselevel','$evuluationlink','$startdate','$enddate')";
 
     $query = mysqli_query($conn, $sql);
     if ($query) {
@@ -3175,7 +3184,12 @@ function _getCourse($coursename = '', $teacheremailid = '', $startfrom = '', $li
             <tr>
                 <td><?php echo $data['_id']; ?></td>
                 <td><?php echo $data['_coursename']; ?></td>
-                <td><?php echo $data['_teacheremailid']; ?></td>
+                <td>
+                    <?php 
+                        $teacherid = $data['_teacheremailid'];
+                        echo _getSingleUser($teacherid,'_useremail');
+                    ?>
+                </td>
                 <td><?php echo $data['_coursetype']; ?></td>
                 <td><?php echo $data['_status']; ?></td>
                 <td>
@@ -3264,13 +3278,13 @@ function _showCourses($_courseid = '')
 }
 
 
-function _updateCourse($_id, $coursename, $courseDesc, $whatlearn, $requirements, $capacity, $enrollstatus, $thumbnail, $banner, $pricing, $status, $teacheremailid, $categoryid, $subcategoryid, $coursetype)
+function _updateCourse($_id, $coursename, $courseDesc, $whatlearn, $requirements,$eligibitycriteria, $capacity, $enrollstatus, $thumbnail, $banner, $pricing, $status, $teacheremailid, $categoryid, $subcategoryid, $coursetype, $coursechannel, $courselevel, $evuluationlink, $startdate, $enddate)
 {
 
     require('_config.php');
 
 
-    $sql = "UPDATE `tblcourse` SET `_coursename`='$coursename' ,`_coursedescription`='$courseDesc' , `_whatlearn`='$whatlearn',`_requirements`='$requirements' ,`_capacity`='$capacity' , `_enrollstatus`='$enrollstatus',`_thumbnail`='$thumbnail' ,`_banner`='$banner' , `_pricing`='$pricing',`_status`='$status' ,`_teacheremailid`='$teacheremailid' , `_categoryid`='$categoryid',`_subcategoryid`='$subcategoryid' , `_coursetype`='$coursetype' WHERE `_id` = '$_id' ";
+    $sql = "UPDATE `tblcourse` SET `_coursename`='$coursename' ,`_coursedescription`='$courseDesc' , `_whatlearn`='$whatlearn',`_requirements`='$requirements' ,`_eligibilitycriteria`='$eligibitycriteria',`_capacity`='$capacity' , `_enrollstatus`='$enrollstatus',`_thumbnail`='$thumbnail' ,`_banner`='$banner' , `_pricing`='$pricing',`_status`='$status' ,`_teacheremailid`='$teacheremailid' , `_categoryid`='$categoryid',`_subcategoryid`='$subcategoryid' , `_coursetype`='$coursetype' , `_coursechannel`='$coursechannel' , `_courselevel`='$courselevel' , `_evuluationlink`='$evuluationlink' , `_startdate`='$startdate' , `_enddate`='$enddate' WHERE `_id` = '$_id' ";
 
 
     $query = mysqli_query($conn, $sql);
@@ -3306,13 +3320,13 @@ function _deleteCourse($id)
 
 
 // Lessons //
-function _createLesson($_courseid, $_lessonname, $_lessondescription, $_status, $_availablity)
+function _createLesson($_courseid, $_lessonname, $_lessontype, $_lessonurl, $_recordedfilename, $_lessondescription, $_status, $_availablity)
 {
 
 
     require('_config.php');
 
-    $sql = "INSERT INTO `tbllessons`(`_courseid`,`_lessonname`,`_lessondescription`,`_status`,`_availablity`) VALUES ('$_courseid','$_lessonname','$_lessondescription','$_status','$_availablity')";
+    $sql = "INSERT INTO `tbllessons`(`_courseid`,`_lessonname`,`_lessontype`,`_lessonurl`,`_recordedfilename`,`_lessondescription`,`_status`,`_availablity`) VALUES ('$_courseid','$_lessonname','$_lessontype','$_lessonurl','$_recordedfilename','$_lessondescription','$_status','$_availablity')";
 
     $query = mysqli_query($conn, $sql);
     if ($query) {
@@ -3378,8 +3392,9 @@ function _getLessons($coursename = '', $teacheremailid = '', $startfrom = '', $l
                     ?>
                 </td>
 
-                <td><?php echo $data['_lessondescription']; ?></td>
+                <td><?php echo $data['_lessonname']; ?></td>
                 <td><?php echo $data['_status']; ?></td>
+                <td><?php echo $data['_lessontype']; ?></td>
                 <td><?php echo $data['_availablity']; ?></td>
                 <td>
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
@@ -3403,13 +3418,13 @@ function _getLessons($coursename = '', $teacheremailid = '', $startfrom = '', $l
     }
 }
 
-function _updateLesson($_id, $_courseid, $_lessonname, $_lessondescription, $_status, $_availablity)
+function _updateLesson($_id, $_courseid, $_lessonname,  $_lessontype, $_lessonurl, $_recordedfilename, $_lessondescription, $_status, $_availablity)
 {
 
     require('_config.php');
 
 
-    $sql = "UPDATE `tbllessons` SET `_courseid`='$_courseid' ,`_lessonname`='$_lessonname' ,`_lessondescription`='$_lessondescription' , `_status`='$_status',`_availablity`='$_availablity'  WHERE `_id` = '$_id' ";
+    $sql = "UPDATE `tbllessons` SET `_courseid`='$_courseid' ,`_lessonname`='$_lessonname' ,`_lessondescription`='$_lessondescription' , `_status`='$_status',`_availablity`='$_availablity',`_lessontype`='$_lessontype',`_lessonurl`='$_lessonurl',`_recordedfilename`='$_recordedfilename'  WHERE `_id` = '$_id' ";
 
 
     $query = mysqli_query($conn, $sql);
@@ -3566,6 +3581,49 @@ function _deleteSlide($id,$_courseid)
     } 
 }
 
+
+// Get Teachers
+
+function _getTeachers($id=''){
+
+    include("../includes/_config.php");
+
+
+    if($id != ''){
+
+        $query = mysqli_query($conn, "SELECT * FROM tblusers WHERE _usertype='1' ");
+    
+        while ($row = mysqli_fetch_array($query)) {
+            
+            $rowId = $row['_id'];
+
+            if($id==$rowId){
+                ?>
+                <option value="<?php echo htmlentities($row['_id']); ?>" selected ><?php echo htmlentities($row['_useremail']); ?></option>
+                <?php
+            }
+            else{
+                ?>
+                <option value="<?php echo htmlentities($row['_id']); ?>"><?php echo htmlentities($row['_useremail']); ?></option>
+                <?php
+            }
+
+        }
+
+    }
+    else{
+        $query = mysqli_query($conn, "SELECT * FROM tblusers WHERE _usertype='1' ");
+    
+        while ($row = mysqli_fetch_array($query)) {
+            ?>
+                <option value="<?php echo htmlentities($row['_id']); ?>"><?php echo htmlentities($row['_useremail']); ?></option>
+            <?php
+        }
+    }
+   
+
+
+}
 
 
 

@@ -101,6 +101,7 @@ $start_from = ($page - 1) * $record_per_page;
                                                         <th>Course Name</th>
                                                         <th>Lesson Name</th>
                                                         <th>Status</th>
+                                                        <th>Lesson Type</th>
                                                         <th>Availability</th>
                                                         <th>Created at</th>
                                                         <th>Updated at</th>
