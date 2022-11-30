@@ -125,8 +125,11 @@ if (isset($_POST['submit'])) {
                                         <div class="col" style="margin-top: 20px;">
                                             <label class="checkbox-inline" style="margin-left: 5px;">
                                                 <?php
-                                                if (_getSingleSubCategory($_id, '_status') == true) { ?><input name="isactive" value="true" checked type="checkbox">&nbsp;Is Active<?php }
-                                                                                                                                                                                if (_getSingleSubCategory($_id, '_status') != true) { ?><input name="isactive" value="true" type="checkbox">&nbsp;Is Active<?php }
+
+                                                $status = _getSingleSubCategory($_id, '_status');
+
+                                                if ( $status == 'true') { ?><input name="isactive" value="true"  checked type="checkbox">&nbsp;Is Active<?php }
+                                                if ( $status != 'true') { ?><input name="isactive" value="true" type="checkbox">&nbsp;Is Active<?php }
                                                                                                                                                                                                                                                                                                             ?>
                                             </label>
                                         </div>

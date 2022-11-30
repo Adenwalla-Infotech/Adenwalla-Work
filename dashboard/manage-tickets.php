@@ -2,45 +2,45 @@
 
 session_start();
 
-if(!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['isLoggedIn'] == ''){
+if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['isLoggedIn'] == '') {
+  echo "<script>";
+  echo "window.location.href = 'login'";
+  echo "</script>";
+} else {
+  if ($_SESSION['userVerify'] != 'true') {
     echo "<script>";
-    echo "window.location.href = 'login'";
+    echo "window.location.href = 'verify'";
     echo "</script>";
-}else{
-    if($_SESSION['userVerify'] != 'true'){
-        echo "<script>";
-        echo "window.location.href = 'verify'";
-        echo "</script>";
-    }
+  }
 }
 
 require('../includes/_functions.php');
 require('../includes/_config.php');
 
-if(isset($_GET['del'])){
+if (isset($_GET['del'])) {
   $_id = $_GET['id'];
   _deleteticket($_id);
 }
 
 $record_per_page = 5;
 $page = '';
-if(isset($_GET["page"]))
-{
- $page = $_GET["page"];
+if (isset($_GET["page"])) {
+  $page = $_GET["page"];
+} else {
+  $page = 1;
 }
-else
-{
- $page = 1;
-}
-$start_from = ($page-1)*$record_per_page;
+$start_from = ($page - 1) * $record_per_page;
 
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Manage Tickets | <?php echo _siteconfig('_sitetitle'); ?></title>
+  <title>Manage Tickets |
+    <?php echo _siteconfig('_sitetitle'); ?>
+  </title>
   <!-- plugins:css -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@mdi/font@6.9.96/css/materialdesignicons.min.css">
   <link rel="stylesheet" href="../assets/vendors/feather/feather.css">
@@ -55,8 +55,9 @@ $start_from = ($page-1)*$record_per_page;
   <!-- endinject -->
   <link rel="shortcut icon" href="../assets/images/favicon.png" />
 </head>
+
 <body>
-<div class="container-scroller">
+  <div class="container-scroller">
     <?php include('templates/_header.php'); ?>
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
@@ -64,129 +65,144 @@ $start_from = ($page-1)*$record_per_page;
       <!-- partial -->
       <div class="main-panel">
         <div class="content-wrapper">
-        <div class="col-12 grid-margin stretch-card">
+          <div class="col-12 grid-margin stretch-card">
             <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title">Manage Tickets (Support Ticket)</h4>
-                  <p class="card-description">
-                    Web Help Desk uses tickets to manage service requests. These tickets can be initiated through email, created in the application, and imported from another application. Techs, admins, and clients can also manage tickets through email or through the application in a web browser.
-                  </p>
-                  <form method="POST" action="">
-                    <div class="row">
-                      <?php if ($_SESSION['userType'] == 2) { ?>
-                      <div class="col-lg-3" style="margin-bottom: 20px;">
-                        <input type="text" class="form-control form-control-sm" name="ticketid" placeholder="Ticket Id">
-                      </div>
-                      <?php } ?>
-                      <div class="col-lg-3" style="margin-bottom: 20px;">
-                        <select style="height: 40px;" name="statustype" class="form-control form-control-sm" id="exampleFormControlSelect2">
-                            <option>Status Type</option>
-                            <option value="open">Open</option>
-                            <option value="pending">Pending</option>
-                            <option value="resolved">Resolved</option>
-                            <option value="closed">Closed</option>
-                        </select>
-                      </div>
-                      <div class="col-lg-2" style="margin-bottom: 20px;">
-                        <button name="search" class="btn btn-block btn-primary btn-sm font-weight-medium auth-form-btn" style="height:40px" name="submit"><i class="mdi mdi-account-search"></i>&nbsp;SEARCH</button>
-                      </div>
-                    </div>
-                  </form>
+              <div class="card-body">
+                <h4 class="card-title">Manage Tickets (Support Ticket)</h4>
+                <p class="card-description">
+                  Web Help Desk uses tickets to manage service requests. These tickets can be initiated through email,
+                  created in the application, and imported from another application. Techs, admins, and clients can also
+                  manage tickets through email or through the application in a web browser.
+                </p>
+                <form method="POST" action="">
                   <div class="row">
-                    <div class="col-12">
-                    <div class="table-responsive">
-                        <table id="example" class="display expandable-table" style="width:100%">
-                          <thead>
-                            <tr>
-                              <?php if ($_SESSION['userType'] == 2) { ?>
-                              <th>Ticket Id</th>
-                              <?php } ?>
-                              <th>Subject</th>
-                              <?php if ($_SESSION['userType'] == 2) { ?>
-                              <th>User Email</th>
-                              <?php } ?>
-                              <th>Status</th>
-                              <th>Created at</th>
-                              <th>Updated at</th>
-                              <th>Action</th>
-                              <th></th>
-                            </tr>
-                          </thead>
-                          <tbody style="text-align: left;margin-left: 30px">
-                            <?php
-                               if(isset($_POST['search'])){
-                                if(isset($_POST['ticketid'])){
-                                  $ticketid = $_POST['ticketid'];
-                                }else{
-                                  $ticketid = null;
-                                }
-                                $status = $_POST['statustype'];
-                                _gettickets($ticketid,$status);
-                              }
-                              if(!isset($_POST['search'])){
-                                _gettickets('','',$record_per_page,$start_from);
-                              } 
-                            ?>
-                          </tbody>
-                      </table>
-                      </div>
+                    <?php if ($_SESSION['userType'] == 2) { ?>
+                    <div class="col-lg-3" style="margin-bottom: 20px;">
+                      <input type="text" class="form-control form-control-sm" name="ticketid" placeholder="Ticket Id">
+                    </div>
+                    <?php } ?>
+                    <div class="col-lg-3" style="margin-bottom: 20px;">
+                      <input type="date" class="form-control form-control-sm" name="createdat">
+                    </div>
+                    <div class="col-lg-3" style="margin-bottom: 20px;">
+                      <select style="height: 40px;" name="statustype" class="form-control form-control-sm"
+                        id="exampleFormControlSelect2">
+                        <option>Status Type</option>
+                        <option value="open">Open</option>
+                        <option value="pending">Pending</option>
+                        <option value="resolved">Resolved</option>
+                        <option value="closed">Closed</option>
+                      </select>
+                    </div>
+                    <div class="col-lg-2" style="margin-bottom: 20px;">
+                      <button name="search" class="btn btn-block btn-primary btn-sm font-weight-medium auth-form-btn"
+                        style="height:40px" name="submit"><i class="mdi mdi-account-search"></i>&nbsp;SEARCH</button>
                     </div>
                   </div>
-                  <nav aria-label="Page navigation example" style="margin-top: 30px;">
-                    <ul class="pagination">
-                      <?php 
-                      $query = mysqli_query($conn,"SELECT * FROM `tbltickets`");
+                </form>
+                <div class="row">
+                  <div class="col-12">
+                    <div class="table-responsive">
+                      <table id="example" class="display expandable-table" style="width:100%">
+                        <thead>
+                          <tr>
+                            <?php if ($_SESSION['userType'] == 2) { ?>
+                            <th>Ticket Id</th>
+                            <?php } ?>
+                            <th>Subject</th>
+                            <?php if ($_SESSION['userType'] == 2) { ?>
+                            <th>User Email</th>
+                            <?php } ?>
+                            <th>Status</th>
+                            <th>Created at</th>
+                            <th>Updated at</th>
+                            <th>Action</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody style="text-align: left;margin-left: 30px">
+                          <?php
+                            if (isset($_POST['search'])) {
+
+
+
+
+                              $ticketid = $_POST['ticketid'];
+                              $status = $_POST['statustype'];
+                              $createdAt = $_POST['createdat'];
+
+
+                              if ($ticketid) {
+                                _gettickets($ticketid, '', '', '', '');
+                              } else if ($createdAt) {
+                                _gettickets('', '', $createdAt, '', '');
+                              } else if ($status) {
+                                _gettickets('', $status, '', '', '');
+                              }
+
+
+                            }
+                            if (!isset($_POST['search'])) {
+                              _gettickets('', '', '', $record_per_page, $start_from);
+                            }
+                            ?>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <nav aria-label="Page navigation example" style="margin-top: 30px;">
+                  <ul class="pagination">
+                    <?php
+                      $query = mysqli_query($conn, "SELECT * FROM `tbltickets`");
                       $total_records = mysqli_num_rows($query);
-                      $total_pages = ceil($total_records/$record_per_page);
+                      $total_pages = ceil($total_records / $record_per_page);
                       $start_loop = $page;
                       $difference = $total_pages - $page;
-                      if($difference <= 4)
-                      {
-                      $start_loop = $total_pages - 4;
+                      if ($difference <= 4) {
+                        $start_loop = $total_pages - 4;
                       }
                       $end_loop = $start_loop + 3;
-                      if($page > 1)
-                      {
-                      echo "<li class='page-item'>
-                        <a href='manage-tickets?page=".($page - 1)."' class='page-link'>Previous</a>
+                      if ($page > 1) {
+                        echo "<li class='page-item'>
+                        <a href='manage-tickets?page=" . ($page - 1) . "' class='page-link'>Previous</a>
                       </li>";
                       }
-                      for($i=1; $i<=$total_pages; $i++)
-                      {     
-                      echo "
-                      <li class='page-item'><a class='page-link' href='manage-tickets?page=".$i."'>$i</a></li>";
+                      for ($i = 1; $i <= $total_pages; $i++) {
+                        echo "
+                      <li class='page-item'><a class='page-link' href='manage-tickets?page=" . $i . "'>$i</a></li>";
                       }
-                      if($page <= $end_loop)
-                      {
-                      echo "<li class='page-item'>
-                        <a class='page-link' href='manage-tickets?page=".($page + 1)."'>Next</a>
+                      if ($page <= $end_loop) {
+                        echo "<li class='page-item'>
+                        <a class='page-link' href='manage-tickets?page=" . ($page + 1) . "'>Next</a>
                       </li>";
                       } ?>
-                    </ul>
-                  </nav>
-                </div>    
+                  </ul>
+                </nav>
+              </div>
             </div>
+          </div>
+          <!-- content-wrapper ends -->
+          <!-- partial:partials/_footer.html -->
+          <?php include('templates/_footer.php'); ?>
+          <!-- partial -->
         </div>
-        <!-- content-wrapper ends -->
-        <!-- partial:partials/_footer.html -->
-        <?php include('templates/_footer.php'); ?>
-        <!-- partial -->
+        <!-- main-panel ends -->
       </div>
-      <!-- main-panel ends -->
+      <!-- page-body-wrapper ends -->
     </div>
-    <!-- page-body-wrapper ends -->
-  </div>
     <div class="container"></div>
 </body>
-  <script src="../assets/vendors/js/vendor.bundle.base.js"></script>
-  <!-- endinject -->
-  <!-- Plugin js for this page -->
-  <!-- End plugin js for this page -->
-  <!-- inject:js -->
-  <script src="../assets/js/off-canvas.js"></script>
-  <script src="../assets/js/hoverable-collapse.js"></script>
-  <script src="../assets/js/template.js"></script>
-  <script src="../assets/js/settings.js"></script>
-  <script src="../assets/js/todolist.js"></script>
-  <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+<script src="../assets/vendors/js/vendor.bundle.base.js"></script>
+<!-- endinject -->
+<!-- Plugin js for this page -->
+<!-- End plugin js for this page -->
+<!-- inject:js -->
+<script src="../assets/js/off-canvas.js"></script>
+<script src="../assets/js/hoverable-collapse.js"></script>
+<script src="../assets/js/template.js"></script>
+<script src="../assets/js/settings.js"></script>
+<script src="../assets/js/todolist.js"></script>
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
 </html>

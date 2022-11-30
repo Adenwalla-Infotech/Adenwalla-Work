@@ -178,6 +178,18 @@ $start_from = ($page - 1) * $record_per_page;
             <!-- page-body-wrapper ends -->
         </div>
         <div class="container"></div>
+        <script>
+            const getSubCategory = (val) => {
+                $.ajax({
+                    type: "POST",
+                    url: "getSubCategory.php",
+                    data: 'catid=' + val,
+                    success: function(data) {
+                        $(`#subcategoryId`).html(data);
+                    }
+                });
+            }
+        </script>
 </body>
 <script src="../assets/vendors/js/vendor.bundle.base.js"></script>
 <!-- endinject -->

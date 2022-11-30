@@ -173,8 +173,8 @@ if (isset($_POST['submit'])) {
                                     <div class="row g-3">
                                         <div class="col">
                                             <label for="mytextarea" class="form-label">Blog Description</label>
-                                            <textarea name="_blogdesc" id="mytextarea" minlength="20" required></textarea>
-                                            <div class="invalid-feedback">Blog Description Required (More than 20 Words) </div>
+                                            <textarea name="_blogdesc" id="mytextarea"  required></textarea>
+                                            <div class="invalid-feedback">Blog Description Required </div>
                                         </div>
                                     </div>
 
@@ -182,8 +182,8 @@ if (isset($_POST['submit'])) {
                                     <div class="row g-3">
                                         <div class="col" style="margin-top: 30px;">
                                             <label for="_blogmetadesc" class="form-label">Meta Description</label>
-                                            <textarea name="_blogmetadesc" rows="5" minlength="5" class="form-control" required></textarea>
-                                            <div class="invalid-feedback">Blog Meta Description Required (More than 10 Words) </div>
+                                            <textarea name="_blogmetadesc" rows="5"  class="form-control" required></textarea>
+                                            <div class="invalid-feedback">Blog Meta Description Required </div>
                                         </div>
                                     </div>
 

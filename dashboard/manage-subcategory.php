@@ -95,6 +95,7 @@ session_start();
                                             <table id="example" class="display expandable-table" style="width:100%">
                                                 <thead>
                                                     <tr>
+                                                        <th>Sub-Category Id</th>
                                                         <th>Sub-Category Name</th>
                                                         <th>Status</th>
                                                         <th>Parent</th>
@@ -107,10 +108,10 @@ session_start();
                                                 <tbody style="text-align: left;margin-left: 30px">
                                                     <?php
                                                     if (isset($_POST['search'])) {
-                                                        _getSubCategory($_POST['subcategoryname'],$_POST['categoryid']);
+                                                        _getSubCategory($_POST['subcategoryname'],'','');
                                                     }
                                                     if (!isset($_POST['search'])) {
-                                                        _getSubCategory('', '', $record_per_page, $start_from);
+                                                        _getSubCategory('', $record_per_page, $start_from);
                                                     }
                                                     ?>
                                                 </tbody>

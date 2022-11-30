@@ -303,6 +303,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_userpassword` varchar(255) NULL,
                 `_userotp` int(100) NULL,
                 `_userverify` varchar(50) NULL,
+                `Creation_at_Date` date NOT NULL DEFAULT current_timestamp(),
                 `CreationDate` datetime NOT NULL DEFAULT current_timestamp(),
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
@@ -364,6 +365,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_subcategory` varchar(255) NOT NULL,
                 `_useremail` varchar(255) NOT NULL,
                 `_status` enum('open','closed','pending','resolved') NOT NULL DEFAULT 'open',
+                `Creation_at_Date` date NOT NULL DEFAULT current_timestamp(),
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
@@ -417,6 +419,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_blogimg` varchar(100) NOT NULL,
                 `_userid` varchar(50) NOT NULL,
                 `_status` varchar(20) NOT NULL,
+                `Creation_at_Date` date NOT NULL DEFAULT current_timestamp(),
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
@@ -555,6 +558,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_startdate` varchar(255)  NOT NULL,
                 `_enddate` varchar(255)  NOT NULL,
                 `_discountprice` varchar(50)  NOT NULL,
+                `Creation_at_Date` date NOT NULL DEFAULT current_timestamp(),
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
@@ -569,6 +573,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_lessondescription` text NOT NULL,
                 `_status` varchar(55) NOT NULL,
                 `_availablity` varchar(55) NOT NULL,
+                `Creation_at_Date` date NOT NULL DEFAULT current_timestamp(),
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
@@ -808,6 +813,8 @@ function _notifyuser($useremail = '', $userphone = '', $sendmail = '', $message 
 
 function _getuser($username = '', $usertype = '', $createdat = '', $limit = '', $startfrom = '')
 {
+
+
     require('_config.php');
     if ($usertype != '') {
         $sql = "SELECT * FROM `tblusers` WHERE `_usertype` = '$usertype'";
@@ -922,8 +929,11 @@ function _getuser($username = '', $usertype = '', $createdat = '', $limit = '', 
 
     if ($createdat != '') {
 
-        $sql = "SELECT * FROM `tblusers` WHERE `CreationDate`='2022-11-29 13:58:01'";
+        $sql = "SELECT * FROM `tblusers` WHERE `Creation_at_Date` LIKE '$createdat' ";      
+
         $query = mysqli_query($conn, $sql);
+
+        
         if ($query) {
             foreach ($query as $data) { ?>
                 <tr>
@@ -1316,29 +1326,41 @@ function _saveticket($subject, $category, $status, $image, $user, $message)
     }
 }
 
-function _gettickets($ticketid = '', $status = '', $limit = '', $startfrom = '')
+function _gettickets($ticketid = '', $status = '',$createdAt='', $limit = '', $startfrom = '')
 {
     require('_config.php');
     $user = $_SESSION['userEmailId'];
     if ($status != '' && $ticketid == '') {
+
         if ($_SESSION['userType'] == 2) {
             $sql = "SELECT * FROM `tbltickets` WHERE `_status` = '$status'";
         } else {
             $sql = "SELECT * FROM `tbltickets` WHERE `_status` = '$status' AND `_useremail` = '$user'";
         }
-    } else if ($ticketid != '' && $status != '') {
+    }
+     else if ($ticketid != '' && $status == '') {
         if ($_SESSION['userType'] == 2) {
             $sql = "SELECT * FROM `tbltickets` WHERE `_id` = '$ticketid'";
         } else {
             $sql = "SELECT * FROM `tbltickets` WHERE `_id` = '$ticketid'  AND `_useremail` = '$user'";
         }
-    } else {
+    } 
+     else if ($createdAt != '' && $ticketid == '') {
+        if ($_SESSION['userType'] == 2) {
+            $sql = "SELECT * FROM `tbltickets` WHERE `Creation_at_Date` = '$createdAt'";
+        } else {
+            $sql = "SELECT * FROM `tbltickets` WHERE `Creation_at_Date` = '$createdAt'  AND `_useremail` = '$user'";
+        }
+    } 
+    else {
         if ($_SESSION['userType'] == 2) {
             $sql = "SELECT * FROM `tbltickets` ORDER BY `CreationDate` DESC LIMIT $startfrom, $limit";
         } else {
             $sql = "SELECT * FROM `tbltickets` WHERE `_useremail` = '$user' ORDER BY `CreationDate` DESC LIMIT $startfrom, $limit";
         }
     }
+
+
     $query = mysqli_query($conn, $sql);
     if ($query) {
         foreach ($query as $data) { ?>
@@ -1611,13 +1633,12 @@ function _createSubCategory($subCategoryname, $categoryId, $subCategoryDesc, $is
     }
 }
 
-function _getSubCategory($_subcategoryname = '', $categoryId = '', $limit = '', $startfrom = '')
+function _getSubCategory($_subcategoryname = '', $limit = '', $startfrom = '')
 {
     require('_config.php');
-    if ($categoryId != '' && $_subcategoryname == '') {
-        $sql = "SELECT * FROM `tblsubcategory` WHERE `_categoryid` LIKE '%$categoryId%'";
-    } else if ($_subcategoryname != '' && $categoryId == '') {
-        $sql = "SELECT * FROM `tblsubcategory` WHERE `_subcategoryname` = '$_subcategoryname'";
+
+    if ($_subcategoryname != '') {
+        $sql = "SELECT * FROM `tblsubcategory` WHERE `_subcategoryname` LIKE '%$_subcategoryname%'";
     } else {
         $sql = "SELECT * FROM `tblsubcategory` ORDER BY `CreationDate` DESC LIMIT $startfrom, $limit";
     }
@@ -1625,6 +1646,7 @@ function _getSubCategory($_subcategoryname = '', $categoryId = '', $limit = '', 
     if ($query) {
         foreach ($query as $data) { ?>
             <tr>
+                <td><?php echo $data['_id']; ?></td>
                 <td><?php echo $data['_subcategoryname']; ?></td>
 
                 <td>
@@ -1643,8 +1665,8 @@ function _getSubCategory($_subcategoryname = '', $categoryId = '', $limit = '', 
             $sql = "SELECT * FROM `tblcategory` WHERE `_id` = $catid";
             $query = mysqli_query($conn, $sql);
             if ($query) {
-                foreach ($query as $data) {
-                    echo $data['_categoryname'];
+                foreach ($query as $cat_data) {
+                    echo $cat_data['_categoryname'];
                 }
             }
                 ?></td>
@@ -1883,7 +1905,7 @@ function _getBlogs($blogtitle = '', $blogcategory = '', $blogsubcategory = '', $
                             <input disabled role="switch" name="isactive" value="true" checked type="checkbox">
                         <?php
             }
-            if ($data['_status'] == 'false') {
+            if ($data['_status'] != 'true') {
                         ?>
                             <input disabled role="switch" name="isactive" value="false" type="checkbox">
                         <?php
@@ -3213,7 +3235,7 @@ function _getSingleCourse($id, $param)
 }
 
 
-function _getCourse($coursename = '', $teacheremailid = '', $startfrom = '', $limit = '')
+function _getCourse($coursename = '', $teacheremailid = '', $createdat = '', $startfrom = '', $limit = '')
 {
 
     require('_config.php');
@@ -3223,11 +3245,15 @@ function _getCourse($coursename = '', $teacheremailid = '', $startfrom = '', $li
         $sql = "SELECT * FROM `tblcourse` where `_coursename` LIKE '%$coursename%' ";
     }
 
-    if (!$coursename && $teacheremailid) {
+    else if (!$coursename && $teacheremailid) {
         $sql = "SELECT * FROM `tblcourse` where `_teacheremailid` LIKE '%$teacheremailid%' ";
     }
 
-    if (!$coursename && !$teacheremailid) {
+    else if (!$teacheremailid && $createdat) {
+        $sql = "SELECT * FROM `tblcourse` where `Creation_at_Date`='$createdat' ";
+    }
+
+    else if (!$coursename && !$teacheremailid) {
         $sql = "SELECT * FROM `tblcourse` ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
     }
 
@@ -3288,7 +3314,6 @@ function _showCourses($_courseid = '')
             <label for="courseid" class="form-label">Select Course</label>
             <select style="height: 40px;" id="courseid" name="courseid" class="form-control form-control-lg"  required>
 
-                <option selected disabled value="">Course</option>
 
                 <?php
             foreach ($query as $data) {
@@ -3412,21 +3437,25 @@ function _getSingleLesson($id, $param)
 
 
 
-function _getLessons($coursename = '', $teacheremailid = '', $startfrom = '', $limit = '')
+function _getLessons($coursename = '', $lessonname = '', $createdAt = '', $startfrom = '', $limit = '')
 {
 
     require('_config.php');
 
 
-    if ($coursename && !$teacheremailid) {
-        $sql = "SELECT * FROM `tblcourse` where `_coursename` LIKE '%$coursename%' ";
+    if ($coursename && !$lessonname) {
+        $sql = "SELECT * FROM `tbllessons` where `_courseid`='$coursename' ";
     }
 
-    if (!$coursename && $teacheremailid) {
-        $sql = "SELECT * FROM `tblcourse` where `_teacheremailid` LIKE '%$teacheremailid%' ";
+    else if (!$createdAt && $lessonname) {
+        $sql = "SELECT * FROM `tbllessons` where `_lessonname` LIKE '%$lessonname%' ";
     }
 
-    if (!$coursename && !$teacheremailid) {
+    else if (!$lessonname && $createdAt) {
+        $sql = "SELECT * FROM `tbllessons` where `Creation_at_Date`='$createdAt' ";
+    }
+
+    if (!$coursename && !$lessonname && !$createdAt) {
         $sql = "SELECT * FROM `tbllessons` ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
     }
 

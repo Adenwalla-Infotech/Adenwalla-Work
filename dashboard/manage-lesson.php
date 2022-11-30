@@ -18,11 +18,11 @@ require('../includes/_functions.php');
 require('../includes/_config.php');
 
 
-if(isset($_GET['del'])){
+if (isset($_GET['del'])) {
     $_id = $_GET['id'];
     _deleteLesson($_id);
-  }
-  
+}
+
 
 $record_per_page = 5;
 $page = '';
@@ -40,7 +40,9 @@ $start_from = ($page - 1) * $record_per_page;
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Manage Lesson | <?php echo _siteconfig('_sitetitle'); ?></title>
+    <title>Manage Lesson |
+        <?php echo _siteconfig('_sitetitle'); ?>
+    </title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@mdi/font@6.9.96/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../assets/vendors/feather/feather.css">
@@ -70,26 +72,63 @@ $start_from = ($page - 1) * $record_per_page;
                             <div class="card-body">
                                 <h4 class="card-title">Manage Lesson</h4>
                                 <p class="card-description">
-                                    Web Help Desk uses tickets to manage service requests. These tickets can be initiated through email, created in the application, and imported from another application. Techs, admins, and clients can also manage tickets through email or through the application in a web browser.
+                                    Web Help Desk uses tickets to manage service requests. These tickets can be
+                                    initiated through email, created in the application, and imported from another
+                                    application. Techs, admins, and clients can also manage tickets through email or
+                                    through the application in a web browser.
                                 </p>
-                                <!-- <form method="POST" action="">
+                                <form method="POST" action="">
                                     <div class="row">
 
                                         <div class="col-lg-3" style="margin-bottom: 20px;">
-                                            <label for="coursename" class="form-label">Course Name</label>
-                                            <input type="text" class="form-control form-control-md" name="coursename" placeholder="Course name">
+                                            <?php
+
+                                            $sql = "SELECT * FROM `tblcourse`";
+                                            $query = mysqli_query($conn, $sql);
+                                            if ($query) { ?>
+                                            <label for="courseid" class="form-label">Select Course</label>
+                                            <select style="height: 46px;" id="courseid" name="courseid"
+                                                class="form-control form-control-lg">
+                                                <option selected disabled>Course</option>
+                                                <?php
+                                                foreach ($query as $data) {
+                                                ?>
+                                                <option value="<?php echo $data['_id']; ?>">
+                                                    <?php echo $data['_coursename']; ?>
+                                                </option>
+                                                <?php
+                                                }
+                                                ?>
+
+                                            </select>
+                                            <div class="invalid-feedback">Please select proper course</div>
+                                            <?php
+                                            }
+
+                                            ?>
+
                                         </div>
 
                                         <div class="col-lg-3" style="margin-bottom: 20px;">
-                                            <label for="teacheremailid" class="form-label">Teacher Email id</label>
-                                            <input type="text" class="form-control form-control-md" name="teacheremailid" placeholder="Teacher Email id">
+                                            <label for="lessonname" class="form-label">Lesson Name</label>
+                                            <input type="text" class="form-control form-control-md" name="lessonname"
+                                                placeholder="Lesson name">
                                         </div>
 
-                                        <div class="col-lg-2" style="margin-top: 30px;">
-                                            <button name="search" class="btn btn-block btn-primary btn-sm font-weight-medium auth-form-btn" style="height:40px" name="submit"><i class="mdi mdi-account-search"></i>&nbsp;SEARCH</button>
+
+                                        <div class="col-lg-3" style="margin-bottom: 20px;">
+                                            <label for="createdat" class="form-label">Lesson Date</label>
+                                            <input type="date" class="form-control form-control-sm" name="createdat">
+                                        </div>
+
+                                        <div class="col-lg-2">
+                                            <button name="search"
+                                                class="btn btn-block btn-primary btn-sm font-weight-medium auth-form-btn"
+                                                style="height:40px" name="submit"><i
+                                                    class="mdi mdi-account-search"></i>&nbsp;SEARCH</button>
                                         </div>
                                     </div>
-                                </form> -->
+                                </form>
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="table-responsive">
@@ -113,22 +152,26 @@ $start_from = ($page - 1) * $record_per_page;
                                                     <?php
                                                     if (isset($_POST['search'])) {
 
-                                                        if(isset($_POST['coursename'])){
-                                                            $coursename = $_POST['coursename'];
-                                                        }else{
-                                                            $coursename = null;
+                                                        $lessonname = $_POST['lessonname'];
+                                                        $createdat = $_POST['createdat'];
+
+
+                                                        if ($lessonname) {
+                                                            _getLessons('', $lessonname, '', '', '');
+                                                        } else if ($createdat) {
+                                                            _getLessons('', '', $createdat, '', '');
                                                         }
 
-                                                        if(isset($_POST['teacheremailid'])){
-                                                            $teacheremailid = $_POST['teacheremailid'];
-                                                        }else{
-                                                            $teacheremailid = null;
+
+                                                        if (isset($_POST['courseid'])) {
+                                                            $courseid = $_POST['courseid'];
+                                                            _getLessons($courseid, '', '', '', '');
                                                         }
 
-                                                        _getCourse($coursename, $teacheremailid, $start_from, $record_per_page);
+
                                                     }
                                                     if (!isset($_POST['search'])) {
-                                                        _getLessons('', '', $start_from, $record_per_page);
+                                                        _getLessons('', '', '', $start_from, $record_per_page);
                                                     }
                                                     ?>
                                                 </tbody>
@@ -177,6 +220,9 @@ $start_from = ($page - 1) * $record_per_page;
             <!-- page-body-wrapper ends -->
         </div>
         <div class="container"></div>
+        <script>
+            $('.select2').select2();
+        </script>
 </body>
 <script src="../assets/vendors/js/vendor.bundle.base.js"></script>
 <!-- endinject -->

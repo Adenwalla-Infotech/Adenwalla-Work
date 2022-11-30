@@ -176,7 +176,7 @@ if (isset($_POST['submit'])) {
                                             <label class="checkbox-inline">
                                                 <?php
                                                 if (_getSingleBlog($_id, '_status') == true) { ?>
-                                                    <input name="isactive" value="false" checked type="checkbox">&nbsp;Is Active<?php } else { ?>
+                                                    <input name="isactive" value="true" checked type="checkbox">&nbsp;Is Active<?php } else { ?>
                                                     <input name="isactive" value="true" type="checkbox">&nbsp;Is Active<?php }
                                                                                                                         ?>
                                             </label>

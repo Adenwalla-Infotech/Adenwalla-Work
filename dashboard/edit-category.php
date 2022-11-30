@@ -96,7 +96,7 @@ if (isset($_POST['submit'])) {
                                             <label class="checkbox-inline" style="margin-left: 5px;">
                                                 <?php
                                                 if (_getSingleCategory($_id, '_status') == true) { ?><input name="isactive" value="true" checked type="checkbox">&nbsp;Is Active<?php }
-                                                                                                                                                                            if (_getSingleCategory($_id, '_status') != true) { ?><input name="isactive" value="true" type="checkbox">&nbsp;Is Active<?php }
+                                                if (_getSingleCategory($_id, '_status') != true) { ?><input name="isactive" value="true" type="checkbox">&nbsp;Is Active<?php }
                                                                                                                                                                                                                                                                                                     ?>
                                             </label>
                                         </div>
