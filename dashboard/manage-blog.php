@@ -81,11 +81,49 @@ $start_from = ($page - 1) * $record_per_page;
                                         </div>
 
                                         <div class="col-lg-3" style="margin-bottom: 20px;">
-                                            <?php _showCategoryOptions() ?>
+                                            <?php 
+                                            
+                                            $sql = "SELECT * FROM `tblcategory`";
+                                            $query = mysqli_query($conn, $sql);
+                                            if ($query) { ?>
+                                                <label for="categoryId" class="form-label">Select Category</label>
+                                                <select style="height: 46px;" id="categoryId" name="categoryId" onClick="getSubCategory(this.options[this.selectedIndex].value)" class="form-control form-control-lg" >
+                                                    <option selected disabled >Select Category</option>
+                                                    <?php
+                                                foreach ($query as $data) {
+                                                    ?>
+                                                        <option value="<?php echo $data['_id']; ?>"> <?php echo $data['_categoryname']; ?> </option>
+                                                    <?php
+                                                }
+                                                    ?>
+                                    
+                                                </select>
+                                            <?php
+                                            }
+
+                                            ?>
                                         </div>
 
                                         <div class="col-lg-3" style="margin-bottom: 20px;">
-                                            <?php _showSubCategoryOptions() ?>
+                                            <?php 
+                                            
+                                            $sql = "SELECT * FROM `tblsubcategory`";
+
+                                            $query = mysqli_query($conn, $sql);
+                                            if ($query) {
+                                    
+                                            ?>
+                                                <label for="subcategoryId" class="form-label">Select Sub-Category</label>
+                                                <select style="height: 46px;" id="subcategoryId" name="subcategoryId" id="subcategory" class="form-control form-control-lg" >
+                                    
+                                    
+                                                </select>
+                                            <?php
+                                    
+                                    
+                                            }
+
+                                            ?>
                                         </div>
                                         <div class="col-lg-2" style="margin-top: 30px;">
                                             <button name="search" class="btn btn-block btn-primary btn-sm font-weight-medium auth-form-btn" style="height:40px" name="submit"><i class="mdi mdi-account-search"></i>&nbsp;SEARCH</button>
