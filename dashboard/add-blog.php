@@ -65,7 +65,9 @@ if (isset($_POST['submit'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Add Blog | <?php echo _siteconfig('_sitetitle'); ?></title>
+    <title>Add Blog |
+        <?php echo _siteconfig('_sitetitle'); ?>
+    </title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@mdi/font@6.9.96/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../assets/vendors/feather/feather.css">
@@ -100,21 +102,21 @@ if (isset($_POST['submit'])) {
 
                     if ($_SESSION['blog_success']) {
                     ?>
-                        <div id="liveAlertPlaceholder">
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                <strong>Blog Created!</strong> New Blog created successfully.
-                            </div>
+                    <div id="liveAlertPlaceholder">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>Blog Created!</strong> New Blog created successfully.
                         </div>
+                    </div>
                     <?php
                     }
 
                     if ($_SESSION['blog_error']) {
                     ?>
-                        <div id="liveAlertPlaceholder">
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <strong>Blog Creation Failed!</strong> Error while creating blog.
-                            </div>
+                    <div id="liveAlertPlaceholder">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>Blog Creation Failed!</strong> Error while creating blog.
                         </div>
+                    </div>
                     <?php
                     }
 
@@ -125,14 +127,22 @@ if (isset($_POST['submit'])) {
                             <div class="card-body">
                                 <h4 class="card-title">Add Post (New Blog Post)</h4>
                                 <p class="card-description">
-                                    If you can't find a solution to your problems in our knowledgebase, you can submit a ticket by selecting the appropriate department below & subject below. Tickets can also be created by simply sending an email. Ticket responses can also be created by replying to the same email.
+                                    If you can't find a solution to your problems in our knowledgebase, you can submit a
+                                    ticket by selecting the appropriate department below & subject below. Tickets can
+                                    also be created by simply sending an email. Ticket responses can also be created by
+                                    replying to the same email.
                                 </p>
-                                <form method="POST" action="" enctype="multipart/form-data" class="needs-validation" novalidate>
+                                <form method="POST" action="" enctype="multipart/form-data" class="needs-validation"
+                                    novalidate>
                                     <div class="row g-3">
                                         <div class="col-lg-6" style="margin-bottom: 20px;">
                                             <label for="formFile" class="form-label">Blog Title</label>
-                                            <input type="text" class="form-control" placeholder="Blog Title" aria-label="Blog Title" name="_blogtitle" required>
+                                            <input type="text" class="form-control" placeholder="Blog Title"
+                                                aria-label="Blog Title" id="blogtitle"  name="_blogtitle" required>
                                             <div class="invalid-feedback">Blog Title Needed</div>
+                                            <div id="wordCountDisplay" style="margin: 10px 5px; display: none;" >
+                                                <p style="color: red;" >Word Count <strong style="color: red;" id="wordCount" ></strong> </p>
+                                            </div>
                                         </div>
 
                                         <div class="col-lg-6" style="margin-bottom: 20px;">
@@ -173,7 +183,7 @@ if (isset($_POST['submit'])) {
                                     <div class="row g-3">
                                         <div class="col">
                                             <label for="mytextarea" class="form-label">Blog Description</label>
-                                            <textarea name="_blogdesc" id="mytextarea"  required></textarea>
+                                            <textarea name="_blogdesc" id="mytextarea" required></textarea>
                                             <div class="invalid-feedback">Blog Description Required </div>
                                         </div>
                                     </div>
@@ -182,13 +192,18 @@ if (isset($_POST['submit'])) {
                                     <div class="row g-3">
                                         <div class="col" style="margin-top: 30px;">
                                             <label for="_blogmetadesc" class="form-label">Meta Description</label>
-                                            <textarea name="_blogmetadesc" rows="5"  class="form-control" required></textarea>
+                                            <textarea name="_blogmetadesc" id="metaDescriptionInput" rows="5" class="form-control"
+                                                required></textarea>
                                             <div class="invalid-feedback">Blog Meta Description Required </div>
+                                        </div>
+                                        <div id="metaDescwordCountDisplay" style="margin: 10px 5px; display: none;" >
+                                                <p style="color: red;" >Word Count <strong style="color: red;" id="metaDescwordCount" ></strong> </p>
                                         </div>
                                     </div>
 
                                     <div class="col-12" style="margin-top: 30px;">
-                                        <button type="submit" name="submit" style="width: 150px;margin-left: -10px" class="btn btn-primary">Create Blog</button>
+                                        <button type="submit" name="submit" style="width: 150px;margin-left: -10px"
+                                            class="btn btn-primary">Create Blog</button>
                                     </div>
                                 </form>
                             </div>
@@ -211,11 +226,41 @@ if (isset($_POST['submit'])) {
                     type: "POST",
                     url: "getSubCategory.php",
                     data: 'catid=' + val,
-                    success: function(data) {
+                    success: function (data) {
                         $(`#subcategoryId`).html(data);
                     }
                 });
             }
+
+            let blogtitle = document.getElementById('blogtitle');
+            blogtitle.addEventListener('input',(ele)=>{
+                let value = ele.target.value;
+                if(value.length > 0){
+
+                    let wordCountDisplay = document.getElementById('wordCountDisplay');
+                    let wordCount = document.getElementById('wordCount');
+                    wordCountDisplay.style.display = 'block'
+                    wordCount.innerText = value.length;
+                }
+            })
+
+            // let metaDescriptionInput = document.getElementById('metaDescriptionInput');
+            // metaDescriptionInput.addEventListener('input',(ele)=>{
+            //     let value = ele;
+            //     console.log(value);
+            //     if(value.length > 0){
+
+            //         let wordCountDisplay = document.getElementById('metaDescwordCountDisplay');
+            //         let wordCount = document.getElementById('metaDescwordCount');
+            //         wordCountDisplay.style.display = 'block'
+            //         wordCount.innerText = value.length;
+            //     }
+            // })
+
+
+            
+
+
         </script>
 
         <script src="../includes/_validation.js"></script>

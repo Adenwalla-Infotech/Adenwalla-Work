@@ -63,9 +63,22 @@ if (isset($_POST['submit'])) {
     <!-- Plugin css for this page -->
     <script src="../assets/plugins/tinymce/js/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
     <script>
-        tinymce.init({
-            selector: '#mytextarea'
-        });
+      tinymce.init({
+        selector: '#mytextarea',
+        plugins: 'advlist autolink lists link image charmap preview anchor pagebreak code visualchars wordcount',
+        setup: function(editor) {
+	  	var max = 500;
+	    editor.on('submit', function(event) {
+		  var numChars = tinymce.activeEditor.plugins.wordcount.body.getCharacterCountWithoutSpaces();
+		  if (numChars > max) {
+			alert(`Maximum ${max} characters allowed. <br> Current Words : ${numChars} `);
+			event.preventDefault();
+			return false;
+		  }
+		});
+        
+        }
+      });
     </script>
     <!-- End plugin css for this page -->
     <!-- inject:css -->

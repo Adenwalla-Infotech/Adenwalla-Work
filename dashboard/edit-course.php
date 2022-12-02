@@ -537,6 +537,9 @@ if (isset($_POST['editSlide'])) {
                                             <input class="form-control" name="coursename" type="text" id="coursename"
                                                 value="<?php echo _getSingleCourse($id, '_coursename') ?>" required>
                                             <div class="invalid-feedback">Please type correct course name</div>
+                                            <div id="wordCountDisplay" style="margin: 10px 5px; display: none;" >
+                                                <p style="color: red;" >Word Count <strong style="color: red;" id="wordCount" ></strong> </p>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row" style="margin-top: 30px;">
@@ -753,6 +756,19 @@ if (isset($_POST['editSlide'])) {
             });
 
         }
+
+        let courseTitle = document.getElementById('coursename');
+            courseTitle.addEventListener('input',(ele)=>{
+                let value = ele.target.value;
+                if(value.length > 0){
+
+                    let wordCountDisplay = document.getElementById('wordCountDisplay');
+                    let wordCount = document.getElementById('wordCount');
+                    wordCountDisplay.style.display = 'block'
+                    wordCount.innerText = value.length;
+                }
+            })
+
         </script>
 
 

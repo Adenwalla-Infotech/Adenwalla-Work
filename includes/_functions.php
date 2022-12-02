@@ -368,7 +368,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `Creation_at_Date` date NOT NULL DEFAULT current_timestamp(),
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
-            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
+            )  ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
             $ticket_comment = "CREATE TABLE IF NOT EXISTS `tblticketres` (
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -378,7 +378,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_useremail` varchar(255) NOT NULL,
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
-            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
+            )  ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
             $contact_table = "CREATE TABLE IF NOT EXISTS `tblcontact` (
                 `id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -432,7 +432,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_status` varchar(50) NOT NULL DEFAULT 'open',
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
-            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
+            )  ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
             $tax_table = "CREATE TABLE IF NOT EXISTS `tbltaxes` (
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -443,7 +443,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_status` varchar(50) NOT NULL DEFAULT 'true',
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
-            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
+            )  ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
             $payment_trans = "CREATE TABLE IF NOT EXISTS `tblpayment` (
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -457,7 +457,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_couponcode` varchar(255) NOT NULL,
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
-            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
+            )  ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
             $coupon_table = "CREATE TABLE IF NOT EXISTS `tblcoupon` (
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -471,7 +471,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_totaluse` varchar(255) NOT NULL,
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
-            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
+            )  ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
             $coupon_trans = "CREATE TABLE IF NOT EXISTS `tblcoupontrans` (
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -480,13 +480,13 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_useremail` varchar(255) NOT NULL,
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
-            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
+            )  ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
 
             $membership_table = "CREATE TABLE IF NOT EXISTS `tblmembership` (
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
-                `_membershipname` varchar(255) NOT NULL,
-                `_membershipdesc` varchar(255) NOT NULL,
+                `_membershipname` varchar(100) NOT NULL,
+                `_membershipdesc` varchar(500) NOT NULL,
                 `_price` varchar(55) NOT NULL,
                 `_benefit` varchar(55) NOT NULL, 
                 `_benefittype` varchar(55) NOT NULL, 
@@ -494,7 +494,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_status` varchar(255) NOT NULL,
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
-            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
+            )  ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
             $templates = "CREATE TABLE IF NOT EXISTS `tblemailtemplates` (
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -506,7 +506,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_paymenttemplate` text NOT NULL,
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
-            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
+            )  ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
 
             $invoice = "CREATE TABLE IF NOT EXISTS `tblinvoice` (
@@ -521,7 +521,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_duedate` varchar(255) NOT NULL,
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
-            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
+            )  ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
 
             $invoiceitems = "CREATE TABLE IF NOT EXISTS `tblinvoiceitems` (
@@ -532,7 +532,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_productamount` varchar(55) NOT NULL, 
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
-            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
+            )  ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
 
             $course = "CREATE TABLE IF NOT EXISTS `tblcourse` (
@@ -561,7 +561,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `Creation_at_Date` date NOT NULL DEFAULT current_timestamp(),
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
-            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
+            )  ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
             $lessondb = "CREATE TABLE IF NOT EXISTS `tbllessons` (
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -576,7 +576,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `Creation_at_Date` date NOT NULL DEFAULT current_timestamp(),
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
-            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
+            )  ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
             $slidesdb = "CREATE TABLE IF NOT EXISTS `tblslides` (
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -585,7 +585,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_caption` varchar(55) NOT NULL,
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
-            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
+            )  ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
 
 

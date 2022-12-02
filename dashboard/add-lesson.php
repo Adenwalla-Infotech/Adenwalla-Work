@@ -200,6 +200,9 @@ if (isset($_POST['submit'])) {
                                             <input type="text" class="form-control" name="lessonname" id="lessonname"
                                                 placeholder="Lesson Name" required>
                                             <div class="invalid-feedback">Please type correct Description</div>
+                                            <div id="wordCountDisplay" style="margin: 10px 5px; display: none;" >
+                                                <p style="color: red;" >Word Count <strong style="color: red;" id="wordCount" ></strong> </p>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -262,6 +265,18 @@ if (isset($_POST['submit'])) {
                 }
 
             }
+
+            let lessonname = document.getElementById('lessonname');
+            lessonname.addEventListener('input',(ele)=>{
+                let value = ele.target.value;
+                if(value.length > 0){
+
+                    let wordCountDisplay = document.getElementById('wordCountDisplay');
+                    let wordCount = document.getElementById('wordCount');
+                    wordCountDisplay.style.display = 'block'
+                    wordCount.innerText = value.length;
+                }
+            })
 
         </script>
 

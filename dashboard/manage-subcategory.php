@@ -92,7 +92,7 @@ session_start();
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="table-responsive">
-                                            <table id="example" class="display expandable-table" style="width:100%">
+                                            <table id="example" class="display table expandable-table" style="width:100%">
                                                 <thead>
                                                     <tr>
                                                         <th>Sub-Category Id</th>

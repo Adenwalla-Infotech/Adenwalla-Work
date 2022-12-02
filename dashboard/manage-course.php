@@ -107,7 +107,7 @@ $start_from = ($page - 1) * $record_per_page;
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="table-responsive">
-                                            <table id="example" class="display expandable-table" style="width:100%">
+                                            <table id="example" class="display table expandable-table" style="width:100%">
                                                 <thead>
                                                     <tr>
 

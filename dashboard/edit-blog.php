@@ -132,8 +132,11 @@ if (isset($_POST['submit'])) {
                                     <div class="row g-3">
                                         <div class="col-lg-6" style="margin-bottom: 20px;">
                                             <label for="formFile" class="form-label">Blog Title</label>
-                                            <input type="text" class="form-control" placeholder="Blog Title" aria-label="Blog Title" name="_blogtitle" value="<?php echo _getSingleBlog($_id, '_blogtitle') ?>" required>
+                                            <input type="text" class="form-control" placeholder="Blog Title" aria-label="Blog Title" id="blogtitle" name="_blogtitle" value="<?php echo _getSingleBlog($_id, '_blogtitle') ?>" required>
                                             <div class="invalid-feedback">Blog Title Needed</div>
+                                            <div id="wordCountDisplay" style="margin: 10px 5px; display: none;" >
+                                                <p style="color: red;" >Word Count <strong style="color: red;" id="wordCount" ></strong> </p>
+                                            </div>
                                         </div>
 
                                         <div class="col-lg-6" style="margin-bottom: 20px;">
@@ -231,6 +234,19 @@ if (isset($_POST['submit'])) {
                     }
                 });
             }
+
+            let blogtitle = document.getElementById('blogtitle');
+            blogtitle.addEventListener('input',(ele)=>{
+                let value = ele.target.value;
+                if(value.length > 0){
+
+                    let wordCountDisplay = document.getElementById('wordCountDisplay');
+                    let wordCount = document.getElementById('wordCount');
+                    wordCountDisplay.style.display = 'block'
+                    wordCount.innerText = value.length;
+                }
+            })
+
         </script>
         <script src="../includes/_validation.js"></script>
 
