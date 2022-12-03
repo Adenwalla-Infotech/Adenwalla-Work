@@ -69,10 +69,11 @@ $start_from = ($page - 1) * $record_per_page;
           <div class="col-12 grid-margin stretch-card">
             <div class="card">
               <div class="card-body">
-                <h4 class="card-title">Manage users (Registered Members)   
-                  <button  class="btn btn-success btn-sm " onclick="exportToExcel()" style="float: right; margin-bottom: 10px; "  ><i class="mdi mdi-export"></i>&nbsp;Export</button>
-                       </h4>
-                <p class="card-description" >
+                <h4 class="card-title">Manage users (Registered Members)
+                  <button class="btn btn-success btn-sm " onclick="exportToExcel()"
+                    style="float: right; margin-bottom: 10px; "><i class="mdi mdi-export"></i>&nbsp;Export</button>
+                </h4>
+                <p class="card-description">
                   This section provides information you need to use the Worklist Users module of Worklist Console. This
                   module allows you to manage users, groups, and roles defined in the default security realm. You must
                   be logged in as a member of the Administrators or IntegrationAdministrators group to add, delete, or
@@ -160,9 +161,11 @@ $start_from = ($page - 1) * $record_per_page;
                         <a href='manage-users?page=" . ($page - 1) . "' class='page-link'>Previous</a>
                       </li>";
                     }
-                    for ($i = 1; $i <= $total_pages; $i++) {
-                      echo "
+                    if ($total_records > 5) {
+                      for ($i = 1; $i <= $total_pages; $i++) {
+                        echo "
                       <li class='page-item'><a class='page-link' href='manage-users?page=" . $i . "'>$i</a></li>";
+                      }
                     }
                     if ($page <= $end_loop) {
                       echo "<li class='page-item'>

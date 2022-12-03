@@ -122,30 +122,30 @@ $start_from = ($page - 1) * $record_per_page;
                         </thead>
                         <tbody style="text-align: left;margin-left: 30px">
                           <?php
-                            if (isset($_POST['search'])) {
+                          if (isset($_POST['search'])) {
 
 
 
 
-                              $ticketid = $_POST['ticketid'];
-                              $status = $_POST['statustype'];
-                              $createdAt = $_POST['createdat'];
+                            $ticketid = $_POST['ticketid'];
+                            $status = $_POST['statustype'];
+                            $createdAt = $_POST['createdat'];
 
 
-                              if ($ticketid) {
-                                _gettickets($ticketid, '', '', '', '');
-                              } else if ($createdAt) {
-                                _gettickets('', '', $createdAt, '', '');
-                              } else if ($status) {
-                                _gettickets('', $status, '', '', '');
-                              }
-
-
+                            if ($ticketid) {
+                              _gettickets($ticketid, '', '', '', '');
+                            } else if ($createdAt) {
+                              _gettickets('', '', $createdAt, '', '');
+                            } else if ($status) {
+                              _gettickets('', $status, '', '', '');
                             }
-                            if (!isset($_POST['search'])) {
-                              _gettickets('', '', '', $record_per_page, $start_from);
-                            }
-                            ?>
+
+
+                          }
+                          if (!isset($_POST['search'])) {
+                            _gettickets('', '', '', $record_per_page, $start_from);
+                          }
+                          ?>
                         </tbody>
                       </table>
                     </div>
@@ -154,29 +154,31 @@ $start_from = ($page - 1) * $record_per_page;
                 <nav aria-label="Page navigation example" style="margin-top: 30px;">
                   <ul class="pagination">
                     <?php
-                      $query = mysqli_query($conn, "SELECT * FROM `tbltickets`");
-                      $total_records = mysqli_num_rows($query);
-                      $total_pages = ceil($total_records / $record_per_page);
-                      $start_loop = $page;
-                      $difference = $total_pages - $page;
-                      if ($difference <= 4) {
-                        $start_loop = $total_pages - 4;
-                      }
-                      $end_loop = $start_loop + 3;
-                      if ($page > 1) {
-                        echo "<li class='page-item'>
+                    $query = mysqli_query($conn, "SELECT * FROM `tbltickets`");
+                    $total_records = mysqli_num_rows($query);
+                    $total_pages = ceil($total_records / $record_per_page);
+                    $start_loop = $page;
+                    $difference = $total_pages - $page;
+                    if ($difference <= 4) {
+                      $start_loop = $total_pages - 4;
+                    }
+                    $end_loop = $start_loop + 3;
+                    if ($page > 1) {
+                      echo "<li class='page-item'>
                         <a href='manage-tickets?page=" . ($page - 1) . "' class='page-link'>Previous</a>
                       </li>";
-                      }
+                    }
+                    if ($total_records > 5) {
                       for ($i = 1; $i <= $total_pages; $i++) {
                         echo "
                       <li class='page-item'><a class='page-link' href='manage-tickets?page=" . $i . "'>$i</a></li>";
                       }
-                      if ($page <= $end_loop) {
-                        echo "<li class='page-item'>
+                    }
+                    if ($page <= $end_loop) {
+                      echo "<li class='page-item'>
                         <a class='page-link' href='manage-tickets?page=" . ($page + 1) . "'>Next</a>
                       </li>";
-                      } ?>
+                    } ?>
                   </ul>
                 </nav>
               </div>

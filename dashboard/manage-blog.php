@@ -192,9 +192,11 @@ $start_from = ($page - 1) * $record_per_page;
                         <a href='manage-blog?page=" . ($page - 1) . "' class='page-link'>Previous</a>
                       </li>";
                                         }
-                                        for ($i = 1; $i <= $total_pages; $i++) {
-                                            echo "
-                      <li class='page-item'><a class='page-link' href='manage-blog?page=" . $i . "'>$i</a></li>";
+                                        if($total_records>5){
+                                            for ($i = 1; $i <= $total_pages; $i++) {
+                                                echo "
+                          <li class='page-item'><a class='page-link' href='manage-blog?page=" . $i . "'>$i</a></li>";
+                                            }
                                         }
                                         if ($page <= $end_loop) {
                                             echo "<li class='page-item'>

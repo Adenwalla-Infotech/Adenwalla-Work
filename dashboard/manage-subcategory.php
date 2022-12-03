@@ -2,36 +2,36 @@
 
 session_start();
 
-        if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['isLoggedIn'] == '') {
-            echo "<script>";
-            echo "window.location.href = 'login'";
-            echo "</script>";
-        } else {
-            if ($_SESSION['userVerify'] != 'true') {
-                echo "<script>";
-                echo "window.location.href = 'verify'";
-                echo "</script>";
-            }
-        }
+if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['isLoggedIn'] == '') {
+    echo "<script>";
+    echo "window.location.href = 'login'";
+    echo "</script>";
+} else {
+    if ($_SESSION['userVerify'] != 'true') {
+        echo "<script>";
+        echo "window.location.href = 'verify'";
+        echo "</script>";
+    }
+}
 
-        require('../includes/_functions.php');
-        require('../includes/_config.php');
+require('../includes/_functions.php');
+require('../includes/_config.php');
 
-       
-        if(isset($_GET['del'])){
-            $_id = $_GET['id'];
-            _deleteSubCategory($_id);
-          }
-          
 
-        $record_per_page = 5;
-        $page = '';
-        if (isset($_GET["page"])) {
-            $page = $_GET["page"];
-        } else {
-            $page = 1;
-        }
-        $start_from = ($page - 1) * $record_per_page;
+if (isset($_GET['del'])) {
+    $_id = $_GET['id'];
+    _deleteSubCategory($_id);
+}
+
+
+$record_per_page = 5;
+$page = '';
+if (isset($_GET["page"])) {
+    $page = $_GET["page"];
+} else {
+    $page = 1;
+}
+$start_from = ($page - 1) * $record_per_page;
 
 ?>
 <!DOCTYPE html>
@@ -72,13 +72,15 @@ session_start();
                             <div class="card-body">
                                 <h4 class="card-title">Manage Child (All Sub-Category)</h4>
                                 <p class="card-description">
-                                From here, you'll see a list of all the categories on your site. You can edit or delete them from here. You can also change the order of your categories by dragging and dropping them into the order you
+                                    From here, you'll see a list of all the categories on your site. You can edit or
+                                    delete them from here. You can also change the order of your categories by dragging
+                                    and dropping them into the order you
                                 </p>
                                 <form method="POST" action="">
                                     <div class="row">
                                         <div class="col-lg-3" style="margin-bottom: 20px;">
-                                            <input type="text" class="form-control form-control-sm" name="subcategoryname"
-                                                placeholder="Sub Category Name">
+                                            <input type="text" class="form-control form-control-sm"
+                                                name="subcategoryname" placeholder="Sub Category Name">
                                         </div>
 
                                         <div class="col-lg-2" style="margin-bottom: 20px;">
@@ -92,7 +94,8 @@ session_start();
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="table-responsive">
-                                            <table id="example" class="display table expandable-table" style="width:100%">
+                                            <table id="example" class="display table expandable-table"
+                                                style="width:100%">
                                                 <thead>
                                                     <tr>
                                                         <th>Sub-Category Id</th>
@@ -108,7 +111,7 @@ session_start();
                                                 <tbody style="text-align: left;margin-left: 30px">
                                                     <?php
                                                     if (isset($_POST['search'])) {
-                                                        _getSubCategory($_POST['subcategoryname'],'','');
+                                                        _getSubCategory($_POST['subcategoryname'], '', '');
                                                     }
                                                     if (!isset($_POST['search'])) {
                                                         _getSubCategory('', $record_per_page, $start_from);
@@ -136,9 +139,11 @@ session_start();
                         <a href='subcategory-manage?page=" . ($page - 1) . "' class='page-link'>Previous</a>
                       </li>";
                                         }
-                                        for ($i = 1; $i <= $total_pages; $i++) {
-                                            echo "
+                                        if ($total_records > 5) {
+                                            for ($i = 1; $i <= $total_pages; $i++) {
+                                                echo "
                       <li class='page-item'><a class='page-link' href='subcategory-manage?page=" . $i . "'>$i</a></li>";
+                                            }
                                         }
                                         if ($page <= $end_loop) {
                                             echo "<li class='page-item'>

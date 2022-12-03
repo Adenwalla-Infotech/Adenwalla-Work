@@ -133,9 +133,11 @@ session_start();
                         <a href='category-manage?page=" . ($page - 1) . "' class='page-link'>Previous</a>
                       </li>";
                                         }
-                                        for ($i = 1; $i <= $total_pages; $i++) {
-                                            echo "
-                      <li class='page-item'><a class='page-link' href='category-manage?page=" . $i . "'>$i</a></li>";
+                                        if($total_records>5){
+                                            for ($i = 1; $i <= $total_pages; $i++) {
+                                                echo "
+                          <li class='page-item'><a class='page-link' href='category-manage?page=" . $i . "'>$i</a></li>";
+                                            }
                                         }
                                         if ($page <= $end_loop) {
                                             echo "<li class='page-item'>

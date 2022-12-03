@@ -2621,7 +2621,7 @@ function _getTranscations($useremail = '', $amount = '', $status = '', $startfro
                     ?>
                 </td>
                 <td>
-                    <a href="edit-transcation.php?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
+                    <a href="edit-transcation?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
                 </td>
             </tr>
         <?php
@@ -2698,7 +2698,7 @@ function _getCouponTranscation($couponname = '', $couponamount = '', $startfrom 
                     ?>
                 </td>
                 <td>
-                    <a href="edit-coupon-transcation.php?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
+                    <a href="edit-coupon-transcation?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
                 </td>
             </tr>
             <?php
@@ -2930,7 +2930,7 @@ function _getInvoice($clientemail = '', $refno = '', $startfrom = '', $limit = '
                     ?>
                 </td>
                 <td>
-                    <a href="edit-invoice.php?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
+                    <a href="edit-invoice?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
                     <a href='manage-invoice?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
                 </td>
             </tr>
@@ -2986,7 +2986,7 @@ function _viewInvoice($startfrom = '', $limit = '')
                     ?>
                 </td>
                 <td>
-                    <a href="view-invoice.php?invoiceno=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-eye"></a>
+                    <a href="view-invoice?invoiceno=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-eye"></a>
                 </td>
             </tr>
         <?php
@@ -3289,7 +3289,7 @@ function _getCourse($coursename = '', $teacheremailid = '', $createdat = '', $st
                     ?>
                 </td>
                 <td>
-                    <a href="edit-course.php?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
+                    <a href="edit-course?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
                     <a href='manage-course?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
                 </td>
             </tr>
@@ -3496,7 +3496,7 @@ function _getLessons($coursename = '', $lessonname = '', $createdAt = '', $start
                     ?>
                 </td>
                 <td>
-                    <a href="edit-lesson.php?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
+                    <a href="edit-lesson?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
                     <a href='manage-lesson?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
                 </td>
             </tr>

@@ -76,7 +76,8 @@ $start_from = ($page - 1) * $record_per_page;
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="table-responsive">
-                                            <table id="example" class="display expandable-table" style="width:100%">
+                                            <table id="example" class="display table expandable-table"
+                                                style="width:100%">
                                                 <thead>
                                                     <tr>
                                                         <th>Transcation Id</th>
@@ -90,8 +91,8 @@ $start_from = ($page - 1) * $record_per_page;
                                                 </thead>
                                                 <tbody style="text-align: left;margin-left: 30px">
                                                     <?php
-                                                         $useremail = $_SESSION['userEmailId'];
-                                                        _viewTranscation($useremail,$start_from, $record_per_page);
+                                                    $useremail = $_SESSION['userEmailId'];
+                                                    _viewTranscation($useremail, $start_from, $record_per_page);
                                                     ?>
                                                 </tbody>
                                             </table>
@@ -102,7 +103,7 @@ $start_from = ($page - 1) * $record_per_page;
                                     <ul class="pagination">
                                         <?php
                                         $userid = $_SESSION['userId'];
-                                        $useremail = _getsingleuser($userid,'_useremail');
+                                        $useremail = _getsingleuser($userid, '_useremail');
                                         $query = mysqli_query($conn, "SELECT * FROM `tblpayment` where `_useremail`='$useremail' AND `_status` != 'pending'");
                                         $total_records = mysqli_num_rows($query);
                                         $total_pages = ceil($total_records / $record_per_page);
@@ -117,9 +118,11 @@ $start_from = ($page - 1) * $record_per_page;
                         <a href='category-manage?page=" . ($page - 1) . "' class='page-link'>Previous</a>
                       </li>";
                                         }
-                                        for ($i = 1; $i <= $total_pages; $i++) {
-                                            echo "
+                                        if ($total_records > 5) {
+                                            for ($i = 1; $i <= $total_pages; $i++) {
+                                                echo "
                       <li class='page-item'><a class='page-link' href='category-manage?page=" . $i . "'>$i</a></li>";
+                                            }
                                         }
                                         if ($page <= $end_loop) {
                                             echo "<li class='page-item'>

@@ -79,20 +79,26 @@ $start_from = ($page - 1) * $record_per_page;
                                 <form method="POST" action="">
                                     <div class="row">
                                         <div class="col-lg-3" style="margin-bottom: 20px;">
-                                            <input type="text" class="form-control form-control-sm" name="clientemail" placeholder="Client Email">
+                                            <input type="text" class="form-control form-control-sm" name="clientemail"
+                                                placeholder="Client Email">
                                         </div>
                                         <div class="col-lg-3" style="margin-bottom: 20px;">
-                                            <input type="text" class="form-control form-control-sm" name="refno" placeholder="Reference No">
+                                            <input type="text" class="form-control form-control-sm" name="refno"
+                                                placeholder="Reference No">
                                         </div>
                                         <div class="col-lg-2" style="margin-bottom: 20px;">
-                                            <button name="search" class="btn btn-block btn-primary btn-sm font-weight-medium auth-form-btn" style="height:40px" name="submit"><i class="mdi mdi-account-search"></i>&nbsp;SEARCH</button>
+                                            <button name="search"
+                                                class="btn btn-block btn-primary btn-sm font-weight-medium auth-form-btn"
+                                                style="height:40px" name="submit"><i
+                                                    class="mdi mdi-account-search"></i>&nbsp;SEARCH</button>
                                         </div>
                                     </div>
                                 </form>
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="table-responsive">
-                                            <table id="example" class="display table expandable-table" style="width:100%">
+                                            <table id="example" class="display table expandable-table"
+                                                style="width:100%">
                                                 <thead>
                                                     <tr>
                                                         <th>Id</th>
@@ -109,20 +115,20 @@ $start_from = ($page - 1) * $record_per_page;
                                                 <tbody style="text-align: left;margin-left: 30px">
                                                     <?php
                                                     if (isset($_POST['search'])) {
-                                                        
-                                                        
-                                                        if($_POST['clientemail']){
+
+
+                                                        if ($_POST['clientemail']) {
                                                             $clientemail = $_POST['clientemail'];
-                                                            _getInvoice($clientemail,'','','');
+                                                            _getInvoice($clientemail, '', '', '');
                                                         }
-                                                        if($_POST['refno']){
+                                                        if ($_POST['refno']) {
                                                             $refno = $_POST['refno'];
-                                                            _getInvoice('',$refno,'', '');
+                                                            _getInvoice('', $refno, '', '');
                                                         }
 
                                                     }
                                                     if (!isset($_POST['search'])) {
-                                                        _getInvoice('','',$start_from, $record_per_page);
+                                                        _getInvoice('', '', $start_from, $record_per_page);
                                                     }
                                                     ?>
                                                 </tbody>
@@ -147,9 +153,11 @@ $start_from = ($page - 1) * $record_per_page;
                         <a href='category-manage?page=" . ($page - 1) . "' class='page-link'>Previous</a>
                       </li>";
                                         }
-                                        for ($i = 1; $i <= $total_pages; $i++) {
-                                            echo "
+                                        if ($total_records > 5) {
+                                            for ($i = 1; $i <= $total_pages; $i++) {
+                                                echo "
                       <li class='page-item'><a class='page-link' href='category-manage?page=" . $i . "'>$i</a></li>";
+                                            }
                                         }
                                         if ($page <= $end_loop) {
                                             echo "<li class='page-item'>

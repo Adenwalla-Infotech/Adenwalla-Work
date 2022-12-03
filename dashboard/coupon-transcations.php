@@ -35,7 +35,9 @@ $start_from = ($page - 1) * $record_per_page;
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Manage Coupon Transactions | <?php echo _siteconfig('_sitetitle'); ?></title>
+  <title>Manage Coupon Transactions |
+    <?php echo _siteconfig('_sitetitle'); ?>
+  </title>
   <!-- plugins:css -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@mdi/font@6.9.96/css/materialdesignicons.min.css">
   <link rel="stylesheet" href="../assets/vendors/feather/feather.css">
@@ -65,19 +67,24 @@ $start_from = ($page - 1) * $record_per_page;
               <div class="card-body">
                 <h4 class="card-title">Manage Coupon Transcations</h4>
                 <p class="card-description">
-                  Web Help Desk uses tickets to manage service requests. These tickets can be initiated through email, created in the application, and imported from another application. Techs, admins, and clients can also manage tickets through email or through the application in a web browser.
+                  Web Help Desk uses tickets to manage service requests. These tickets can be initiated through email,
+                  created in the application, and imported from another application. Techs, admins, and clients can also
+                  manage tickets through email or through the application in a web browser.
                 </p>
 
                 <form method="POST" action="">
                   <div class="row">
                     <div class="col-lg-3" style="margin-bottom: 20px;">
-                      <input type="text" class="form-control form-control-sm" name="couponname" placeholder="Coupon Name">
+                      <input type="text" class="form-control form-control-sm" name="couponname"
+                        placeholder="Coupon Name">
                     </div>
                     <div class="col-lg-3" style="margin-bottom: 20px;">
-                      <input type="text" class="form-control form-control-sm" name="couponamount" placeholder="Coupon Amount">
+                      <input type="text" class="form-control form-control-sm" name="couponamount"
+                        placeholder="Coupon Amount">
                     </div>
                     <div class="col-lg-2" style="margin-bottom: 20px;">
-                      <button name="search" class="btn btn-block btn-primary btn-sm font-weight-medium auth-form-btn" style="height:40px" name="submit"><i class="mdi mdi-account-search"></i>&nbsp;SEARCH</button>
+                      <button name="search" class="btn btn-block btn-primary btn-sm font-weight-medium auth-form-btn"
+                        style="height:40px" name="submit"><i class="mdi mdi-account-search"></i>&nbsp;SEARCH</button>
                     </div>
                   </div>
                 </form>
@@ -85,7 +92,7 @@ $start_from = ($page - 1) * $record_per_page;
                 <div class="row">
                   <div class="col-12">
                     <div class="table-responsive">
-                      <table id="example" class="display expandable-table" style="width:100%">
+                      <table id="example" class="display table expandable-table" style="width:100%">
                         <thead>
                           <tr>
 
@@ -121,7 +128,7 @@ $start_from = ($page - 1) * $record_per_page;
                           }
 
                           if (!isset($_POST['search'])) {
-                            _getCouponTranscation('', '' ,$start_from, $record_per_page);
+                            _getCouponTranscation('', '', $start_from, $record_per_page);
                           }
 
 
@@ -149,9 +156,11 @@ $start_from = ($page - 1) * $record_per_page;
                         <a href='manage-coupon-transcations?page=" . ($page - 1) . "' class='page-link'>Previous</a>
                       </li>";
                     }
-                    for ($i = 1; $i <= $total_pages; $i++) {
-                      echo "
+                    if ($total_records > 5) {
+                      for ($i = 1; $i <= $total_pages; $i++) {
+                        echo "
                       <li class='page-item'><a class='page-link' href='manage-coupon-transcations?page=" . $i . "'>$i</a></li>";
+                      }
                     }
                     if ($page <= $end_loop) {
                       echo "<li class='page-item'>

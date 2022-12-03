@@ -35,8 +35,8 @@
         </a>
         <div class="collapse" id="ui-transactions">
           <ul class="nav flex-column sub-menu">
-            <li class="nav-item"> <a class="nav-link" href="payment-transcations.php">Payment Record</a></li>
-            <li class="nav-item"> <a class="nav-link" href="coupon-transcations.php">Coupon Record</a></li>
+            <li class="nav-item"> <a class="nav-link" href="payment-transcations">Payment Record</a></li>
+            <li class="nav-item"> <a class="nav-link" href="coupon-transcations">Coupon Record</a></li>
           </ul>
         </div>
       </li>
@@ -169,12 +169,12 @@
         </a>
         <div class="collapse" id="ui-template">
           <ul class="nav flex-column sub-menu">
-            <li class="nav-item"> <a class="nav-link" href="purchase-template.php">Purchase</a></li>
-            <li class="nav-item"> <a class="nav-link" href="reminder-template.php">Reminder</a></li>
-            <li class="nav-item"> <a class="nav-link" href="lecture-template.php">Lecture</a></li>
-            <li class="nav-item"> <a class="nav-link" href="signup-template.php">Signup</a></li>
-            <li class="nav-item"> <a class="nav-link" href="cancel-template.php">Cancel</a></li>
-            <li class="nav-item"> <a class="nav-link" href="payment-template.php">Payment</a></li>
+            <li class="nav-item"> <a class="nav-link" href="purchase-template">Purchase</a></li>
+            <li class="nav-item"> <a class="nav-link" href="reminder-template">Reminder</a></li>
+            <li class="nav-item"> <a class="nav-link" href="lecture-template">Lecture</a></li>
+            <li class="nav-item"> <a class="nav-link" href="signup-template">Signup</a></li>
+            <li class="nav-item"> <a class="nav-link" href="cancel-template">Cancel</a></li>
+            <li class="nav-item"> <a class="nav-link" href="payment-template">Payment</a></li>
           </ul>
         </div>
       </li>
@@ -186,7 +186,7 @@
         </a>
         <div class="collapse" id="ui-invoice">
           <ul class="nav flex-column sub-menu">
-            <li class="nav-item"> <a class="nav-link" href="create-invoice.php">Create Invoice</a></li>
+            <li class="nav-item"> <a class="nav-link" href="create-invoice">Create Invoice</a></li>
             <li class="nav-item"> <a class="nav-link" href="manage-invoice">Manage Invoice</a></li>
           </ul>
         </div>
@@ -199,7 +199,7 @@
         </a>
         <div class="collapse" id="ui-course">
           <ul class="nav flex-column sub-menu">
-            <li class="nav-item"> <a class="nav-link" href="create-course.php">Create Course</a></li>
+            <li class="nav-item"> <a class="nav-link" href="create-course">Create Course</a></li>
             <li class="nav-item"> <a class="nav-link" href="manage-course">Manage Course</a></li>
           </ul>
         </div>
@@ -212,7 +212,7 @@
         </a>
         <div class="collapse" id="ui-Lesson">
           <ul class="nav flex-column sub-menu">
-            <li class="nav-item"> <a class="nav-link" href="add-lesson.php">Add Lesson Plan</a></li>
+            <li class="nav-item"> <a class="nav-link" href="add-lesson">Add Lesson Plan</a></li>
             <li class="nav-item"> <a class="nav-link" href="manage-lesson">Manage Lesson Plan</a></li>
           </ul>
         </div>

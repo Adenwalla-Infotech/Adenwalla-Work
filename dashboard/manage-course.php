@@ -107,7 +107,8 @@ $start_from = ($page - 1) * $record_per_page;
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="table-responsive">
-                                            <table id="example" class="display table expandable-table" style="width:100%">
+                                            <table id="example" class="display table expandable-table"
+                                                style="width:100%">
                                                 <thead>
                                                     <tr>
 
@@ -165,9 +166,11 @@ $start_from = ($page - 1) * $record_per_page;
                         <a href='manage-course?page=" . ($page - 1) . "' class='page-link'>Previous</a>
                       </li>";
                                         }
-                                        for ($i = 1; $i <= $total_pages; $i++) {
-                                            echo "
+                                        if ($total_records > 5) {
+                                            for ($i = 1; $i <= $total_pages; $i++) {
+                                                echo "
                       <li class='page-item'><a class='page-link' href='manage-course?page=" . $i . "'>$i</a></li>";
+                                            }
                                         }
                                         if ($page <= $end_loop) {
                                             echo "<li class='page-item'>
@@ -190,7 +193,7 @@ $start_from = ($page - 1) * $record_per_page;
         </div>
         <div class="container"></div>
         <script>
-                  $('.select2').select2();
+            $('.select2').select2();
         </script>
 </body>
 <script src="../assets/vendors/js/vendor.bundle.base.js"></script>
