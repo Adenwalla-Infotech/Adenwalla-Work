@@ -589,9 +589,19 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
 
 
 
+            $attachmentsDB = "CREATE TABLE IF NOT EXISTS `tblattachements` (
+                `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                `_lessonid` varchar(55) NOT NULL,
+                `_attachementurl` varchar(55) NOT NULL,
+                `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                `UpdationDate` datetime NULL ON UPDATE current_timestamp()
+            )  ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
 
-            $tables = [$admin_table, $sms_config, $email_config, $site_config, $payment_config, $tickets_table, $ticket_comment, $contact_table, $category_table, $subcategory_table, $blog_table, $currency_table, $tax_table, $payment_trans, $coupon_table, $coupon_trans, $membership_table, $templates, $invoice, $invoiceitems, $course, $lessondb, $slidesdb];
+
+
+
+            $tables = [$admin_table, $sms_config, $email_config, $site_config, $payment_config, $tickets_table, $ticket_comment, $contact_table, $category_table, $subcategory_table, $blog_table, $currency_table, $tax_table, $payment_trans, $coupon_table, $coupon_trans, $membership_table, $templates, $invoice, $invoiceitems, $course, $lessondb, $slidesdb,$attachmentsDB];
 
             foreach ($tables as $k => $sql) {
                 $query = @$temp_conn->query($sql);
@@ -3705,5 +3715,126 @@ function _getTeachers($id = '')
 
 
 
+// Slides //
+function _createAttachment($_lessonid, $_attachementurl)
+{
 
-            ?>
+    require('_config.php');
+
+
+    $sql = "INSERT INTO `tblattachements` (`_lessonid`,`_attachementurl`) VALUES ('$_lessonid','$_attachementurl')";
+
+    $query = mysqli_query($conn, $sql);
+
+    if ($query) {
+        $_SESSION['attachment_success'] = true;
+        header("location:");
+    } else {
+        $_SESSION['attachment_error'] = true;
+        header("location:");
+    }
+}
+
+
+function _getSingleAttachment($id,$param)
+{
+
+    require('_config.php');
+    $sql = "SELECT * FROM `tblattachements` WHERE `_id`='$id' ";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        foreach ($query as $data) {
+            return $data[$param];
+        }
+    }
+}
+
+
+function _updateAttachment($_id, $_attachementurl)
+{
+
+    require('_config.php');
+
+
+    $sql = "UPDATE `tblattachements` SET `_attachementurl`='$_attachementurl'  WHERE `_id` = '$_id'  ";
+    $query = mysqli_query($conn, $sql);
+
+
+  
+    if ($query) {
+        $_SESSION['attachment_edit_success'] = true;
+        header("location:");
+    } else {
+        $_SESSION['attachment_edit_error'] = true;
+        header("location:");
+    }
+}
+
+
+function _deleteAttachment($id,$locationid)
+{
+    require('_config.php');
+
+
+    $sql = "DELETE FROM `tblattachements` WHERE `_id`='$id' ";
+    $query = mysqli_query($conn, $sql);
+
+    if ($query) {
+        header("location:edit-lesson?id=$locationid");
+    }
+}
+
+
+
+function _getAttachments($id, $startfrom = '', $limit = '')
+{
+
+    require('_config.php');
+
+
+    $sql = "SELECT * FROM `tblattachements` where `_lessonid`='$id' ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
+
+    $query = mysqli_query($conn, $sql);
+
+    if ($query) {
+        foreach ($query as $data) {
+        ?>
+            <tr>
+                <td><?php echo $data['_id']; ?></td>
+                
+                <td>
+                    <?php
+
+            $lessonid = $data['_lessonid'];
+            echo _getSingleLesson($lessonid, '_lessonname');
+
+                    ?>
+                </td>
+
+                <td><?php echo $data['_attachementurl']; ?></td>
+                
+                <td>
+                    <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
+                </td>
+                <td>
+                    <?php
+            if (strtotime($data['UpdationDate']) == '') {
+                echo "Not Updated Yet";
+            } else {
+                echo date("M j, Y", strtotime($data['UpdationDate']));
+            }
+                    ?>
+                </td>
+                <td>
+                    <span style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box" onclick="callEditAttachment(<?php echo $data['_lessonid']; ?>,<?php echo $data['_id']; ?>)"></span>
+                    
+                    <a href='edit-lesson?id=<?php echo $data['_lessonid']; ?>&attachmentid=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
+                </td>
+            </tr>
+        <?php
+        }
+    }
+}
+
+
+?>

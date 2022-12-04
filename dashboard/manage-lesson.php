@@ -121,7 +121,7 @@ $start_from = ($page - 1) * $record_per_page;
                                             <input type="date" class="form-control form-control-sm" name="createdat">
                                         </div>
 
-                                        <div class="col-lg-2">
+                                        <div class="col-lg-2" style="margin-top: 30px;" >
                                             <button name="search"
                                                 class="btn btn-block btn-primary btn-sm font-weight-medium auth-form-btn"
                                                 style="height:40px" name="submit"><i

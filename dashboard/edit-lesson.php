@@ -20,8 +20,24 @@ if (isset($_SESSION['course_error']) || !isset($_SESSION['course_error'])) {
     $_SESSION['course_error'] = false;
 }
 
+if (isset($_SESSION['attachment_success']) || !isset($_SESSION['attachment_success'])) {
+    $_SESSION['attachment_success'] = false;
+}
+if (isset($_SESSION['attachment_error']) || !isset($_SESSION['attachment_error'])) {
+    $_SESSION['attachment_error'] = false;
+}
+
+if (isset($_SESSION['attachment_edit_success']) || !isset($_SESSION['attachment_edit_success'])) {
+    $_SESSION['attachment_edit_success'] = false;
+}
+if (isset($_SESSION['attachment_edit_error']) || !isset($_SESSION['attachment_edit_error'])) {
+    $_SESSION['attachment_edit_error'] = false;
+}
+
 
 $id = $_GET['id'];
+require('../includes/_config.php');
+
 
 require('../includes/_functions.php');
 
@@ -61,6 +77,45 @@ if (isset($_POST['submit'])) {
     _updateLesson($id, $_courseid, $_lessonname, $lessontype, $lessonurl, $recorderfile, $_lessondescription, $isactive, $_availablity);
 
 }
+
+
+$record_per_page = 5;
+$page = '';
+if (isset($_GET["page"])) {
+    $page = $_GET["page"];
+} else {
+    $page = 1;
+}
+$start_from = ($page - 1) * $record_per_page;
+
+
+
+if (isset($_POST['addAttachment'])) {
+
+    $attachmenturl = $_POST['attachmenturl'];
+    _createAttachment($id, $attachmenturl);
+}
+
+
+if (isset($_GET['del'])) {
+
+    $attachmentid = $_GET['attachmentid'];
+    $lessonid = $_GET['id'];
+
+    _deleteAttachment($attachmentid, $lessonid);
+}
+
+
+if (isset($_POST['editAttachment'])) {
+
+    $attachmentid = $_POST['attachmentid'];
+    $attachmenturl = $_POST['attachmenturl'];
+
+
+    _updateAttachment($attachmentid, $attachmenturl);
+
+}
+
 
 ?>
 <!DOCTYPE html>
@@ -119,6 +174,46 @@ if (isset($_POST['submit'])) {
                     <div id="liveAlertPlaceholder">
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <strong>Lesson Updation Failed</strong>
+                        </div>
+                    </div>
+                    <?php
+                    }
+
+                    if ($_SESSION['attachment_success']) {
+                    ?>
+                    <div id="liveAlertPlaceholder">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>Attachment Added</strong>
+                        </div>
+                    </div>
+                    <?php
+                    }
+
+                    if ($_SESSION['attachment_error']) {
+                    ?>
+                    <div id="liveAlertPlaceholder">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>Attachment Creation Failed</strong>
+                        </div>
+                    </div>
+                    <?php
+                    }
+
+                    if ($_SESSION['attachment_edit_success']) {
+                    ?>
+                    <div id="liveAlertPlaceholder">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>Attachment Updated</strong>
+                        </div>
+                    </div>
+                    <?php
+                    }
+
+                    if ($_SESSION['attachment_edit_error']) {
+                    ?>
+                    <div id="liveAlertPlaceholder">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>Attachment Updation Failed</strong>
                         </div>
                     </div>
                     <?php
@@ -263,8 +358,9 @@ if (isset($_POST['submit'])) {
                                                 placeholder="Lesson Name"
                                                 value="<?php echo _getSingleLesson($id, '_lessonname'); ?>" required>
                                             <div class="invalid-feedback">Please type correct Description</div>
-                                            <div id="wordCountDisplay" style="margin: 10px 5px; display: none;" >
-                                                <p style="color: red;" >Word Count <strong style="color: red;" id="wordCount" ></strong> </p>
+                                            <div id="wordCountDisplay" style="margin: 10px 5px; display: none;">
+                                                <p style="color: red;">Word Count <strong style="color: red;"
+                                                        id="wordCount"></strong> </p>
                                             </div>
                                         </div>
                                     </div>
@@ -282,11 +378,85 @@ if (isset($_POST['submit'])) {
                                     <div class="col-12" style="margin-top: 30px;">
                                         <button type="submit" name="submit" style="width: 200px;margin-left: -10px"
                                             class="btn btn-primary">Update Lesson</button>
-
+                                        <button type="button"
+                                            class="btn btn-primary btn-sm font-weight-medium auth-form-btn"
+                                            style="height:40px; float:right; " data-bs-toggle="modal"
+                                            data-bs-target="#exampleModal">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="white" style="width: 15px;"
+                                                viewBox="0 0 448 512">
+                                                <!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) -->
+                                                <path
+                                                    d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
+                                            </svg>&nbsp;&nbsp;Add Attachment
+                                        </button>
                                     </div>
 
                                 </form>
                             </div>
+
+
+                            <div class="card-body" style="margin-top: 30px ;">
+                                <h4 class="card-title">Manage Attachments </h4>
+                                <p class="card-description">
+                                    From here, you'll see a list of all the categories on your site. You can edit or
+                                    delete them from here. You can also change the order of your categories by dragging
+                                    and dropping them into the order you
+                                </p>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="table-responsive">
+                                            <table id="example" class="display expandable-table" style="width:100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Id</th>
+                                                        <th>Lessom Name</th>
+                                                        <th>Attachment URL</th>
+                                                        <th>Created at</th>
+                                                        <th>Updated at</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody style="text-align: left;margin-left: 30px">
+                                                    <?php
+                                                    _getAttachments($id, $start_from, $record_per_page);
+                                                    ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <nav aria-label="Page navigation example" style="margin-top: 10px;">
+                                    <ul class="pagination">
+                                        <?php
+                                        $query = mysqli_query($conn, "SELECT * FROM `tblattachements`");
+                                        $total_records = mysqli_num_rows($query);
+                                        $total_pages = ceil($total_records / $record_per_page);
+                                        $start_loop = $page;
+                                        $difference = $total_pages - $page;
+                                        if ($difference <= 4) {
+                                            $start_loop = $total_pages - 4;
+                                        }
+                                        $end_loop = $start_loop + 3;
+                                        if ($page > 1) {
+                                            echo "<li class='page-item'>
+                        <a href='edit-lesson?id=$id&page=" . ($page - 1) . "' class='page-link'>Previous</a>
+                      </li>";
+                                        }
+                                        if ($total_records > 5) {
+                                            for ($i = 1; $i <= $total_pages; $i++) {
+                                                echo "
+                          <li class='page-item'><a class='page-link' href='edit-lesson?id=$id&page=" . $i . "'>$i</a></li>";
+                                            }
+                                        }
+                                        if ($page <= $end_loop) {
+                                            echo "<li class='page-item'>
+                        <a class='page-link' href='edit-lesson?id=$id&page=" . ($page + 1) . "'>Next</a>
+                      </li>";
+                                        } ?>
+                                    </ul>
+                                </nav>
+                            </div>
+
                         </div>
                     </div>
                     <!-- content-wrapper ends -->
@@ -300,7 +470,75 @@ if (isset($_POST['submit'])) {
         </div>
         <div class="container"></div>
 
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <form action="" method="post" enctype="multipart/form-data">
+                    <div class="modal-content" style="padding: 10px;">
+                        <div class="modal-header" style="padding: 0px;margin-bottom: 20px;padding-bottom:10px">
+                            <h4 class="modal-title fs-5" id="exampleModalLabel">Add Attachment</h4>
+                            <button type="button" class="btn-close" style="border: none;;background-color:white"
+                                data-bs-dismiss="modal" aria-label="Close"><svg style="width: 15px;"
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512">
+                                    <!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) -->
+                                    <path
+                                        d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z" />
+                                </svg></button>
+                        </div>
+                        <div class="modal-body" style="padding: 0px;">
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <input type="text" name="attachmenturl" id="attachmenturl"
+                                        placeholder="Attachment URL" class="form-control">
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="modal-footer" style="padding: 0px;margin-top: 20px;padding-top:10px">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" name="addAttachment" class="btn btn-primary">Add</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="editAttachment" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" id="editAttachmentBody">
+
+            </div>
+        </div>
+
+
+
         <script>
+
+            const callEditAttachment = (lessonid, attachmentid) => {
+
+
+                $.ajax({
+                    type: "POST",
+                    url: `editAttachment.php`,
+                    data: {
+                        "edit": true,
+                        "lessonid": lessonid,
+                        "attachmentid": attachmentid,
+                    },
+                    success: function (data) {
+                        $(`#editAttachmentBody`).html(data);
+                        $(`#editAttachment`).modal("show");
+                    }
+                });
+
+            }
+
             let lessontype = document.getElementById('lessontype');
             let lessonurl = document.getElementById('lessonurl');
             let lessonfile = document.getElementById('lessonfile');
@@ -341,11 +579,11 @@ if (isset($_POST['submit'])) {
 
             }
 
-            
+
             let lessonname = document.getElementById('lessonname');
-            lessonname.addEventListener('input',(ele)=>{
+            lessonname.addEventListener('input', (ele) => {
                 let value = ele.target.value;
-                if(value.length > 0){
+                if (value.length > 0) {
 
                     let wordCountDisplay = document.getElementById('wordCountDisplay');
                     let wordCount = document.getElementById('wordCount');

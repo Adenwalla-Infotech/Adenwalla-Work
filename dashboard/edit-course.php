@@ -74,9 +74,8 @@ if (isset($_POST['submit'])) {
             $thumbnailimg = md5($thumbnail) . $extension;
             move_uploaded_file($_FILES["thumbnail"]["tmp_name"], "../uploads/coursethumbnail/" . $thumbnailimg);
         }
-    }
-    else{
-        $thumbnailimg = _getSingleCourse($id,'_thumbnail');
+    } else {
+        $thumbnailimg = _getSingleCourse($id, '_thumbnail');
     }
 
     if ($_FILES["banner"]["name"] != '') {
@@ -89,9 +88,8 @@ if (isset($_POST['submit'])) {
             $bannerimg = md5($banner) . $extension;
             move_uploaded_file($_FILES["banner"]["tmp_name"], "../uploads/coursebanner/" . $bannerimg);
         }
-    }
-    else{
-        $bannerimg = _getSingleCourse($id,'_banner');
+    } else {
+        $bannerimg = _getSingleCourse($id, '_banner');
     }
 
     if (isset($_POST['isactive'])) {
@@ -106,7 +104,7 @@ if (isset($_POST['submit'])) {
         $enrollstatus = false;
     }
 
-    _updateCourse($id, $coursename, $courseDesc, $whatlearn, $requirements,$eligibitycriteria, $capacity, $enrollstatus, $thumbnailimg, $bannerimg, $pricing, $isactive, $teacheremailid, $categoryid, $subcategoryid, $coursetype, $coursechannel, $courselevel, $evaluationlink, $startdate, $enddate ,$discountprice);
+    _updateCourse($id, $coursename, $courseDesc, $whatlearn, $requirements, $eligibitycriteria, $capacity, $enrollstatus, $thumbnailimg, $bannerimg, $pricing, $isactive, $teacheremailid, $categoryid, $subcategoryid, $coursetype, $coursechannel, $courselevel, $evaluationlink, $startdate, $enddate, $discountprice);
 }
 
 $record_per_page = 5;
@@ -155,7 +153,7 @@ if (isset($_POST['editSlide'])) {
     $slideid = $_POST['slideid'];
 
     $caption = $_POST['caption'];
-  
+
     if ($_FILES["banner"]["name"] != '') {
         $banner = $_FILES["banner"]["name"];
         $extension = substr($banner, strlen($banner) - 4, strlen($banner));
@@ -167,15 +165,12 @@ if (isset($_POST['editSlide'])) {
             $_slideurl = md5($banner) . $extension;
             move_uploaded_file($_FILES["banner"]["tmp_name"], "../uploads/banner/" . $_slideurl);
         }
+    } else {
+        $_slideurl = _getSingleSlide($slideid, $courseid, '_slideurl');
     }
-    else {
-        $_slideurl = _getSingleSlide($slideid , $courseid , '_slideurl');
-    }
 
 
-
-
-    _updateSlide($slideid, $courseid, $_slideurl , $caption);
+    _updateSlide($slideid, $courseid, $_slideurl, $caption);
 
 }
 
@@ -199,9 +194,9 @@ if (isset($_POST['editSlide'])) {
     <!-- Plugin css for this page -->
     <script src="../assets/plugins/tinymce/js/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
     <script>
-    tinymce.init({
-        selector: '#mytextarea'
-    });
+        tinymce.init({
+            selector: '#mytextarea'
+        });
     </script>
     <!-- End plugin css for this page -->
     <!-- inject:css -->
@@ -318,9 +313,9 @@ if (isset($_POST['editSlide'])) {
                                             <label for="teacheremailid" class="form-label">Teacher Email</label>
                                             <select id="teacheremailid" name="teacheremailid"
                                                 class="form-control select2" required>
-                                                <?php 
-                                                        $teacherid = _getSingleCourse($id, '_teacheremailid');
-                                                        _getTeachers($teacherid);
+                                                <?php
+                                                $teacherid = _getSingleCourse($id, '_teacheremailid');
+                                                _getTeachers($teacherid);
                                                 ?>
                                             </select>
                                         </div>
@@ -377,32 +372,32 @@ if (isset($_POST['editSlide'])) {
                                             <label for="courselevel" class="form-label">Course Level</label>
                                             <select name="courselevel" id="courselevel" class="form-control  " required>
                                                 <?php
-                                                
-                                                    $level =  _getSingleCourse($id, '_courselevel') ;
 
-                                                    if($level=='Beginner'){
-                                                        ?>
-                                                            <option selected value="Beginner">Beginner</option>
-                                                            <option value="Intermediate">Intermediate</option>
-                                                            <option value="Advanced">Advanced</option>
-                                                        <?php
-                                                    }
-                                                    if($level=='Intermediate'){
-                                                        ?>
-                                                            <option value="Beginner">Beginner</option>
-                                                            <option selected value="Intermediate">Intermediate</option>
-                                                            <option value="Advanced">Advanced</option>
-                                                        <?php
-                                                    }
-                                                    if($level=='Advanced'){
-                                                        ?>
-                                                            <option value="Beginner">Beginner</option>
-                                                            <option value="Intermediate">Intermediate</option>
-                                                            <option selected value="Advanced">Advanced</option>
-                                                        <?php
-                                                    }
+                                                $level = _getSingleCourse($id, '_courselevel');
 
+                                                if ($level == 'Beginner') {
                                                 ?>
+                                                <option selected value="Beginner">Beginner</option>
+                                                <option value="Intermediate">Intermediate</option>
+                                                <option value="Advanced">Advanced</option>
+                                                <?php
+                                                }
+                                                if ($level == 'Intermediate') {
+                                                        ?>
+                                                <option value="Beginner">Beginner</option>
+                                                <option selected value="Intermediate">Intermediate</option>
+                                                <option value="Advanced">Advanced</option>
+                                                <?php
+                                                }
+                                                if ($level == 'Advanced') {
+                                                        ?>
+                                                <option value="Beginner">Beginner</option>
+                                                <option value="Intermediate">Intermediate</option>
+                                                <option selected value="Advanced">Advanced</option>
+                                                <?php
+                                                }
+
+                                                        ?>
 
                                             </select>
                                         </div>
@@ -442,10 +437,11 @@ if (isset($_POST['editSlide'])) {
 
                                         <div class="col-lg-6">
                                             <label for="discountprice" class="form-label">Discount Price</label>
-                                            <input type="text" class="form-control" name="discountprice" id="discountprice"
-                                            placeholder="Discount Price"
-                                            value="<?php echo _getSingleCourse($id, '_discountprice') ?>" required>
-                                            <div class="invalid-feedback">Please type correct course discount price</div>
+                                            <input type="text" class="form-control" name="discountprice"
+                                                id="discountprice" placeholder="Discount Price"
+                                                value="<?php echo _getSingleCourse($id, '_discountprice') ?>" required>
+                                            <div class="invalid-feedback">Please type correct course discount price
+                                            </div>
                                         </div>
                                     </div>
 
@@ -537,8 +533,9 @@ if (isset($_POST['editSlide'])) {
                                             <input class="form-control" name="coursename" type="text" id="coursename"
                                                 value="<?php echo _getSingleCourse($id, '_coursename') ?>" required>
                                             <div class="invalid-feedback">Please type correct course name</div>
-                                            <div id="wordCountDisplay" style="margin: 10px 5px; display: none;" >
-                                                <p style="color: red;" >Word Count <strong style="color: red;" id="wordCount" ></strong> </p>
+                                            <div id="wordCountDisplay" style="margin: 10px 5px; display: none;">
+                                                <p style="color: red;">Word Count <strong style="color: red;"
+                                                        id="wordCount"></strong> </p>
                                             </div>
                                         </div>
                                     </div>
@@ -617,7 +614,7 @@ if (isset($_POST['editSlide'])) {
                                                 </thead>
                                                 <tbody style="text-align: left;margin-left: 30px">
                                                     <?php
-                                                    _getSlides($id,$start_from, $record_per_page);
+                                                    _getSlides($id, $start_from, $record_per_page);
                                                     ?>
                                                 </tbody>
                                             </table>
@@ -641,9 +638,12 @@ if (isset($_POST['editSlide'])) {
                         <a href='edit-course?id=$id&page=" . ($page - 1) . "' class='page-link'>Previous</a>
                       </li>";
                                         }
-                                        for ($i = 1; $i <= $total_pages; $i++) {
-                                            echo "
+                                        if ($total_records > 5) {
+
+                                            for ($i = 1; $i <= $total_pages; $i++) {
+                                                echo "
                       <li class='page-item'><a class='page-link' href='edit-course?id=$id&page=" . $i . "'>$i</a></li>";
+                                            }
                                         }
                                         if ($page <= $end_loop) {
                                             echo "<li class='page-item'>
@@ -727,40 +727,40 @@ if (isset($_POST['editSlide'])) {
 
 
         <script>
-        const getSubCategory = (val) => {
-            $.ajax({
-                type: "POST",
-                url: "getSubCategory.php",
-                data: 'catid=' + val,
-                success: function(data) {
-                    $(`#subcategoryId`).html(data);
-                }
-            });
-        }
+            const getSubCategory = (val) => {
+                $.ajax({
+                    type: "POST",
+                    url: "getSubCategory.php",
+                    data: 'catid=' + val,
+                    success: function (data) {
+                        $(`#subcategoryId`).html(data);
+                    }
+                });
+            }
 
-        const callEditSlide = (courseid, slideid) => {
+            const callEditSlide = (courseid, slideid) => {
 
 
-            $.ajax({
-                type: "POST",
-                url: `editslidebanner.php`,
-                data: {
-                    "edit": true,
-                    "courseid": courseid,
-                    "slideid": slideid,
-                },
-                success: function(data) {
-                    $(`#editBannerBody`).html(data);
-                    $(`#editBanner`).modal("show");
-                }
-            });
+                $.ajax({
+                    type: "POST",
+                    url: `editslidebanner.php`,
+                    data: {
+                        "edit": true,
+                        "courseid": courseid,
+                        "slideid": slideid,
+                    },
+                    success: function (data) {
+                        $(`#editBannerBody`).html(data);
+                        $(`#editBanner`).modal("show");
+                    }
+                });
 
-        }
+            }
 
-        let courseTitle = document.getElementById('coursename');
-            courseTitle.addEventListener('input',(ele)=>{
+            let courseTitle = document.getElementById('coursename');
+            courseTitle.addEventListener('input', (ele) => {
                 let value = ele.target.value;
-                if(value.length > 0){
+                if (value.length > 0) {
 
                     let wordCountDisplay = document.getElementById('wordCountDisplay');
                     let wordCount = document.getElementById('wordCount');
@@ -780,7 +780,7 @@ if (isset($_POST['editSlide'])) {
 <!-- Plugin js for this page -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous">
-</script>
+    </script>
 <!-- End plugin js for this page -->
 <!-- inject:js -->
 <script src="../assets/js/off-canvas.js"></script>
