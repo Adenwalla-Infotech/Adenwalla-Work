@@ -81,6 +81,7 @@ if (isset($_POST['update'])) {
     <style>
         .img-account-profile {
             height: 10rem;
+            width: 10rem;
         }
 
         .rounded-circle {

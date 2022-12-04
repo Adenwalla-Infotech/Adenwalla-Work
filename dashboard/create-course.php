@@ -185,7 +185,7 @@ if (isset($_POST['submit'])) {
                                             <label for="teacheremailid" class="form-label">Teacher Email</label>
                                             <select id="teacheremailid" name="teacheremailid"
                                                 class="form-control select2" required>
-                                                <option>Email</option>
+                                                <option>Select Teacher</option>
                                                 <?php _getTeachers() ?>
                                             </select>
                                         </div>

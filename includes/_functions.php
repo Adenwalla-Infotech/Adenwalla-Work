@@ -1359,8 +1359,6 @@ function _gettickets($ticketid = '', $status = '',$createdAt='', $limit = '', $s
             $sql = "SELECT * FROM `tbltickets` WHERE `_useremail` = '$user' ORDER BY `CreationDate` DESC LIMIT $startfrom, $limit";
         }
     }
-
-
     $query = mysqli_query($conn, $sql);
     if ($query) {
         foreach ($query as $data) { ?>
@@ -1391,6 +1389,7 @@ function _gettickets($ticketid = '', $status = '',$createdAt='', $limit = '', $s
                 </td>
             <?php } ?>
             </tr>
+            <hr>
         <?php }
     }
 }
@@ -3159,16 +3158,9 @@ function _deleteInvoiceItems($invoiceno, $id)
 // View Transcation
 function _viewTranscation($useremail, $startfrom = '', $limit = '')
 {
-
-
     require('_config.php');
-
-
     $sql = "SELECT * FROM `tblpayment` where `_useremail`='$useremail' AND `_status` != 'pending' ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
-
-
     $query = mysqli_query($conn, $sql);
-
     if ($query) {
         foreach ($query as $data) {
         ?>
@@ -3187,9 +3179,9 @@ function _viewTranscation($useremail, $startfrom = '', $limit = '')
             } else {
                 echo "No Coupon Code Applied";
             }
-
                     ?>
                 </td>
+                <td><?php echo $data['_status']; ?></td>
                 <td>
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
                 </td>
