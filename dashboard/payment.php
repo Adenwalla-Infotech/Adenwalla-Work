@@ -50,7 +50,8 @@ if(!isset($applydiscount)){
 if (isset($_POST['pay'])) {
     if(isset($_POST['coupon'])){
         $couponcode = $_POST['coupon'];
-        $applydiscount = _validatecoupon($getamount,$_POST['coupon'],$currency);
+        $_SESSION['couponid'] = _coupon($getamount,$couponcode,$currency);
+        $applydiscount = _validatecoupon($getamount,$_POST['coupon'],$currency,$product);
     }else{
         $showcoupon = false;
         $couponcode = 'Membership';

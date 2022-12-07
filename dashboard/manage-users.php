@@ -55,7 +55,9 @@ $start_from = ($page - 1) * $record_per_page;
   <!-- endinject -->
   <link rel="shortcut icon" href="../assets/images/favicon.png" />
 </head>
-
+<style>
+  .table:nth-of-type(0) { display:none; }
+</style>
 <body>
   <div class="container-scroller">
     <!-- partial -->
@@ -115,10 +117,9 @@ $start_from = ($page - 1) * $record_per_page;
                             <th>Created at</th>
                             <th>Updated at</th>
                             <th>Action</th>
-                            <th></th>
                           </tr>
                         </thead>
-                        <tbody style="text-align: left;margin-left: 30px">
+                        <tbody class="table-group-divider" style="text-align: left;margin-left: 30px">
                           <?php
                           if (isset($_POST['search'])) {
 

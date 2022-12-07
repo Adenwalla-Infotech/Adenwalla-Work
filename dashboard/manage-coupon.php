@@ -36,11 +36,12 @@ if (isset($_POST['submit'])) {
   $type = $_POST['type'];
   $amount = $_POST['amount'];
   $condition = $_POST['condition'];
+  $couponprod = $_POST['couponprod'];
   $conamount = $_POST['conamount'];
   $validity = $_POST['usage'];
   $currency = $_POST['currency'];
 
-  _createcoupon($name, $type, $amount, $condition, $conamount, $validity, $currency);
+  _createcoupon($name, $type, $amount, $condition, $conamount, $validity, $currency,$couponprod);
 }
 
 ?>
@@ -393,6 +394,15 @@ if (isset($_POST['submit'])) {
 
                 <option value="VND">Vietnam Dong – VND</option>
                 <option value="ZMK">Zambia Kwacha – ZMK</option>
+              </select>
+            </div>
+            <div class="col-lg-4">
+              <label for="inputEmail4">Coupon Service</label>
+              <select name="couponprod" class="form-control">
+                <option>Select Service</option>
+                <option value="ecommerce">Ecommerce</option>
+                <option value="lms">LMS</option>
+                <option value="membership">Membership</option>
               </select>
             </div>
           </div>

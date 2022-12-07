@@ -95,17 +95,13 @@ $start_from = ($page - 1) * $record_per_page;
                       <table id="example" class="display table expandable-table" style="width:100%">
                         <thead>
                           <tr>
-
-                            <th>Id</th>
-
                             <th>Coupon Name</th>
                             <th>Coupon Amount</th>
+                            <th>Currency</th>
                             <th>User Email</th>
-
+                            <th>Status</th>
                             <th>Created at</th>
                             <th>Updated at</th>
-                            <th>Action</th>
-                            <th></th>
                           </tr>
                         </thead>
                         <tbody style="text-align: left;margin-left: 30px">

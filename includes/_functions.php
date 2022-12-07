@@ -466,6 +466,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_couponamount` varchar(255) NULL,
                 `_couponcurrency` varchar(255) NULL,
                 `_couponcondition` varchar(255) NULL,
+                `_couponprod` varchar(255) NULL,
                 `_conamount` varchar(255) NULL,
                 `_maxusage` varchar(255) NOT NULL,
                 `_totaluse` varchar(255) NOT NULL,
@@ -477,11 +478,12 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
                 `_couponname` varchar(255) NOT NULL,
                 `_couponamount` varchar(255) NULL,
+                `_couponcurrency` varchar(255) NULL,
+                `_couponstatus` varchar(255) NULL,
                 `_useremail` varchar(255) NOT NULL,
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             )  ENGINE=InnoDB DEFAULT CHARSET=utf8;";
-
 
             $membership_table = "CREATE TABLE IF NOT EXISTS `tblmembership` (
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -2239,11 +2241,11 @@ function _gettotal($sub, $currency, $discount)
 
 // Coupon Functions 
 
-function _createcoupon($name, $type, $amount, $condition, $conamount, $validity, $currency)
+function _createcoupon($name, $type, $amount, $condition, $conamount, $validity, $currency, $couponprod)
 {
     require('_config.php');
     require('_alert.php');
-    $sql = "INSERT INTO `tblcoupon`(`_couponname`, `_coupontype`, `_couponamount`, `_couponcurrency`,`_couponcondition`, `_conamount`, `_maxusage`, `_totaluse`) VALUES ('$name','$type','$amount', '$currency','$condition','$conamount','$validity',0)";
+    $sql = "INSERT INTO `tblcoupon`(`_couponname`, `_coupontype`, `_couponamount`, `_couponcurrency`,`_couponcondition`, `_couponprod`, `_conamount`, `_maxusage`, `_totaluse`) VALUES ('$name','$type','$amount', '$currency','$condition', '$couponprod','$conamount','$validity',0)";
     $query = mysqli_query($conn, $sql);
     if ($query) {
         $alert = new PHPAlert();
@@ -2298,7 +2300,7 @@ function _deletecoupon($id)
     }
 }
 
-function _validatecoupon($amount, $coupon, $currency)
+function _validatecoupon($amount, $coupon, $currency, $prod)
 {
     require('_config.php');
     require('_alert.php');
@@ -2314,53 +2316,57 @@ function _validatecoupon($amount, $coupon, $currency)
                 $vusage = $data['_totaluse'];
                 $vdiscount = $data['_couponamount'];
                 $coupontype = $data['_coupontype'];
-                $vcurrency = $data['_couponcurrency'];
+                $couponprod = $data['_couponprod'];
             }
             $vamount = _conversion($vamount, $currency);
-            if ($vusage < $vlimit) {
-                if ($vcondition == 'less') {
-                    if ($amount < $vamount) {
-                        if ($coupontype == 'Variable') {
-                            $discount = ($vdiscount / 100) * $amount;
-                            return $discount;
+            if($prod == $couponprod){
+                if ($vusage < $vlimit) {
+                    if ($vcondition == 'less') {
+                        if ($amount < $vamount) {
+                            if ($coupontype == 'Variable') {
+                                $discount = ($vdiscount / 100) * $amount;
+                                return $discount;
+                            }
+                            if ($coupontype == 'Fixed') {
+                                $discount = _conversion($vdiscount, $currency);
+                                return $discount;
+                            }
+                            if ($coupontype == 'Uncertain') {
+                                $numbers = range(0, $vdiscount);
+                                shuffle($numbers);
+                                $famount = array_slice($numbers, 0, 1);
+                                $discount = _conversion($famount[0], $currency);
+                                return $discount;
+                            }
+                        } else {
+                            return null;
                         }
-                        if ($coupontype == 'Fixed') {
-                            $discount = _conversion($vdiscount, $currency);
-                            return $discount;
-                        }
-                        if ($coupontype == 'Uncertain') {
-                            $numbers = range(0, $vdiscount);
-                            shuffle($numbers);
-                            $famount = array_slice($numbers, 0, 1);
-                            $discount = _conversion($famount[0], $currency);
-                            return $discount;
-                        }
-                    } else {
-                        return null;
                     }
-                }
-                if ($vcondition == 'more') {
-                    if ($amount >= $vamount) {
-                        if ($coupontype == 'Variable') {
-                            $discount = ($vdiscount / 100) * $amount;
-                            return $discount;
+                    if ($vcondition == 'more') {
+                        if ($amount >= $vamount) {
+                            if ($coupontype == 'Variable') {
+                                $discount = ($vdiscount / 100) * $amount;
+                                return $discount;
+                            }
+                            if ($coupontype == 'Fixed') {
+                                $discount = _conversion($vdiscount, $currency);
+                                return $discount;
+                            }
+                            if ($coupontype == 'Uncertain') {
+                                $numbers = range(30, $vdiscount);
+                                shuffle($numbers);
+                                $famount = array_slice($numbers, 0, 1);
+                                $discount = _conversion($famount[0], $currency);
+                                return $discount;
+                            }
+                        } else {
+                            return null;
                         }
-                        if ($coupontype == 'Fixed') {
-                            $discount = _conversion($vdiscount, $currency);
-                            return $discount;
-                        }
-                        if ($coupontype == 'Uncertain') {
-                            $numbers = range(30, $vdiscount);
-                            shuffle($numbers);
-                            $famount = array_slice($numbers, 0, 1);
-                            $discount = _conversion($famount[0], $currency);
-                            return $discount;
-                        }
-                    } else {
-                        return null;
                     }
+                } else {
+                    return null;
                 }
-            } else {
+            }else{
                 return null;
             }
         } else {
@@ -2369,6 +2375,35 @@ function _validatecoupon($amount, $coupon, $currency)
     }
 }
 
+function _coupon($amount,$coupon,$currency)
+{
+    require('_config.php');
+    $useremail = $_SESSION['userEmailId'];
+    $sql = "INSERT INTO `tblcoupontrans`(`_couponname`, `_couponamount`, `_couponcurrency`, `_couponstatus`, `_useremail`) VALUES ('$coupon','$amount','$currency','pending','$useremail')";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        return $conn->insert_id;
+    }
+}
+
+function _updatecoupon($id, $status)
+{
+    require('_config.php');
+    $sql = "UPDATE `tblcoupontrans` SET `_couponstatus`='$status' WHERE `_id` = $id";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        if($status == 'success'){
+            $sql = "SELECT * FROM `tblcoupontrans` WHERE `_id` = $id";
+            $query = mysqli_query($conn,$sql);
+            foreach($query as $data){
+                $couponname = $data['_couponname'];
+            }
+            $sql = "UPDATE `tblcoupon` SET `_totaluse`= _totaluse + 1 WHERE `_couponname` = '$couponname'";
+            echo $sql;
+            $query = mysqli_query($conn,$sql);
+        }        
+    }
+}
 
 // Membership Module
 
@@ -2690,10 +2725,11 @@ function _getCouponTranscation($couponname = '', $couponamount = '', $startfrom 
         foreach ($query as $data) {
                   ?>
             <tr>
-                <td><?php echo $data['_id']; ?></td>
                 <td><?php echo $data['_couponname']; ?></td>
                 <td><?php echo $data['_couponamount']; ?></td>
+                <td><?php echo $data['_couponcurrency']; ?></td>
                 <td><?php echo $data['_useremail']; ?></td>
+                <td><?php echo $data['_couponstatus']; ?></td>
                 <td>
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
                 </td>
@@ -2705,9 +2741,6 @@ function _getCouponTranscation($couponname = '', $couponamount = '', $startfrom 
                 echo date("M j, Y", strtotime($data['UpdationDate']));
             }
                     ?>
-                </td>
-                <td>
-                    <a href="edit-coupon-transcation?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
                 </td>
             </tr>
             <?php

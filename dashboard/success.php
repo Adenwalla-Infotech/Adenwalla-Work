@@ -3,7 +3,8 @@
     require('../includes/_functions.php');
     
     if(isset($_POST['payment'])){
-        $id = $_SESSION['transid'];
+        $tranid = $_SESSION['transid'];
+        $couponid = $_SESSION['couponid'];
         $userid = $_SESSION['userId'];
         if(isset($_POST['product'])&& isset($_POST['productid'])){
             $product = $_POST['product'];
@@ -11,9 +12,11 @@
             if($product == 'membership'){
                 _purchasememebership($userid,$productid);
             }   
-            _updatepayment($id,'success');
+            _updatepayment($tranid,'success');
+            _updatecoupon($couponid, 'success');
         }else{
-            _updatepayment($id,'success');
+            _updatepayment($tranid,'success');
+            _updatecoupon($couponid, 'success');
         }
     }else{
         echo "<script>";
