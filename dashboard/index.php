@@ -140,7 +140,7 @@ if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['is
             </div>
             <a href="manage-users" style="margin-left: 20px;margin-top:10px">Manage Users &nbsp;&nbsp;<svg fill="blue" style="width: 13px;margin-top:-3px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --><path d="M190.5 66.9l22.2-22.2c9.4-9.4 24.6-9.4 33.9 0L441 239c9.4 9.4 9.4 24.6 0 33.9L246.6 467.3c-9.4 9.4-24.6 9.4-33.9 0l-22.2-22.2c-9.5-9.5-9.3-25 .4-34.3L311.4 296H24c-13.3 0-24-10.7-24-24v-32c0-13.3 10.7-24 24-24h287.4L190.9 101.2c-9.8-9.3-10-24.8-.4-34.3z"/></svg></a>
           </div>
-          <div class="row" style="margin-top: 20px;">
+          <div class="row" style="margin-top: 20px;margin-bottom:50px">
             <div class="col-md-3">
               <div class="card-counter primary">
                 <!-- Generator: Adobe Illustrator 22.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
@@ -217,72 +217,6 @@ if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['is
               </div>
             </div>
             <a href="manage-tickets" style="margin-left: 20px;margin-top:10px">Manage Tickets&nbsp;&nbsp;<svg fill="blue" style="width: 13px;margin-top:-3px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --><path d="M190.5 66.9l22.2-22.2c9.4-9.4 24.6-9.4 33.9 0L441 239c9.4 9.4 9.4 24.6 0 33.9L246.6 467.3c-9.4 9.4-24.6 9.4-33.9 0l-22.2-22.2c-9.5-9.5-9.3-25 .4-34.3L311.4 296H24c-13.3 0-24-10.7-24-24v-32c0-13.3 10.7-24 24-24h287.4L190.9 101.2c-9.8-9.3-10-24.8-.4-34.3z"/></svg></a>
-          </div>	
-          <div class="row" style="margin-top: 20px; margin-bottom:50px">
-            <div class="col-md-3">
-              <div class="card-counter primary">
-                <svg fill="white" width="52" style="margin-left:10px" height="52" version="1.1" id="lni_lni-bookmark" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-                  y="0px" viewBox="0 0 64 64" style="enable-background:new 0 0 64 64;" xml:space="preserve">
-                <g>
-                  <path d="M16.2,62.8c-0.6,0-1.2-0.1-1.8-0.4c-1.6-0.7-2.6-2.3-2.6-4v-51c0-3.3,2.7-6.1,6.1-6.1h28.3c3.3,0,6.1,2.7,6.1,6.1v50.9
-                    c0,1.7-1,3.3-2.6,4c-1.6,0.7-3.4,0.4-4.7-0.7l-11.4-10c-0.9-0.6-2.1-0.6-3,0L19.1,61.6C18.3,62.4,17.2,62.8,16.2,62.8z M17.9,4.8
-                    c-1.4,0-2.6,1.1-2.6,2.6v51c0,0.5,0.4,0.7,0.5,0.8c0.2,0.1,0.6,0.2,1-0.1l11.6-10.2c2.2-1.7,5.2-1.7,7.4,0L36,49l11.2,9.9
-                    c0.4,0.3,0.8,0.2,1,0.1c0.2-0.1,0.5-0.3,0.5-0.8V7.3c0-1.4-1.1-2.6-2.6-2.6H17.9z"/>
-                </g>
-                </svg>
-                <span class="count-numbers"><?php echo _getdashtotal('tblcourse','_status','true'); ?></span>
-                <span class="count-name">Active Courses</span>
-              </div>
-            </div>
-
-            <div class="col-md-3">
-              <div class="card-counter danger">
-                <svg fill="white" width="52" style="margin-left:10px" height="52" version="1.1" id="lni_lni-bookmark" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-                  y="0px" viewBox="0 0 64 64" style="enable-background:new 0 0 64 64;" xml:space="preserve">
-                <g>
-                  <path d="M16.2,62.8c-0.6,0-1.2-0.1-1.8-0.4c-1.6-0.7-2.6-2.3-2.6-4v-51c0-3.3,2.7-6.1,6.1-6.1h28.3c3.3,0,6.1,2.7,6.1,6.1v50.9
-                    c0,1.7-1,3.3-2.6,4c-1.6,0.7-3.4,0.4-4.7-0.7l-11.4-10c-0.9-0.6-2.1-0.6-3,0L19.1,61.6C18.3,62.4,17.2,62.8,16.2,62.8z M17.9,4.8
-                    c-1.4,0-2.6,1.1-2.6,2.6v51c0,0.5,0.4,0.7,0.5,0.8c0.2,0.1,0.6,0.2,1-0.1l11.6-10.2c2.2-1.7,5.2-1.7,7.4,0L36,49l11.2,9.9
-                    c0.4,0.3,0.8,0.2,1,0.1c0.2-0.1,0.5-0.3,0.5-0.8V7.3c0-1.4-1.1-2.6-2.6-2.6H17.9z"/>
-                </g>
-                </svg>
-                <span class="count-numbers"><?php echo _getdashtotal('tblcourse','_status','false'); ?></span>
-                <span class="count-name">In-active Courses</span>
-              </div>
-            </div>
-
-            <div class="col-md-3">
-              <div class="card-counter success">
-                <svg fill="white" width="52" style="margin-left:10px" height="52" version="1.1" id="lni_lni-bookmark" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-                  y="0px" viewBox="0 0 64 64" style="enable-background:new 0 0 64 64;" xml:space="preserve">
-                <g>
-                  <path d="M16.2,62.8c-0.6,0-1.2-0.1-1.8-0.4c-1.6-0.7-2.6-2.3-2.6-4v-51c0-3.3,2.7-6.1,6.1-6.1h28.3c3.3,0,6.1,2.7,6.1,6.1v50.9
-                    c0,1.7-1,3.3-2.6,4c-1.6,0.7-3.4,0.4-4.7-0.7l-11.4-10c-0.9-0.6-2.1-0.6-3,0L19.1,61.6C18.3,62.4,17.2,62.8,16.2,62.8z M17.9,4.8
-                    c-1.4,0-2.6,1.1-2.6,2.6v51c0,0.5,0.4,0.7,0.5,0.8c0.2,0.1,0.6,0.2,1-0.1l11.6-10.2c2.2-1.7,5.2-1.7,7.4,0L36,49l11.2,9.9
-                    c0.4,0.3,0.8,0.2,1,0.1c0.2-0.1,0.5-0.3,0.5-0.8V7.3c0-1.4-1.1-2.6-2.6-2.6H17.9z"/>
-                </g>
-                </svg>
-                <span class="count-numbers"><?php echo _getdashtotal('tblcourse','_coursetype','Recorded'); ?></span>
-                <span class="count-name">Recorded Courses</span>
-              </div>
-            </div>
-
-            <div class="col-md-3">
-              <div class="card-counter info">
-                <svg fill="white" width="52" style="margin-left:10px" height="52" version="1.1" id="lni_lni-bookmark" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-                  y="0px" viewBox="0 0 64 64" style="enable-background:new 0 0 64 64;" xml:space="preserve">
-                <g>
-                  <path d="M16.2,62.8c-0.6,0-1.2-0.1-1.8-0.4c-1.6-0.7-2.6-2.3-2.6-4v-51c0-3.3,2.7-6.1,6.1-6.1h28.3c3.3,0,6.1,2.7,6.1,6.1v50.9
-                    c0,1.7-1,3.3-2.6,4c-1.6,0.7-3.4,0.4-4.7-0.7l-11.4-10c-0.9-0.6-2.1-0.6-3,0L19.1,61.6C18.3,62.4,17.2,62.8,16.2,62.8z M17.9,4.8
-                    c-1.4,0-2.6,1.1-2.6,2.6v51c0,0.5,0.4,0.7,0.5,0.8c0.2,0.1,0.6,0.2,1-0.1l11.6-10.2c2.2-1.7,5.2-1.7,7.4,0L36,49l11.2,9.9
-                    c0.4,0.3,0.8,0.2,1,0.1c0.2-0.1,0.5-0.3,0.5-0.8V7.3c0-1.4-1.1-2.6-2.6-2.6H17.9z"/>
-                </g>
-                </svg>
-                <span class="count-numbers"><?php echo _getdashtotal('tblcourse','_coursetype','Live'); ?></span>
-                <span class="count-name">Live Courses</span>
-              </div>
-            </div>
-            <a href="manage-course" style="margin-left: 20px;margin-top:10px">Manage Courses&nbsp;&nbsp;<svg fill="blue" style="width: 13px;margin-top:-3px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --><path d="M190.5 66.9l22.2-22.2c9.4-9.4 24.6-9.4 33.9 0L441 239c9.4 9.4 9.4 24.6 0 33.9L246.6 467.3c-9.4 9.4-24.6 9.4-33.9 0l-22.2-22.2c-9.5-9.5-9.3-25 .4-34.3L311.4 296H24c-13.3 0-24-10.7-24-24v-32c0-13.3 10.7-24 24-24h287.4L190.9 101.2c-9.8-9.3-10-24.8-.4-34.3z"/></svg></a>
           </div>
           <!-- content-wrapper ends -->
           <!-- partial:partials/_footer.html -->

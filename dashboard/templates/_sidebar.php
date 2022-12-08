@@ -7,17 +7,11 @@
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="memberships">
-        <i class="mdi mdi-wallet-membership menu-icon"></i>
-        <span class="menu-title">Memberships</span>
-      </a>
-    </li>
-    <!-- <li class="nav-item">
       <a class="nav-link" href="myinvoice">
         <i class="mdi mdi-cash-multiple menu-icon"></i>
         <span class="menu-title">My Invoice</span>
       </a>
-    </li> -->
+    </li>
     <li class="nav-item">
       <a class="nav-link" href="mytranscations">
         <!-- <i class="mdi mdi-wallet-membership menu-icon"></i> -->
@@ -171,14 +165,13 @@
           <ul class="nav flex-column sub-menu">
             <li class="nav-item"> <a class="nav-link" href="purchase-template">Purchase</a></li>
             <li class="nav-item"> <a class="nav-link" href="reminder-template">Reminder</a></li>
-            <li class="nav-item"> <a class="nav-link" href="lecture-template">Lecture</a></li>
             <li class="nav-item"> <a class="nav-link" href="signup-template">Signup</a></li>
             <li class="nav-item"> <a class="nav-link" href="cancel-template">Cancel</a></li>
             <li class="nav-item"> <a class="nav-link" href="payment-template">Payment</a></li>
           </ul>
         </div>
       </li>
-    <!-- <li class="nav-item">
+    <li class="nav-item">
         <a class="nav-link" data-toggle="collapse" href="#ui-invoice" aria-expanded="false" aria-controls="ui-basic">
           <i class="mdi mdi-cash-multiple menu-icon"></i>
           <span class="menu-title">Invoice</span>
@@ -190,33 +183,13 @@
             <li class="nav-item"> <a class="nav-link" href="manage-invoice">Manage Invoice</a></li>
           </ul>
         </div>
-      </li> -->
-    <li class="nav-item">
-        <a class="nav-link" data-toggle="collapse" href="#ui-course" aria-expanded="false" aria-controls="ui-basic">
-          <i class="mdi mdi-cash-multiple menu-icon"></i>
-          <span class="menu-title">All Courses</span>
-          <i class="menu-arrow"></i>
-        </a>
-        <div class="collapse" id="ui-course">
-          <ul class="nav flex-column sub-menu">
-            <li class="nav-item"> <a class="nav-link" href="create-course">Create Course</a></li>
-            <li class="nav-item"> <a class="nav-link" href="manage-course">Manage Course</a></li>
-          </ul>
-        </div>
-      </li>
-    <li class="nav-item">
-        <a class="nav-link" data-toggle="collapse" href="#ui-Lesson" aria-expanded="false" aria-controls="ui-basic">
-          <i class="mdi mdi-cash-multiple menu-icon"></i>
-          <span class="menu-title">Lesson Plan</span>
-          <i class="menu-arrow"></i>
-        </a>
-        <div class="collapse" id="ui-Lesson">
-          <ul class="nav flex-column sub-menu">
-            <li class="nav-item"> <a class="nav-link" href="add-lesson">Add Lesson Plan</a></li>
-            <li class="nav-item"> <a class="nav-link" href="manage-lesson">Manage Lesson Plan</a></li>
-          </ul>
-        </div>
       </li>
       <?php } ?>
+      <li class="nav-item">
+      <a class="nav-link" href="memberships">
+        <i class="mdi mdi-wallet-membership menu-icon"></i>
+        <span class="menu-title">All Memberships</span>
+      </a>
+    </li>
   </ul>
 </nav>

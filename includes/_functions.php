@@ -71,7 +71,7 @@ function _signup($userpassword, $useremail, $username, $userphone)
                 $alert = new PHPAlert();
                 $alert->warn("User Already Exists");
             } else {
-                $sql = "INSERT INTO `tblusers`(`_username`, `_useremail`, `_userphone`, `_usertype`, `_userstatus`, `_userpassword`, `_userotp`, `_userverify`) VALUES ('$username','$useremail', '$userphone','0', 'true', '$enc_password', '$userotp', 'false')";
+                $sql = "INSERT INTO `tblusers`(`_username`, `_useremail`, `_userphone`, `_usertype`, `_userstatus`, `_userwallet`, `_userpassword`, `_userotp`, `_userverify`) VALUES ('$username','$useremail', '$userphone','0', 'true', 0,'$enc_password', '$userotp', 'false')";
 
                 $query = mysqli_query($conn, $sql);
                 if ($query) {
@@ -126,7 +126,6 @@ function _logout()
 
 function _verifyotp($verifyotp)
 {
-    require('_alert.php');
     require('_config.php');
     $useremail = $_SESSION['userEmailId'];
     $sql = "SELECT * FROM `tblusers` WHERE `_useremail` = '$useremail'";
@@ -300,6 +299,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_userdp` varchar(50) NULL,
                 `_usertype` int(11) NULL,
                 `_userstatus` varchar(50) NULL,
+                `_userwallet` varchar(255) NULL,
                 `_userpassword` varchar(255) NULL,
                 `_userotp` int(100) NULL,
                 `_userverify` varchar(50) NULL,
@@ -502,7 +502,6 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
                 `_purchasetemplate` text NOT NULL,
                 `_remindertemplate` text NOT NULL,
-                `_lecturetemplate` text NOT NULL,
                 `_signuptemplate` text NOT NULL,
                 `_canceltemplate` text NOT NULL,
                 `_paymenttemplate` text NOT NULL,
@@ -528,82 +527,15 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
 
             $invoiceitems = "CREATE TABLE IF NOT EXISTS `tblinvoiceitems` (
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
-                `_invoiceno` varchar(55) NOT NULL,
-                `_productname` varchar(55) NOT NULL,
-                `_productquantity` varchar(55) NOT NULL, 
-                `_productamount` varchar(55) NOT NULL, 
+                `_invoiceno` varchar(255) NOT NULL,
+                `_productname` varchar(255) NOT NULL,
+                `_productquantity` varchar(255) NOT NULL, 
+                `_productamount` varchar(255) NOT NULL, 
                 `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             )  ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
-
-            $course = "CREATE TABLE IF NOT EXISTS `tblcourse` (
-                `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
-                `_coursename` text NOT NULL,
-                `_coursedescription` text NOT NULL,
-                `_whatlearn` text NOT NULL,
-                `_requirements` text NOT NULL,
-                `_eligibilitycriteria` text NOT NULL,
-                `_capacity` varchar(50) NOT NULL,
-                `_enrollstatus` varchar(50) NOT NULL,
-                `_thumbnail` varchar(100) NOT NULL,
-                `_banner` varchar(100) NOT NULL,
-                `_pricing` varchar(50) NOT NULL,
-                `_status` varchar(50) NOT NULL,
-                `_teacheremailid` varchar(50) NOT NULL,
-                `_categoryid` varchar(50) NOT NULL,
-                `_subcategoryid` varchar(50) NOT NULL,
-                `_coursetype` varchar(50) NOT NULL,
-                `_coursechannel` varchar(50) NOT NULL,
-                `_courselevel` varchar(50) NOT NULL,
-                `_evuluationlink` varchar(50) NOT NULL,
-                `_startdate` varchar(255)  NOT NULL,
-                `_enddate` varchar(255)  NOT NULL,
-                `_discountprice` varchar(50)  NOT NULL,
-                `Creation_at_Date` date NOT NULL DEFAULT current_timestamp(),
-                `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                `UpdationDate` datetime NULL ON UPDATE current_timestamp()
-            )  ENGINE=InnoDB DEFAULT CHARSET=utf8;";
-
-            $lessondb = "CREATE TABLE IF NOT EXISTS `tbllessons` (
-                `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
-                `_courseid` varchar(55) NOT NULL,
-                `_lessonname` text NOT NULL,
-                `_lessontype` varchar(55) NOT NULL,
-                `_lessonurl` varchar(55) NOT NULL,
-                `_recordedfilename` varchar(55) NOT NULL,
-                `_lessondescription` text NOT NULL,
-                `_status` varchar(55) NOT NULL,
-                `_availablity` varchar(55) NOT NULL,
-                `Creation_at_Date` date NOT NULL DEFAULT current_timestamp(),
-                `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                `UpdationDate` datetime NULL ON UPDATE current_timestamp()
-            )  ENGINE=InnoDB DEFAULT CHARSET=utf8;";
-
-            $slidesdb = "CREATE TABLE IF NOT EXISTS `tblslides` (
-                `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
-                `_courseid` varchar(55) NOT NULL,
-                `_slideurl` varchar(55) NOT NULL,
-                `_caption` varchar(55) NOT NULL,
-                `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                `UpdationDate` datetime NULL ON UPDATE current_timestamp()
-            )  ENGINE=InnoDB DEFAULT CHARSET=utf8;";
-
-
-
-            $attachmentsDB = "CREATE TABLE IF NOT EXISTS `tblattachements` (
-                `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
-                `_lessonid` varchar(55) NOT NULL,
-                `_attachementurl` varchar(55) NOT NULL,
-                `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                `UpdationDate` datetime NULL ON UPDATE current_timestamp()
-            )  ENGINE=InnoDB DEFAULT CHARSET=utf8;";
-
-
-
-
-
-            $tables = [$admin_table, $sms_config, $email_config, $site_config, $payment_config, $tickets_table, $ticket_comment, $contact_table, $category_table, $subcategory_table, $blog_table, $currency_table, $tax_table, $payment_trans, $coupon_table, $coupon_trans, $membership_table, $templates, $invoice, $invoiceitems, $course, $lessondb, $slidesdb,$attachmentsDB];
+            $tables = [$admin_table, $sms_config, $email_config, $site_config, $payment_config, $tickets_table, $ticket_comment, $contact_table, $category_table, $subcategory_table, $blog_table, $currency_table, $tax_table, $payment_trans, $coupon_table, $coupon_trans, $membership_table, $templates, $invoice, $invoiceitems];
 
             foreach ($tables as $k => $sql) {
                 $query = @$temp_conn->query($sql);
@@ -684,7 +616,7 @@ function _createuser($username, $useremail, $usertype, $userphone, $isactive, $i
                 $alert = new PHPAlert();
                 $alert->warn("User Already Exists");
             } else {
-                $sql = "INSERT INTO `tblusers`(`_username`, `_useremail`, `_userphone`, `_usertype`, `_userstatus`, `_userotp`, `_userverify`) VALUES ('$username','$useremail', '$userphone', '$usertype', '$isactive', '$userotp', '$isverified')";
+                $sql = "INSERT INTO `tblusers`(`_username`, `_useremail`, `_userphone`, `_usertype`, `_userstatus`, `_userwallet`,`_userotp`, `_userverify`) VALUES ('$username','$useremail', '$userphone', '$usertype', '$isactive', 0,'$userotp', '$isverified')";
 
                 $query = mysqli_query($conn, $sql);
                 if ($query) {
@@ -722,6 +654,8 @@ use PHPMailer\PHPMailer\Exception;
 function _notifyuser($useremail = '', $userphone = '', $sendmail = '', $message = '', $subject = '')
 {
     require('_config.php');
+    require('_alert.php');
+
     if ($userphone != '') {
         $sql = "SELECT * FROM `tblsmsconfig` WHERE `_supplierstatus` = 'true'";
         $query = mysqli_query($conn, $sql);
@@ -1066,13 +1000,13 @@ function _deleteuser($id)
     }
 }
 
-function _updateuser($username, $useremail, $usertype, $userphone, $isactive, $isverified, $_id)
+function _updateuser($username, $useremail, $usertype, $userphone, $isactive, $isverified, $_id, $userwallet)
 {
     require('_config.php');
     require('_alert.php');
 
     $sql = "UPDATE `tblusers` SET `_username`='$username' , `_useremail`='$useremail' , `_userphone`='$userphone' 
-    , `_usertype`='$usertype' , `_userstatus`='$isactive' , `_userverify`='$isverified' WHERE `_id` = $_id";
+    , `_usertype`='$usertype' , `_userstatus`='$isactive' , `_userwallet`='$userwallet', `_userverify`='$isverified' WHERE `_id` = $_id";
     $query = mysqli_query($conn, $sql);
     if ($query) {
         $alert = new PHPAlert();
@@ -2399,7 +2333,6 @@ function _updatecoupon($id, $status)
                 $couponname = $data['_couponname'];
             }
             $sql = "UPDATE `tblcoupon` SET `_totaluse`= _totaluse + 1 WHERE `_couponname` = '$couponname'";
-            echo $sql;
             $query = mysqli_query($conn,$sql);
         }        
     }
@@ -2788,6 +2721,9 @@ function _payment($amount, $currency, $coupon = '', $prod, $prodid)
     if ($prod == 'invoice') {
         $prodname = _getSingleInvoice($prodid, '_refno');
     }
+    if($prod == 'recharge'){
+        $prodname = 'recharge';
+    }
     require('_config.php');
     $useremail = $_SESSION['userEmailId'];
     $sql = "INSERT INTO `tblpayment`(`_useremail`, `_amount`, `_currency`, `_status`, `_producttitle`, `_productid`, `_producttype`, `_couponcode`) VALUES ('$useremail','$amount','$currency','pending','$prodname', '$prodid', '$prod', '$coupon')";
@@ -2843,7 +2779,16 @@ function _getproduct($id, $type)
             <?php }
         }
     }
-}
+    if ($type == 'recharge') { ?>
+                <li style="border:none;" class="list-group-item d-flex justify-content-between lh-condensed">
+                    <div>
+                        <h6 class="my-0">Payment for Recharge &nbsp;(Wallet Recharge)</h6>
+                        <small class="text-muted">Wallet Topup Payment</small>
+                    </div>
+                    <!-- <span class="text-muted">INR&nbsp;<?php echo $data['_price']; ?></span> -->
+                </li>
+        <?php }
+    }
 
 
 // Email Templates
@@ -2854,7 +2799,7 @@ function _updateEmailTemplate($templateName, $templateCode)
     require('_config.php');
 
     $emailtemp = $conn->real_escape_string($templateCode);
-    $sql = "UPDATE `tblemailtemplates` SET `$templateName`='" . $emailtemp . "' WHERE `_id` = 2 ";
+    $sql = "UPDATE `tblemailtemplates` SET `$templateName`='$emailtemp' WHERE `_id` = 1 ";
 
     $query = mysqli_query($conn, $sql);
     if ($query) {
@@ -2869,7 +2814,7 @@ function _updateEmailTemplate($templateName, $templateCode)
 function _getSingleEmailTemplate($templateName)
 {
     require('_config.php');
-    $sql = "SELECT * FROM `tblemailtemplates` WHERE `_id` = 2 ";
+    $sql = "SELECT * FROM `tblemailtemplates` WHERE `_id` = 1 ";
     $query = mysqli_query($conn, $sql);
     if ($query) {
         foreach ($query as $data) {
@@ -3152,11 +3097,11 @@ function _getInvoiceItems($invoiceno, $startfrom = '', $limit = '')
 
 
 
-function _getSingleInvoiceItem($invoiceno, $id, $param)
+function _getSingleInvoiceItem($id, $param)
 {
 
     require('_config.php');
-    $sql = "SELECT * FROM `tblinvoiceitems` WHERE `_invoiceno` = '$invoiceno' AND `_id`='$id' ";
+    $sql = "SELECT * FROM `tblinvoiceitems` WHERE `_id`='$id' ";
     $query = mysqli_query($conn, $sql);
     if ($query) {
         foreach ($query as $data) {
@@ -3197,6 +3142,29 @@ function _deleteInvoiceItems($invoiceno, $id)
     }
 }
 
+function _purchaseinvoice($userid, $id, $amount)
+{
+    require('_config.php');
+    $sql = "UPDATE `tblinvoice` SET `_paymentstatus`='Paid' WHERE `_id` = $id";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $sql = "SELECT * FROM `tblemailtemplates`";
+        $query = mysqli_query($conn, $sql);
+        foreach ($query as $data) {
+            $template = $data['_paymenttemplate'];
+        }
+        $variables = array();
+        $variables['name'] = _getsingleuser($userid, '_username');
+        $variables['price'] = $amount;
+        $variables['date'] = date('M j, Y');
+        $variables['companyname'] = _siteconfig('_sitetitle');
+        $variables['paymentid'] = $_SESSION['transid'];
+        $sendmail = _usetemplate($template, $variables);
+        $message = 'Thank you for your Payment with' . _siteconfig('_sitetitle') . '. We have mailed your details';
+        _notifyuser(_getsingleuser($userid, '_useremail'), _getsingleuser($userid, '_userphone'), $sendmail, $message, 'Payment Successfull');
+    }
+}
+
 
 // View Transcation
 function _viewTranscation($useremail, $startfrom = '', $limit = '')
@@ -3209,9 +3177,10 @@ function _viewTranscation($useremail, $startfrom = '', $limit = '')
         ?>
             <tr>
                 <td><?php echo $data['_id']; ?></td>
-                <td><?php echo $data['_producttitle']; ?></td>
+                <td style="text-transform: capitalize;"><?php echo $data['_producttitle']; ?></td>
+                <td><?php echo $data['_currency']; ?></td>
                 <td><?php echo $data['_amount']; ?></td>
-                <td><?php echo $data['_producttype']; ?></td>
+                <td style="text-transform: capitalize;"><?php echo $data['_producttype']; ?></td>
                 <td>
                     <?php
 
@@ -3224,7 +3193,7 @@ function _viewTranscation($useremail, $startfrom = '', $limit = '')
             }
                     ?>
                 </td>
-                <td><?php echo $data['_status']; ?></td>
+                <td style="text-transform: capitalize;"><?php echo $data['_status']; ?></td>
                 <td>
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
                 </td>
@@ -3234,479 +3203,10 @@ function _viewTranscation($useremail, $startfrom = '', $limit = '')
     }
 }
 
-// Course //
 
-function _createCourse($coursename, $courseDesc, $whatlearn, $requirements, $eligibitycriteria, $capacity, $enrollstatus, $thumbnail, $banner, $pricing, $status, $teacheremailid, $categoryid, $subcategoryid, $coursetype, $coursechannel, $courselevel, $evuluationlink, $startdate, $enddate, $discountprice)
-{
+// Get Clients
 
-
-    require('_config.php');
-
-    $sql = "INSERT INTO `tblcourse`(`_coursename`,`_coursedescription`,`_whatlearn`,`_requirements`,`_eligibilitycriteria`,`_capacity`,`_enrollstatus`,`_thumbnail`,`_banner`,`_pricing`,`_status`,`_teacheremailid`,`_categoryid`,`_subcategoryid`,`_coursetype`,`_coursechannel`,`_courselevel`,`_evuluationlink`,`_startdate`,`_enddate`,`_discountprice`) VALUES ('$coursename','$courseDesc','$whatlearn','$requirements','$eligibitycriteria','$capacity','$enrollstatus','$thumbnail','$banner','$pricing','$status','$teacheremailid','$categoryid','$subcategoryid','$coursetype','$coursechannel','$courselevel','$evuluationlink','$startdate','$enddate','$discountprice')";
-
-    $query = mysqli_query($conn, $sql);
-    if ($query) {
-        $_SESSION['course_success'] = true;
-        header("location:");
-    } else {
-        $_SESSION['course_error'] = false;
-        header("location:");
-    }
-}
-
-
-
-function _getSingleCourse($id, $param)
-{
-
-    require('_config.php');
-    $sql = "SELECT * FROM `tblcourse` WHERE `_id`='$id' ";
-    $query = mysqli_query($conn, $sql);
-    if ($query) {
-        foreach ($query as $data) {
-            return $data[$param];
-        }
-    }
-}
-
-
-function _getCourse($coursename = '', $teacheremailid = '', $createdat = '', $startfrom = '', $limit = '')
-{
-
-    require('_config.php');
-
-
-    if ($coursename && !$teacheremailid) {
-        $sql = "SELECT * FROM `tblcourse` where `_coursename` LIKE '%$coursename%' ";
-    }
-
-    else if (!$coursename && $teacheremailid) {
-        $sql = "SELECT * FROM `tblcourse` where `_teacheremailid` LIKE '%$teacheremailid%' ";
-    }
-
-    else if (!$teacheremailid && $createdat) {
-        $sql = "SELECT * FROM `tblcourse` where `Creation_at_Date`='$createdat' ";
-    }
-
-    else if (!$coursename && !$teacheremailid) {
-        $sql = "SELECT * FROM `tblcourse` ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
-    }
-
-
-
-
-    $query = mysqli_query($conn, $sql);
-
-    if ($query) {
-        foreach ($query as $data) {
-        ?>
-            <tr>
-                <td><?php echo $data['_id']; ?></td>
-                <td><?php echo $data['_coursename']; ?></td>
-                <td>
-                    <?php
-            $teacherid = $data['_teacheremailid'];
-            echo _getSingleUser($teacherid, '_useremail');
-                    ?>
-                </td>
-                <td><?php echo $data['_coursetype']; ?></td>
-                <td><?php echo $data['_status']; ?></td>
-                <td>
-                    <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
-                </td>
-                <td>
-                    <?php
-            if (strtotime($data['UpdationDate']) == '') {
-                echo "Not Updated Yet";
-            } else {
-                echo date("M j, Y", strtotime($data['UpdationDate']));
-            }
-                    ?>
-                </td>
-                <td>
-                    <a href="edit-course?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
-                    <a href='manage-course?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
-                </td>
-            </tr>
-        <?php
-        }
-    }
-}
-
-function _showCourses($_courseid = '')
-{
-
-    require('_config.php');
-
-
-    if ($_courseid != '') {
-
-        $sql = "SELECT * FROM `tblcourse`  ";
-
-        $query = mysqli_query($conn, $sql);
-        if ($query) {
-        ?>
-            <label for="courseid" class="form-label">Select Course</label>
-            <select style="height: 40px;" id="courseid" name="courseid" class="form-control form-control-lg"  required>
-
-
-                <?php
-            foreach ($query as $data) {
-
-                $currentId = $data['_id'];
-
-                if ($_courseid == $currentId) {
-                ?>
-                        <option value="<?php echo $data['_id']; ?>" selected> <?php echo $data['_coursename']; ?> </option>
-                    <?php
-                } else {
-                    ?>
-                        <option value="<?php echo $data['_id']; ?>"> <?php echo $data['_coursename']; ?> </option>
-                <?php
-                }
-            }
-                ?>
-
-            </select>
-            <div class="invalid-feedback">Please select proper course</div>
-        <?php
-
-
-        }
-    } else {
-        $sql = "SELECT * FROM `tblcourse`";
-        $query = mysqli_query($conn, $sql);
-        if ($query) { ?>
-            <label for="courseid" class="form-label">Select Course</label>
-            <select style="height: 46px;" id="courseid" name="courseid" class="form-control form-control-lg" required>
-                <option selected disabled value="">Course</option>
-                <?php
-            foreach ($query as $data) {
-                ?>
-                    <option value="<?php echo $data['_id']; ?>"> <?php echo $data['_coursename']; ?> </option>
-                <?php
-            }
-                ?>
-
-            </select>
-            <div class="invalid-feedback">Please select proper course</div>
-        <?php
-        }
-    }
-}
-
-
-function _updateCourse($_id, $coursename, $courseDesc, $whatlearn, $requirements, $eligibitycriteria, $capacity, $enrollstatus, $thumbnail, $banner, $pricing, $status, $teacheremailid, $categoryid, $subcategoryid, $coursetype, $coursechannel, $courselevel, $evuluationlink, $startdate, $enddate, $discountprice)
-{
-
-    require('_config.php');
-
-
-    $sql = "UPDATE `tblcourse` SET `_coursename`='$coursename' ,`_coursedescription`='$courseDesc' , `_whatlearn`='$whatlearn',`_requirements`='$requirements' ,`_eligibilitycriteria`='$eligibitycriteria',`_capacity`='$capacity' , `_enrollstatus`='$enrollstatus',`_thumbnail`='$thumbnail' ,`_banner`='$banner' , `_pricing`='$pricing',`_status`='$status' ,`_teacheremailid`='$teacheremailid' , `_categoryid`='$categoryid',`_subcategoryid`='$subcategoryid' , `_coursetype`='$coursetype' , `_coursechannel`='$coursechannel' , `_courselevel`='$courselevel' , `_evuluationlink`='$evuluationlink' , `_startdate`='$startdate' , `_enddate`='$enddate' , `_discountprice`='$discountprice' WHERE `_id` = '$_id' ";
-
-
-    $query = mysqli_query($conn, $sql);
-    if ($query) {
-        $_SESSION['course_success'] = true;
-        header("location:");
-    } else {
-        $_SESSION['course_error'] = false;
-        header("location:");
-    }
-}
-
-
-
-function _deleteCourse($id)
-{
-    require('_config.php');
-    require('_alert.php');
-
-    $sql = "DELETE FROM `tblcourse` WHERE `_id`='$id' ";
-    $query = mysqli_query($conn, $sql);
-
-    if ($query) {
-        $alert = new PHPAlert();
-        $alert->success("Course Delete");
-    } else {
-        $alert = new PHPAlert();
-        $alert->warn("Deletion Failed");
-    }
-}
-
-
-
-
-// Lessons //
-function _createLesson($_courseid, $_lessonname, $_lessontype, $_lessonurl, $_recordedfilename, $_lessondescription, $_status, $_availablity)
-{
-
-
-    require('_config.php');
-
-    $sql = "INSERT INTO `tbllessons`(`_courseid`,`_lessonname`,`_lessontype`,`_lessonurl`,`_recordedfilename`,`_lessondescription`,`_status`,`_availablity`) VALUES ('$_courseid','$_lessonname','$_lessontype','$_lessonurl','$_recordedfilename','$_lessondescription','$_status','$_availablity')";
-
-    $query = mysqli_query($conn, $sql);
-    if ($query) {
-        $_SESSION['course_success'] = true;
-        header("location:");
-    } else {
-        $_SESSION['course_error'] = false;
-        header("location:");
-    }
-}
-
-
-function _getSingleLesson($id, $param)
-{
-
-    require('_config.php');
-    $sql = "SELECT * FROM `tbllessons` WHERE `_id`='$id' ";
-    $query = mysqli_query($conn, $sql);
-    if ($query) {
-        foreach ($query as $data) {
-            return $data[$param];
-        }
-    }
-}
-
-
-
-function _getLessons($coursename = '', $lessonname = '', $createdAt = '', $startfrom = '', $limit = '')
-{
-
-    require('_config.php');
-
-
-    if ($coursename && !$lessonname) {
-        $sql = "SELECT * FROM `tbllessons` where `_courseid`='$coursename' ";
-    }
-
-    else if (!$createdAt && $lessonname) {
-        $sql = "SELECT * FROM `tbllessons` where `_lessonname` LIKE '%$lessonname%' ";
-    }
-
-    else if (!$lessonname && $createdAt) {
-        $sql = "SELECT * FROM `tbllessons` where `Creation_at_Date`='$createdAt' ";
-    }
-
-    if (!$coursename && !$lessonname && !$createdAt) {
-        $sql = "SELECT * FROM `tbllessons` ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
-    }
-
-
-
-
-    $query = mysqli_query($conn, $sql);
-
-    if ($query) {
-        foreach ($query as $data) {
-        ?>
-            <tr>
-                <td><?php echo $data['_id']; ?></td>
-
-                <td>
-                    <?php
-
-            $courseid = $data['_courseid'];
-            echo _getSingleCourse($courseid, '_coursename');
-
-                    ?>
-                </td>
-
-                <td><?php echo $data['_lessonname']; ?></td>
-                <td><?php echo $data['_status']; ?></td>
-                <td><?php echo $data['_lessontype']; ?></td>
-                <td><?php echo $data['_availablity']; ?></td>
-                <td>
-                    <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
-                </td>
-                <td>
-                    <?php
-            if (strtotime($data['UpdationDate']) == '') {
-                echo "Not Updated Yet";
-            } else {
-                echo date("M j, Y", strtotime($data['UpdationDate']));
-            }
-                    ?>
-                </td>
-                <td>
-                    <a href="edit-lesson?id=<?php echo $data['_id']; ?>" style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box"></a>
-                    <a href='manage-lesson?id=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
-                </td>
-            </tr>
-        <?php
-        }
-    }
-}
-
-function _updateLesson($_id, $_courseid, $_lessonname, $_lessontype, $_lessonurl, $_recordedfilename, $_lessondescription, $_status, $_availablity)
-{
-
-    require('_config.php');
-
-
-    $sql = "UPDATE `tbllessons` SET `_courseid`='$_courseid' ,`_lessonname`='$_lessonname' ,`_lessondescription`='$_lessondescription' , `_status`='$_status',`_availablity`='$_availablity',`_lessontype`='$_lessontype',`_lessonurl`='$_lessonurl',`_recordedfilename`='$_recordedfilename'  WHERE `_id` = '$_id' ";
-
-
-    $query = mysqli_query($conn, $sql);
-    if ($query) {
-        $_SESSION['course_success'] = true;
-        header("location:");
-    } else {
-        $_SESSION['course_error'] = false;
-        header("location:");
-    }
-}
-
-
-
-function _deleteLesson($id)
-{
-    require('_config.php');
-    require('_alert.php');
-
-    $sql = "DELETE FROM `tbllessons` WHERE `_id`='$id' ";
-    $query = mysqli_query($conn, $sql);
-
-    if ($query) {
-        $alert = new PHPAlert();
-        $alert->success("Lesson Delete");
-    } else {
-        $alert = new PHPAlert();
-        $alert->warn("Deletion Failed");
-    }
-}
-
-
-
-
-// Slides //
-function _createSlide($_courseid, $_slideurl, $_caption)
-{
-
-
-    require('_config.php');
-
-    $sql = "INSERT INTO `tblslides` (`_courseid`,`_slideurl`,`_caption`) VALUES ('$_courseid','$_slideurl','$_caption')";
-
-    $query = mysqli_query($conn, $sql);
-
-    if ($query) {
-        $_SESSION['slide_success'] = true;
-        header("location:");
-    } else {
-        $_SESSION['slide_error'] = false;
-        header("location:");
-    }
-}
-
-
-function _getSingleSlide($id, $courseid, $param)
-{
-
-    require('_config.php');
-    $sql = "SELECT * FROM `tblslides` WHERE `_id`='$id' ";
-    $query = mysqli_query($conn, $sql);
-    if ($query) {
-        foreach ($query as $data) {
-            return $data[$param];
-        }
-    }
-}
-
-
-
-function _getSlides($id, $startfrom = '', $limit = '')
-{
-
-    require('_config.php');
-
-
-    $sql = "SELECT * FROM `tblslides` where `_courseid`='$id' ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
-
-    $query = mysqli_query($conn, $sql);
-
-    if ($query) {
-        foreach ($query as $data) {
-        ?>
-            <tr>
-                <td><?php echo $data['_id']; ?></td>
-                
-                <td>
-                    <?php
-
-            $courseid = $data['_courseid'];
-            echo _getSingleCourse($courseid, '_coursename');
-
-                    ?>
-                </td>
-                
-                <td> 
-                    <a href="../uploads/banner/<?php echo $data['_slideurl']; ?>" target="_blank" class="mdi mdi-eye"></a>
-                </td>
-                <td>
-                    <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
-                </td>
-                <td>
-                    <?php
-            if (strtotime($data['UpdationDate']) == '') {
-                echo "Not Updated Yet";
-            } else {
-                echo date("M j, Y", strtotime($data['UpdationDate']));
-            }
-                    ?>
-                </td>
-                <td>
-                    <span style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box" onclick="callEditSlide(<?php echo $data['_courseid']; ?>,<?php echo $data['_id']; ?>)"></span>
-                    
-                    <a href='edit-course?id=<?php echo $data['_courseid']; ?>&slideid=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
-                </td>
-            </tr>
-        <?php
-        }
-    }
-}
-
-
-function _updateSlide($_id, $_courseid, $_slideurl, $_caption)
-{
-
-    require('_config.php');
-
-    $sql = "UPDATE `tblslides` SET `_slideurl`='$_slideurl' ,`_caption`='$_caption'   WHERE `_id` = '$_id' AND `_courseid`='$_courseid' ";
-    $query = mysqli_query($conn, $sql);
-
-
-    if ($query) {
-        $_SESSION['slide_update_success'] = true;
-        header("location:");
-    } else {
-        $_SESSION['slide_update_error'] = false;
-        header("location:");
-    }
-}
-
-
-
-function _deleteSlide($id, $_courseid)
-{
-    require('_config.php');
-
-
-    $sql = "DELETE FROM `tblslides` WHERE `_id`='$id' AND `_courseid`='$_courseid' ";
-    $query = mysqli_query($conn, $sql);
-
-    if ($query) {
-        $_SESSION['course_success'] = true;
-        header("location:edit-course?id=$_courseid");
-    }
-}
-
-
-// Get Teachers
-
-function _getTeachers($id = '')
+function _getClients($id = '')
 {
 
     include("../includes/_config.php");
@@ -3714,7 +3214,7 @@ function _getTeachers($id = '')
 
     if ($id != '') {
 
-        $query = mysqli_query($conn, "SELECT * FROM tblusers WHERE _usertype='1' ");
+        $query = mysqli_query($conn, "SELECT * FROM tblusers WHERE _usertype='0' ");
 
         while ($row = mysqli_fetch_array($query)) {
 
@@ -3733,7 +3233,7 @@ function _getTeachers($id = '')
         }
 
     } else {
-        $query = mysqli_query($conn, "SELECT * FROM tblusers WHERE _usertype='1' ");
+        $query = mysqli_query($conn, "SELECT * FROM tblusers WHERE _usertype='0' ");
 
         while ($row = mysqli_fetch_array($query)) {
                 ?>
@@ -3746,128 +3246,28 @@ function _getTeachers($id = '')
 
 }
 
-
-
-// Slides //
-function _createAttachment($_lessonid, $_attachementurl)
+// Recharge Functions 
+function _purchaserecharge($userid, $amount)
 {
-
     require('_config.php');
-
-
-    $sql = "INSERT INTO `tblattachements` (`_lessonid`,`_attachementurl`) VALUES ('$_lessonid','$_attachementurl')";
-
-    $query = mysqli_query($conn, $sql);
-
-    if ($query) {
-        $_SESSION['attachment_success'] = true;
-        header("location:");
-    } else {
-        $_SESSION['attachment_error'] = true;
-        header("location:");
-    }
-}
-
-
-function _getSingleAttachment($id,$param)
-{
-
-    require('_config.php');
-    $sql = "SELECT * FROM `tblattachements` WHERE `_id`='$id' ";
+    $sql = "UPDATE `tblusers` SET `_userwallet`=_userwallet + $amount WHERE `_id` = $userid";
     $query = mysqli_query($conn, $sql);
     if ($query) {
+        $sql = "SELECT * FROM `tblemailtemplates`";
+        $query = mysqli_query($conn, $sql);
         foreach ($query as $data) {
-            return $data[$param];
+            $template = $data['_paymenttemplate'];
         }
+        $variables = array();
+        $variables['name'] = _getsingleuser($userid, '_username');
+        $variables['price'] = $amount;
+        $variables['date'] = date('M j, Y');
+        $variables['companyname'] = _siteconfig('_sitetitle');
+        $variables['paymentid'] = $_SESSION['transid'];
+        $sendmail = _usetemplate($template, $variables);
+        $message = 'Thank you for your Payment with' . _siteconfig('_sitetitle') . '. We have mailed your details';
+        _notifyuser(_getsingleuser($userid, '_useremail'), _getsingleuser($userid, '_userphone'), $sendmail, $message, 'Payment Successfull');
     }
 }
-
-
-function _updateAttachment($_id, $_attachementurl)
-{
-
-    require('_config.php');
-
-
-    $sql = "UPDATE `tblattachements` SET `_attachementurl`='$_attachementurl'  WHERE `_id` = '$_id'  ";
-    $query = mysqli_query($conn, $sql);
-
-
-  
-    if ($query) {
-        $_SESSION['attachment_edit_success'] = true;
-        header("location:");
-    } else {
-        $_SESSION['attachment_edit_error'] = true;
-        header("location:");
-    }
-}
-
-
-function _deleteAttachment($id,$locationid)
-{
-    require('_config.php');
-
-
-    $sql = "DELETE FROM `tblattachements` WHERE `_id`='$id' ";
-    $query = mysqli_query($conn, $sql);
-
-    if ($query) {
-        header("location:edit-lesson?id=$locationid");
-    }
-}
-
-
-
-function _getAttachments($id, $startfrom = '', $limit = '')
-{
-
-    require('_config.php');
-
-
-    $sql = "SELECT * FROM `tblattachements` where `_lessonid`='$id' ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit ";
-
-    $query = mysqli_query($conn, $sql);
-
-    if ($query) {
-        foreach ($query as $data) {
-        ?>
-            <tr>
-                <td><?php echo $data['_id']; ?></td>
-                
-                <td>
-                    <?php
-
-            $lessonid = $data['_lessonid'];
-            echo _getSingleLesson($lessonid, '_lessonname');
-
-                    ?>
-                </td>
-
-                <td><?php echo $data['_attachementurl']; ?></td>
-                
-                <td>
-                    <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
-                </td>
-                <td>
-                    <?php
-            if (strtotime($data['UpdationDate']) == '') {
-                echo "Not Updated Yet";
-            } else {
-                echo date("M j, Y", strtotime($data['UpdationDate']));
-            }
-                    ?>
-                </td>
-                <td>
-                    <span style="font-size: 20px;cursor:pointer;color:green" class="mdi mdi-pencil-box" onclick="callEditAttachment(<?php echo $data['_lessonid']; ?>,<?php echo $data['_id']; ?>)"></span>
-                    
-                    <a href='edit-lesson?id=<?php echo $data['_lessonid']; ?>&attachmentid=<?php echo $data['_id']; ?>&del=true' class="mdi mdi-delete-forever" style="font-size: 20px;cursor:pointer; color:red"><a>
-                </td>
-            </tr>
-        <?php
-        }
-    }
-}
-
 
 ?>

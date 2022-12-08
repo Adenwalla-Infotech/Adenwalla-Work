@@ -135,7 +135,7 @@ $invoiceno = $_GET['invoiceno'];
                         ?>
                             <div class="text-95 text-secondary-d3">
                                 <div class="row mb-2 mb-sm-0 py-25">
-                                    <div class="d-none d-sm-block col-1"> <?php echo $index + 1 ?> </div>
+                                    <div class="d-none d-sm-block col-1"> <?php echo $index + 1 ?>) </div>
                                     <div class="col-9 col-sm-5"><?php echo $productName ?></div>
                                     <div class="d-none d-sm-block col-2"><?php echo $productQuantity ?></div>
                                     <div class="d-none d-sm-block col-2 text-95">INR&nbsp;<?php echo $productRate ?></div>
@@ -196,23 +196,23 @@ $invoiceno = $_GET['invoiceno'];
                                 </div>
                             </div>
                         </div>
+                        <?php if($status != 'paid'){ ?>
 
                         <hr />
 
                         <div style="margin-bottom: 50px;">
-
                             <div class="row g-3">
-                                <div class="col">
+                                <!-- <div class="col">
                                     <span class="text-secondary-d1 text-105">Thank you for your business</span>
 
-                                </div>
+                                </div> -->
 
                                 <div>
 
                                     <div class="col">
-                                        <label for="usertype" class="form-label">Select Currency</label>
+                                        <!-- <label for="usertype" class="form-label">Select Currency</label> -->
                                         <select onchange="setConversionCurrency(this.options[this.selectedIndex])" style="height: 46px;" id="usertype" name="usertype" class="form-control form-control-sm" id="exampleFormControlSelect2" required>
-                                            <option selected disabled value="">Currency</option>
+                                            <option selected disabled value="">Chose Payment Currency</option>
                                             <?php _getmarkupOnlyCurrency() ?>
                                         </select>
                                         <div class="invalid-feedback">Please select correct usertype</div>
@@ -226,6 +226,8 @@ $invoiceno = $_GET['invoiceno'];
                             </div>
 
                         </div>
+                        <?php } ?>
+
                     </div>
                 </div>
             </div>
@@ -405,7 +407,7 @@ $invoiceno = $_GET['invoiceno'];
 
             let currency = value.value;
 
-            payNow.setAttribute("href", `payment?amount=50&currency=${currency}&prod=invoice&id=<?php echo $invoiceno; ?>`)
+            payNow.setAttribute("href", `payment?amount=${total}&currency=${currency}&prod=invoice&id=<?php echo $invoiceno; ?>`)
 
 
 

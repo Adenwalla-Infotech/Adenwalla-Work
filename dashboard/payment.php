@@ -64,6 +64,7 @@ if (isset($_POST['pay'])) {
     $pincode = $_POST['pincode'];
     $country = $_POST['country'];
     $amount = _gettotal($getamount,$currency,$applydiscount);
+    $_SESSION['recamt'] = $amount;
     $_SESSION['paybtn'] = true;
     $_SESSION['transid'] = _payment($amount,$currency,$couponcode,$product,$productid);
 }

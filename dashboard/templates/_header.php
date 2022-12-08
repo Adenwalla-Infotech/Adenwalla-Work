@@ -24,13 +24,26 @@ $_userid =  $_SESSION['userId'];
         </ul> -->
     <ul class="navbar-nav navbar-nav-right">
       <li class="nav-item dropdown">
-
-        <!-- <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
-              <i class="icon-bell mx-0"></i>
-              <span class="count"></span>
-            </a> -->
-        <!-- <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
-              <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
+        <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
+              <i class="mdi mdi-wallet mx-0" style="color: #4B49AC;font-size: 25px"></i>&nbsp;
+              <span style="font-size: 17px;margin-right:20px;color:black;font-family:'Times New Roman', Times, serif"><?php echo _getsingleuser($_userid, '_userwallet'); ?></span>
+              <!-- <span class="count"></span> -->
+            </a> 
+        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
+          <form action="payment?&prod=recharge" method="get">
+            <div class="row">
+              <div class="col-8">
+                <input type="number" class="form-control" style="height:30px;width:90%;margin-left:8px" name="amount">
+              </div>
+              <input type="text" hidden value="recharge" name="prod">
+              <input type="text" hidden value="INR" name="currency">
+              <input type="text" hidden value="1" name="id">
+              <div class="col-4">
+                <button type="submit" style="margin-left: -25px;" class="btn btn-sm btn-primary">Add</button>
+              </div>
+            </div>
+          </form>
+              <!-- <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
               <a class="dropdown-item preview-item">
                 <div class="preview-thumbnail">
                   <div class="preview-icon bg-success">
@@ -69,8 +82,8 @@ $_userid =  $_SESSION['userId'];
                     2 days ago
                   </p>
                 </div>
-              </a>
-            </div> -->
+              </a> -->
+            </div>
       </li>
       <li class="nav-item nav-profile dropdown">
         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
@@ -87,11 +100,6 @@ $_userid =  $_SESSION['userId'];
           </a>
         </div>
       </li>
-      <!-- <li class="nav-item nav-settings d-none d-lg-flex">
-            <a class="nav-link" href="#">
-              <i class="icon-ellipsis"></i>
-            </a>
-          </li> -->
     </ul>
     <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
       <span class="icon-menu"></span>

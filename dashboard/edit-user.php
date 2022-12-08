@@ -24,7 +24,7 @@ if (isset($_POST['submit'])) {
     $useremail = $_POST['useremail'];
     $usertype = $_POST['usertype'];
     $userphone = $_POST['userphone'];
-
+    $wallet = $_POST['userwallet'];
     if (isset($_POST['notify'])) {
         $notify = $_POST['notify'];
     } else {
@@ -41,7 +41,7 @@ if (isset($_POST['submit'])) {
         $isverified = false;
     }
 
-    _updateuser($username, $useremail, $usertype, $userphone, $isactive, $isverified, $_id);
+    _updateuser($username, $useremail, $usertype, $userphone, $isactive, $isverified, $_id,$wallet);
 }
 
 ?>
@@ -127,6 +127,10 @@ if (isset($_POST['submit'])) {
                                         <div class="col">
                                             <label for="userlocation" class="form-label">IP Location</label>
                                             <input type="text" class="form-control" placeholder="IP Location" aria-label="user location" id="userlocation" name="userlocation">
+                                        </div>
+                                        <div class="col">
+                                            <label for="userlocation" class="form-label">User Wallet</label>
+                                            <input type="number" class="form-control" placeholder="Wallet Balance" aria-label="user location" value="<?php echo _getsingleuser($_id, '_userwallet'); ?>" id="userlocation" name="userwallet">
                                         </div>
 
                                         <!-- <div class="col">

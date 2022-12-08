@@ -1,11 +1,16 @@
 <?php 
 
-_renewalreminder(5);
-_removemembership();
+_renewalreminder(3);
+// _renewalreminder(2);
+// _renewalreminder(1);
+
+// _removemembership();
 
 function _removemembership(){
     include('../includes/_config.php');
+    date_default_timezone_set("Asia/Kolkata");
     $date = date('Y-m-d');
+    echo $date;
     $sql = "SELECT * FROM `tblusers` WHERE `_usermemsleft` = '$date'";
     $query = mysqli_query($conn,$sql);
     if($query){
@@ -27,6 +32,8 @@ function _removemembership(){
                     $variables['name'] = _getsingleuser($id, '_username');
                     $variables['email'] = _getsingleuser($id, '_useremail');
                     $variables['phone'] = _getsingleuser($id, '_userphone');
+                    $variables['companyname'] = _siteconfig('_sitetitle');
+                    $variables['date'] = date('M j, Y');
                     $sendmail = _usetemplate($template,$variables);
                     _notifyuser(_getsingleuser($id, '_useremail'),_getsingleuser($id, '_userphone'),$sendmail,'Your Subscription has Expired, Kindly Check you mail for more details','Your Subscription is Expired');
                 }
@@ -40,6 +47,7 @@ function _removemembership(){
 function _renewalreminder($time){
     include('../includes/_config.php');
     include('../includes/_functions.php');
+    date_default_timezone_set("Asia/Kolkata");
     $date = strtotime(date('Y-m-d'));
     $duration = date("Y-m-d", strtotime("+$time days", $date));
     $sql = "SELECT * FROM `tblusers` WHERE `_usermemsleft` = '$duration'";
@@ -66,8 +74,10 @@ function _renewalreminder($time){
                 $variables['name'] = $username;
                 $variables['email'] = $user;
                 $variables['time'] = $time;
+                $variables['companyname'] = _siteconfig('_sitetitle');
                 $sendmail = _usetemplate($template,$variables);
                 _notifyuser($user,'',$sendmail,'','Your Subscription is Expiring');
+                echo "sent";
             }
         }
     }else{

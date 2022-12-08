@@ -82,6 +82,7 @@ $start_from = ($page - 1) * $record_per_page;
                                                     <tr>
                                                         <th>Transcation Id</th>
                                                         <th>Product Name</th>
+                                                        <th>Currency</th>
                                                         <th>Product Amount</th>
                                                         <th>Product Type</th>
                                                         <th>Coupon</th>
@@ -115,18 +116,18 @@ $start_from = ($page - 1) * $record_per_page;
                                         $end_loop = $start_loop + 3;
                                         if ($page > 1) {
                                             echo "<li class='page-item'>
-                        <a href='category-manage?page=" . ($page - 1) . "' class='page-link'>Previous</a>
+                        <a href='mytranscations?page=" . ($page - 1) . "' class='page-link'>Previous</a>
                       </li>";
                                         }
                                         if ($total_records > 5) {
                                             for ($i = 1; $i <= $total_pages; $i++) {
                                                 echo "
-                      <li class='page-item'><a class='page-link' href='category-manage?page=" . $i . "'>$i</a></li>";
+                      <li class='page-item'><a class='page-link' href='mytranscations?page=" . $i . "'>$i</a></li>";
                                             }
                                         }
                                         if ($page <= $end_loop) {
                                             echo "<li class='page-item'>
-                        <a class='page-link' href='category-manage?page=" . ($page + 1) . "'>Next</a>
+                        <a class='page-link' href='mytranscations?page=" . ($page + 1) . "'>Next</a>
                       </li>";
                                         } ?>
                                     </ul>

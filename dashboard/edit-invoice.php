@@ -371,7 +371,7 @@ if (isset($_GET['del'])) {
                     <div class="row" style="margin-top: 20px;">
                         <div class="col-lg-6">
                             <label for="inputEmail4" class="form-label">Product Amount</label>
-                            <input type="text" class="form-control" name="_productamount" placeholder="Product Amount">
+                            <input type="number" class="form-control" name="_productamount" placeholder="Product Amount">
                         </div>
                     </div>
 

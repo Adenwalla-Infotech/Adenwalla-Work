@@ -254,7 +254,6 @@ if (isset($_POST['submit'])) {
                             <th>Status</th>
                             <th>Created at</th>
                             <th>Action</th>
-                            <th></th>
                           </tr>
                         </thead>
                         <tbody style="text-align: left;margin-left: 30px">

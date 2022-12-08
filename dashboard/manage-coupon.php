@@ -400,9 +400,8 @@ if (isset($_POST['submit'])) {
               <label for="inputEmail4">Coupon Service</label>
               <select name="couponprod" class="form-control">
                 <option>Select Service</option>
-                <option value="ecommerce">Ecommerce</option>
-                <option value="lms">LMS</option>
-                <option value="membership">Membership</option>
+                <option value="recharge">Recharge</option>
+                <option value="invoice">Invoice</option>
               </select>
             </div>
           </div>

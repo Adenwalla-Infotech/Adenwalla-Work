@@ -105,7 +105,7 @@ if (isset($_POST['submit'])) {
 
                                     <div class="row g-3">
                                         <div class="col">
-                                            <textarea name="remindercode" id="mytextarea"><?php echo _getSingleEmailTemplate('_remindertemplate');  ?></textarea>
+                                            <textarea name="remindercode" class="form-control" rows="20"><?php echo _getSingleEmailTemplate('_remindertemplate');  ?></textarea>
                                             <div class="invalid-feedback">Please enter code</div>
                                         </div>
                                     </div>

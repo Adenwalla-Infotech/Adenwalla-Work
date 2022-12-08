@@ -6,12 +6,19 @@
         $tranid = $_SESSION['transid'];
         $couponid = $_SESSION['couponid'];
         $userid = $_SESSION['userId'];
+        $amount = $_SESSION['recamt'];
         if(isset($_POST['product'])&& isset($_POST['productid'])){
             $product = $_POST['product'];
             $productid = $_POST['productid'];
             if($product == 'membership'){
                 _purchasememebership($userid,$productid);
-            }   
+            }
+            if($product == 'invoice'){
+                _purchaseinvoice($userid,$productid,$amount);
+            }  
+            if($product == 'recharge'){
+                _purchaserecharge($userid,$amount);
+            }  
             _updatepayment($tranid,'success');
             _updatecoupon($couponid, 'success');
         }else{
