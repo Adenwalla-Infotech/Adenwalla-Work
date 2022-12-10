@@ -77,7 +77,9 @@ if (isset($_POST['submit'])) {
 		  }
 		});
         
-        }
+        },
+            branding: false,
+            promotion: false
       });
     </script>
     <!-- End plugin css for this page -->

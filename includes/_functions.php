@@ -356,6 +356,20 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
+            $ai_config = "CREATE TABLE IF NOT EXISTS `tblaiconfig` (
+                `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                `_suppliername` varchar(50) NOT NULL,
+                `_apikey` varchar(100) NOT NULL,
+                `_baseurl` varchar(100) NOT NULL,
+                `_supplierstatus` varchar(50) NOT NULL,
+                `text-ada-001` varchar(50) NOT NULL,
+                `text-babbage-001` varchar(50) NOT NULL,
+                `text-curie-001` varchar(50) NOT NULL,
+                `text-davinci-002` varchar(50) NOT NULL,
+                `CreationDate` datetime NOT NULL DEFAULT current_timestamp(),
+                `UpdationDate` datetime NULL ON UPDATE current_timestamp()
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+
             $tickets_table = "CREATE TABLE IF NOT EXISTS `tbltickets` (
                 `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
                 `_title` varchar(255) NOT NULL,
@@ -535,7 +549,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             )  ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
-            $tables = [$admin_table, $sms_config, $email_config, $site_config, $payment_config, $tickets_table, $ticket_comment, $contact_table, $category_table, $subcategory_table, $blog_table, $currency_table, $tax_table, $payment_trans, $coupon_table, $coupon_trans, $membership_table, $templates, $invoice, $invoiceitems];
+            $tables = [$admin_table, $sms_config, $email_config, $site_config, $payment_config, $ai_config, $tickets_table, $ticket_comment, $contact_table, $category_table, $subcategory_table, $blog_table, $currency_table, $tax_table, $payment_trans, $coupon_table, $coupon_trans, $membership_table, $templates, $invoice, $invoiceitems];
 
             foreach ($tables as $k => $sql) {
                 $query = @$temp_conn->query($sql);
@@ -552,15 +566,17 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
 
                 $sms_data = "INSERT INTO `tblsmsconfig`(`_suppliername`, `_apikey`, `_baseurl`, `_supplierstatus`) VALUES ('Fast2SMS','maeS4bc5gM17qo0FwszOEAx62JND3IiHdfQBtl8XWLZ9rCjVTYOJlgtFLzNqZ7uYj830XWm6sQbM2KIR', 'https://www.fast2sms.com/dev/bulkV2', 'true')";
 
+                $ai_data = "INSERT INTO `tblaiconfig`(`_suppliername`, `_apikey`, `_baseurl`, `_supplierstatus`, `text-ada-001`, `text-babbage-001`, `text-curie-001`, `text-davinci-002`) VALUES ('OpenAI','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', 'https://api.openai.com/v1/completions', 'true', 0.15, 0.25, 0.55, 1.00)";
+
                 $email_data = "INSERT INTO `tblemailconfig`(`_hostname`, `_hostport`, `_smtpauth`, `_emailaddress`, `_emailpassword`, `_sendername`, `_supplierstatus`) VALUES ('mail.adenwalla.in', '465', 'true', 'info@adenwalla.in', 'Juned@786juned', 'Adenwalla Infotech', 'true')";
 
                 $site_data = "INSERT INTO `tblsiteconfig`(`_sitetitle`, `_siteemail`, `_timezone`, `_sitelogo`, `_sitereslogo`, `_favicon`) VALUES ('Site Title', 'info@yoursite.com', 'Asia/Calcutta', 'uploadimage.png', 'uploadimage.png', 'uploadimage.png')";
 
-                $payment_data = "INSERT INTO `tblpaymentconfig`(`_suppliername`, `_apikey`, `_companyname`, `_supplierstatus`) VALUES ('Razorpay','12345678901234567890','Adenwalla & Co.','true')";
+                $payment_data = "INSERT INTO `tblpaymentconfig`(`_suppliername`, `_apikey`, `_companyname`, `_supplierstatus`) VALUES ('Razorpay','rzp_test_37JmjMY7TdjCxF','Adenwalla Infotech','true')";
 
                 $template_data = "INSERT INTO `tblemailtemplates`(`_purchasetemplate`, `_remindertemplate`, `_lecturetemplate`, `_signuptemplate`, `_canceltemplate`, `_paymenttemplate`) VALUES ('Your Html Code','Your Html Code','Your Html Code','Your Html Code','Your Html Code','Your Html Code')";
 
-                $data = [$admin_data, $sms_data, $email_data, $site_data, $payment_data, $template_data];
+                $data = [$admin_data, $sms_data, $ai_data, $email_data, $site_data, $payment_data, $template_data];
 
                 foreach ($data as $k => $sql) {
                     $query = @$temp_conn->query($sql);
@@ -646,7 +662,7 @@ function _createuser($username, $useremail, $usertype, $userphone, $isactive, $i
         $alert->warn("All Feilds are Required");
     }
 }
-
+require_once "../vendor/autoload.php";
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -716,7 +732,6 @@ function _notifyuser($useremail = '', $userphone = '', $sendmail = '', $message 
         $query = mysqli_query($conn, $sql);
         $count = mysqli_num_rows($query);
         if ($count == 1) {
-            require_once "../vendor/autoload.php";
             $mail = new PHPMailer(true); //Argument true in constructor enables exceptions
             //Set PHPMailer to use SMTP.
             $mail->isSMTP();
@@ -3269,5 +3284,92 @@ function _purchaserecharge($userid, $amount)
         _notifyuser(_getsingleuser($userid, '_useremail'), _getsingleuser($userid, '_userphone'), $sendmail, $message, 'Payment Successfull');
     }
 }
+
+// AI Functions 
+function _aiconfig($param){
+    require('_config.php');
+    $sql = "SELECT * FROM `tblaiconfig`";
+    $query = mysqli_query($conn,$sql);
+    if($query){
+        foreach($query as $data){
+            return $data[$param];
+        }
+    }
+}
+
+function _saveaiconfig($suppliername,$apikey,$baseurl,$isactive){
+    require('_config.php');
+    require('_alert.php');
+    $sql = "UPDATE `tblaiconfig` SET `_suppliername`='$suppliername',`_apikey`='$apikey',`_baseurl`='$baseurl',`_supplierstatus`='$isactive' WHERE `_id` = 1";
+    $query = mysqli_query($conn,$sql);
+    if($query){
+        $alert = new PHPAlert();
+        $alert->success("Settings Saved");
+    }else{
+        $alert = new PHPAlert();
+        $alert->warn("Something went wrong");
+    }
+}
+
+function costcalculation($words,$engine){
+    require('_config.php');
+    $sql = "SELECT * FROM `tblaiconfig` WHERE `_id` = 1";
+    $query = mysqli_query($conn,$sql);
+    foreach($query as $data){
+        $engcost = $data[$engine];
+    }
+    $exactengcost = (float)$engcost / 100;
+    $exactwords = $words * 0.75;
+    return (float)$exactwords * (float)$exactengcost;
+}
+
+require '../vendor/autoload.php'; // remove this line if you use a PHP Framework.
+use Orhanerday\OpenAi\OpenAi;
+function _apigeneratecontent($tool,$content,$engine,$length,$cost){
+    session_start();
+    $userid = $_SESSION['userId'];
+    if(_getsingleuser($userid,'_userwallet') > 10){
+        require('_config.php');
+        $sql = "SELECT * FROM `tblaiconfig` WHERE `_id` = 1";
+        $query = mysqli_query($conn,$sql);
+        if($query){
+            foreach($query as $data){
+                $open_ai = new OpenAi($data['_apikey']);
+            }
+        }
+        $newcost =  _getsingleuser($userid,'_userwallet') - $cost;
+        if($newcost < 0){
+            return 'lowballance';
+        }else{
+            $int = (int)$length;
+            $complete = $open_ai->complete([
+                'engine' => $engine,
+                'prompt' => "$tool $content",
+                'temperature' => 0.7,
+                'max_tokens' => $int,
+                "top_p" => 1,
+                "frequency_penalty" => 0.97,
+                "presence_penalty" => 0.53
+            ]);
+            $data = json_decode($complete,true);
+            if($data){
+                $useremail = _getsingleuser($userid,'_useremail');
+                $content2 = $data['choices'][0]['text'];
+                $token_used = $data['usage']['completion_tokens'];
+                $total_cost = costcalculation($token_used,$engine);
+                $_SESSION['total_cost'] = $total_cost;
+                return nl2br($content2,true);
+                $sql = "UPDATE `tblusers` SET `_userwallet`=_userwallet - $total_cost WHERE `_id` = $userid";
+                $query = mysqli_query($conn,$sql);
+                // return str_replace('/n', '<br>', $content2);
+                // $sql = "INSERT INTO `tblcontentrans`(`_summary`, `_engine`, `_words`, `_content`, `_useremail`, `_cost`, `_balance`) VALUES ('$content','$engine','$int', '$content2', '$useremail', '$cost','$newcost')";
+                // $query = mysqli_query($conn,$sql);
+            }
+        }
+    }else{
+        return 'minimumbalance';
+    }
+}    
+
 
 ?>

@@ -60,7 +60,9 @@ if (isset($_POST['submit'])) {
     <script src="../assets/plugins/tinymce/js/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
     <script>
         tinymce.init({
-            selector: '#mytextarea'
+            selector: '#mytextarea',
+            branding: false,
+            promotion: false
         });
     </script>
 </head>

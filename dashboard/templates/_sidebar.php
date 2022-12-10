@@ -147,6 +147,7 @@
           <ul class="nav flex-column sub-menu">
             <li class="nav-item"> <a class="nav-link" href="sms-config">SMS Setting</a></li>
             <li class="nav-item"> <a class="nav-link" href="email-config">Email Setting</a></li>
+            <li class="nav-item"> <a class="nav-link" href="ai-config">AI Setting</a></li>
             <li class="nav-item"> <a class="nav-link" href="site-config">Site Setting</a></li>
             <li class="nav-item"> <a class="nav-link" href="payment-config">Payment Setting</a></li>
           </ul>
@@ -191,5 +192,17 @@
         <span class="menu-title">All Memberships</span>
       </a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#ui-content" aria-expanded="false" aria-controls="ui-basic">
+          <i class="mdi mdi-tune-vertical menu-icon"></i>
+          <span class="menu-title">Content Tools</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="ui-content">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="email-writer">Email Writer</a></li>
+          </ul>
+        </div>
+      </li>
   </ul>
 </nav>

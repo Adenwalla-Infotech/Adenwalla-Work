@@ -59,6 +59,8 @@ if(isset($_POST['statustype'])){
       tinymce.init({
         selector: '#mytextarea',
         height : 300,
+        branding: false,
+        promotion: false
       });
     </script>
   <!-- End plugin css for this page -->
@@ -103,8 +105,6 @@ if(isset($_POST['statustype'])){
                                     <?php 
                                         $type = _getsinglticket($_ticid,'_status');
                                         echo $type;
-                                        
-
                                         if($type=='open'){?><option value="open" selected>Open</option><?php }
                                         if($type=='pending'){?><option value="pending" selected>Pending</option><?php }
                                         if($type=='resolved'){?><option value="resolved" selected>Resolved</option><?php }
