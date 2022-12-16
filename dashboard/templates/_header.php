@@ -25,12 +25,12 @@ $_userid =  $_SESSION['userId'];
     <ul class="navbar-nav navbar-nav-right">
       <li class="nav-item dropdown">
         <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
-              <i class="mdi mdi-wallet mx-0" style="color: #4B49AC;font-size: 25px"></i>&nbsp;
-              <span style="font-size: 17px;margin-right:20px;color:black;font-family:'Times New Roman', Times, serif"><?php if(_getsingleuser($_userid, '_userwallet') == ''){
+              <i class="mdi mdi-wallet mx-0" style="color: #4B49AC;font-size: 25px;padding-top:-3px"></i>&nbsp;
+              <span style="font-size: 15px;margin-right:20px;color:black;margin-bottom:-7px"><?php if(_getsingleuser($_userid, '_userwallet') == ''){
                 echo 0;
-              }else{
-                echo _getsingleuser($_userid, '_userwallet');
-              } ?></span>
+              }else{ ?>
+                <span id="wallet"></span>
+              <?php } ?></span>
               <!-- <span class="count"></span> -->
             </a> 
         <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
@@ -40,7 +40,6 @@ $_userid =  $_SESSION['userId'];
                 <input type="number" min="10" class="form-control" style="height:30px;width:90%;margin-left:8px" name="amount">
               </div>
               <input type="text" hidden value="recharge" name="prod">
-              <input type="text" hidden value="INR" name="currency">
               <input type="text" hidden value="1" name="id">
               <div class="col-4">
                 <button type="submit" style="margin-left: -25px;" class="btn btn-sm btn-primary">Add</button>
@@ -110,3 +109,20 @@ $_userid =  $_SESSION['userId'];
     </button>
   </div>
 </nav>
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script>
+  function getData() {
+    $.ajax({
+      url: '_getuser.php',
+      type: 'post',
+      data: { "param": "_userwallet" },
+      success: function (response) {
+        var amount = parseFloat(response).toFixed(2).replace(/[.,]00$/, "");
+        document.getElementById('wallet').innerHTML = amount;
+      }
+    });
+  }
+  setInterval(function () {
+    getData();
+  }, 1000)
+</script>

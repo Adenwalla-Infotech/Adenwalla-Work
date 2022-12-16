@@ -16,8 +16,6 @@ if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['is
 
 include('../includes/_functions.php');
 
-$_SESSION['lowbalance'] = false;
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,7 +23,7 @@ $_SESSION['lowbalance'] = false;
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Email Writer |
+    <title>Story Writer |
         <?php echo _siteconfig('_sitetitle'); ?>
     </title>
     <!-- plugins:css -->
@@ -73,9 +71,9 @@ $_SESSION['lowbalance'] = false;
                         <div class="col-lg-4 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                <h4 class="card-title"><img src="../assets/icons/email.png" class="menu-icon" style="margin-right: 15px;margin-top:-5px;width:22px;margin-left:5px">Email Writer ( AI Email )</h4>
+                                <h4 class="card-title"><img src="../assets/icons/script.png" class="menu-icon" style="margin-right: 15px;margin-top:-5px;width:22px;margin-left:5px">Story Writer ( AI Story )</h4>
                                 <p class="card-description">
-                                AI Email Writer is a cutting edge technology that helps you write personalized emails in no time & with minimal efforts
+                                Introducing AI Story Writer, a powerful tool that can help you create stories in no time. Create storyboards, novel or short story
                                 </p>
                                 <hr style="width: 100%;">
                                 <div class="row">
@@ -117,7 +115,7 @@ $_SESSION['lowbalance'] = false;
                                         <option value="vietnamese">Vietnamese</option>
                                     </select>
                                     </div>
-                                    <div class="col-lg-12" style="margin-bottom: 20px;">
+                                    <!-- <div class="col-lg-12" style="margin-bottom: 20px;">
                                     <label>Select Content Tone</label>
                                     <select class="form-control" id="tone">
                                         <option>Select Tone</option>
@@ -144,7 +142,7 @@ $_SESSION['lowbalance'] = false;
                                         <option value="urgent">Urgent</option>
                                         <option value="worried">Worried</option>
                                     </select>
-                                    </div>
+                                    </div> -->
                                     <div class="col-lg-12" style="margin-bottom: 20px;">
                                     <label>Maximum Words</label><br>
                                     <input id="words" style="width: 100%;" type="range" class="form-range" min="50" max="2020" step="1"><br>
@@ -170,7 +168,7 @@ $_SESSION['lowbalance'] = false;
                                 <div class="col-lg-12">
                                     <button class="btn btn-primary" style="border-radius: 6px;width:100%" id="submit"><div style="width:20px;height:20px;margin-right:10px" class="spinner-border text-light" id="loader" role="status">
                                         <span class="visually-hidden"></span>
-                                    </div> Generate Email</button>
+                                    </div> Generate Story</button>
                                 </div>
                                 </div>
                                 </div>
@@ -179,14 +177,8 @@ $_SESSION['lowbalance'] = false;
                         <div class="col-lg-8">
                             <div class="card">
                                 <div class="card-body">
-                                    <div id="success" class="alert alert-success" role="alert">
+                                    <div id="alert" class="alert alert-success" role="alert">
                                         Successfull <strong id="alerttext"></strong> Balance Consumed
-                                    </div>
-                                    <div id="warning" class="alert alert-warning" role="alert">
-                                        <strong>Low Balance&nbsp;</strong>Kindly Recharge to Continue
-                                    </div>
-                                    <div id="warning2" class="alert alert-warning" role="alert">
-                                        <strong>No Minimum Balance&nbsp;</strong>Kindly Maintain Balance of atleast 10 INR
                                     </div>
                                     <div class="row">
                                         <div class="col">
@@ -210,40 +202,32 @@ $_SESSION['lowbalance'] = false;
         <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
         <script>
             $('#loader').hide();
-            $('#success').hide();
-            $('#warning').hide();
-            $('#warning2').hide();
+            $('#alert').hide();
             document.getElementById("submit").onclick = function getContent(){
                 $('#loader').show();
                 var lan = document.getElementById('language').value
-                var tone = document.getElementById('tone').value
+                // var tone = document.getElementById('tone').value
                 var words = document.getElementById("words").value
                 var description = document.getElementById("description").value
                 var engine = document.getElementById("engine").value
                 $.ajax({
                     type: "POST",
                     url: "_getcontent.php",
-                    data: 'language=' + lan + '&tone=' + tone + '&words=' + words + '&desc=' + description + '&engine=' + engine + '&content=email',
+                    data: 'language=' + lan + '&words=' + words + '&desc=' + description + '&engine=' + engine + '&content=story',
                     success: function (data) {
                         console.log(data)
+                        tinyMCE.get('content').setContent(data);
                         $('#loader').hide();
-                        if(data == 0){
-                            $('#warning').show();
-                        }
-                        if(data == 1){
-                            $('#warning2').show();
-                        }else{
-                            tinyMCE.get('content').setContent(data);
-                            $.ajax({
+                        $.ajax({
                             type: "POST",
                             url: "_getsession.php",
                             data: 'session=total_cost',
                             success: function (data) {
+                                console.log(data)
                                 document.getElementById("alerttext").innerHTML = data;
-                                $('#success').show();
+                                $('#alert').show();
                             }
-                            });
-                        }
+                        });
                     }
                 });
             }

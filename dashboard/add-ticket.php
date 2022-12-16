@@ -110,7 +110,7 @@ if (isset($_POST['submit'])) {
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Create Ticket (Support Ticket)</h4>
+                                <h4 class="card-title"><img src="../assets/icons/customer-service.png" class="menu-icon" style="margin-right: 10px;margin-top:-5px;width:22px">Create Ticket (Support Ticket)</h4>
                                 <p class="card-description">
                                     If you can't find a solution to your problems in our knowledgebase, you can submit a ticket by selecting the appropriate department below & subject below. Tickets can also be created by simply sending an email. Ticket responses can also be created by replying to the same email.
                                 </p>

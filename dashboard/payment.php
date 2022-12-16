@@ -18,7 +18,10 @@ require('../includes/_functions.php');
 
 $_id =  $_SESSION['userId'];
 $getprice = $_GET['amount'];
-$currency = $_GET['currency'];
+$currency = _getsingleuser($_id,'_usercurrency');
+if(!$currency){
+    $currency = 'INR';
+}
 if(isset($_GET['prod'])&& isset($_GET['id'])){
     $product = $_GET['prod'];
     $productid = $_GET['id'];
@@ -546,7 +549,6 @@ if (isset($_POST['pay'])) {
             "image": "http://localhost/Adenwalla-Infotech/moniqart-development/uploads/images/logo.png",
             // "order_id": "OD<?php echo rand(111111, 999999)?>", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
             "handler": function (response){
-                console.log('response',response);
                 document.getElementById('transpay').click();
             },
             "prefill": {
@@ -555,7 +557,7 @@ if (isset($_POST['pay'])) {
                 "contact": "<?php echo $userphone; ?>"
             },
             "notes": {
-                "address": "Razorpay Corporate Office"
+                "address": "Valpoi, North Goa"
             },
             "theme": {
                 "color": "#4B49AC"

@@ -300,6 +300,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `_usertype` int(11) NULL,
                 `_userstatus` varchar(50) NULL,
                 `_userwallet` varchar(255) NULL,
+                `_usercurrency` varchar(255) NULL,
                 `_userpassword` varchar(255) NULL,
                 `_userotp` int(100) NULL,
                 `_userverify` varchar(50) NULL,
@@ -365,7 +366,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `text-ada-001` varchar(50) NOT NULL,
                 `text-babbage-001` varchar(50) NOT NULL,
                 `text-curie-001` varchar(50) NOT NULL,
-                `text-davinci-002` varchar(50) NOT NULL,
+                `text-davinci-003` varchar(50) NOT NULL,
                 `CreationDate` datetime NOT NULL DEFAULT current_timestamp(),
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
@@ -549,7 +550,20 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
                 `UpdationDate` datetime NULL ON UPDATE current_timestamp()
             )  ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
-            $tables = [$admin_table, $sms_config, $email_config, $site_config, $payment_config, $ai_config, $tickets_table, $ticket_comment, $contact_table, $category_table, $subcategory_table, $blog_table, $currency_table, $tax_table, $payment_trans, $coupon_table, $coupon_trans, $membership_table, $templates, $invoice, $invoiceitems];
+            $content_trans = "CREATE TABLE IF NOT EXISTS `tblcontentrans` (
+                `_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                `_summary` varchar(255) NOT NULL,
+                `_engine` varchar(50) NOT NULL,
+                `_words` varchar(50) NOT NULL,
+                `_content` text NOT NULL,
+                `_useremail` varchar(255) NOT NULL,
+                `_cost` varchar(50) NOT NULl,
+                `_balance` varchar(50) NOT NULl,
+                `_tokens` varchar(50) NOT NULl,
+                `CreationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+
+            $tables = [$admin_table, $sms_config, $email_config, $site_config, $payment_config, $ai_config, $tickets_table, $ticket_comment, $contact_table, $category_table, $subcategory_table, $blog_table, $currency_table, $tax_table, $payment_trans, $coupon_table, $coupon_trans, $membership_table, $templates, $invoice, $invoiceitems, $content_trans];
 
             foreach ($tables as $k => $sql) {
                 $query = @$temp_conn->query($sql);
@@ -566,15 +580,15 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
 
                 $sms_data = "INSERT INTO `tblsmsconfig`(`_suppliername`, `_apikey`, `_baseurl`, `_supplierstatus`) VALUES ('Fast2SMS','maeS4bc5gM17qo0FwszOEAx62JND3IiHdfQBtl8XWLZ9rCjVTYOJlgtFLzNqZ7uYj830XWm6sQbM2KIR', 'https://www.fast2sms.com/dev/bulkV2', 'true')";
 
-                $ai_data = "INSERT INTO `tblaiconfig`(`_suppliername`, `_apikey`, `_baseurl`, `_supplierstatus`, `text-ada-001`, `text-babbage-001`, `text-curie-001`, `text-davinci-002`) VALUES ('OpenAI','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', 'https://api.openai.com/v1/completions', 'true', 0.15, 0.25, 0.55, 1.00)";
+                $ai_data = "INSERT INTO `tblaiconfig`(`_suppliername`, `_apikey`, `_baseurl`, `_supplierstatus`, `text-ada-001`, `text-babbage-001`, `text-curie-001`, `text-davinci-003`) VALUES ('OpenAI','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', 'https://api.openai.com/v1/completions', 'true', 0.15, 0.25, 0.55, 1.00)";
 
-                $email_data = "INSERT INTO `tblemailconfig`(`_hostname`, `_hostport`, `_smtpauth`, `_emailaddress`, `_emailpassword`, `_sendername`, `_supplierstatus`) VALUES ('mail.adenwalla.in', '465', 'true', 'info@adenwalla.in', 'Juned@786juned', 'Adenwalla Infotech', 'true')";
+                $email_data = "INSERT INTO `tblemailconfig`(`_hostname`, `_hostport`, `_smtpauth`, `_emailaddress`, `_emailpassword`, `_sendername`, `_supplierstatus`) VALUES ('mail.adenwalla.in', '465', 'true', 'no-reply@adenwalla.in', 'Juned@786juned', 'Adenwalla Infotech', 'true')";
 
                 $site_data = "INSERT INTO `tblsiteconfig`(`_sitetitle`, `_siteemail`, `_timezone`, `_sitelogo`, `_sitereslogo`, `_favicon`) VALUES ('Site Title', 'info@yoursite.com', 'Asia/Calcutta', 'uploadimage.png', 'uploadimage.png', 'uploadimage.png')";
 
                 $payment_data = "INSERT INTO `tblpaymentconfig`(`_suppliername`, `_apikey`, `_companyname`, `_supplierstatus`) VALUES ('Razorpay','rzp_test_37JmjMY7TdjCxF','Adenwalla Infotech','true')";
 
-                $template_data = "INSERT INTO `tblemailtemplates`(`_purchasetemplate`, `_remindertemplate`, `_lecturetemplate`, `_signuptemplate`, `_canceltemplate`, `_paymenttemplate`) VALUES ('Your Html Code','Your Html Code','Your Html Code','Your Html Code','Your Html Code','Your Html Code')";
+                $template_data = "INSERT INTO `tblemailtemplates`(`_purchasetemplate`, `_remindertemplate`, `_signuptemplate`, `_canceltemplate`, `_paymenttemplate`) VALUES ('Your Html Code','Your Html Code','Your Html Code','Your Html Code','Your Html Code')";
 
                 $data = [$admin_data, $sms_data, $ai_data, $email_data, $site_data, $payment_data, $template_data];
 
@@ -583,7 +597,7 @@ function _install($dbhost, $dbname, $dbpass, $dbuser, $siteurl, $username, $user
 
                     if (!$query) {
                         $errors[] = "Table $k : Creation failed ($temp_conn->error)";
-                        echo 'falied';
+                        echo 'email falied';
                     } else {
                         $errors[] = "Table $k : Creation done";
                         $creation_done = true;
@@ -662,7 +676,6 @@ function _createuser($username, $useremail, $usertype, $userphone, $isactive, $i
         $alert->warn("All Feilds are Required");
     }
 }
-require_once "../vendor/autoload.php";
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -671,7 +684,7 @@ function _notifyuser($useremail = '', $userphone = '', $sendmail = '', $message 
 {
     require('_config.php');
     require('_alert.php');
-
+    require_once "../vendor/autoload.php";
     if ($userphone != '') {
         $sql = "SELECT * FROM `tblsmsconfig` WHERE `_supplierstatus` = 'true'";
         $query = mysqli_query($conn, $sql);
@@ -1032,13 +1045,13 @@ function _updateuser($username, $useremail, $usertype, $userphone, $isactive, $i
     }
 }
 
-function _updateProfile($username, $useremail, $userpassword, $userphone, $userage, $userbio, $location, $userpin, $country)
+function _updateProfile($username, $useremail, $userpassword, $userphone, $userage, $userbio, $location, $userpin, $country, $currency)
 {
     require('_config.php');
     require('_alert.php');
-    $email = $_SESSION['userEmailId'];
-    $phone = $_SESSION['userPhoneNo'];
     $id = $_SESSION['userId'];
+    $email = _getsingleuser($id,'_useremail');
+    $phone = _getsingleuser($id,'_userphone');
     if ($phone != $userphone && $email != $useremail) {
         $sql = "SELECT * FROM `tblusers` WHERE`_useremail` = '$useremail' AND `_userphone` = '$userphone'";
         $run = true;
@@ -1062,13 +1075,13 @@ function _updateProfile($username, $useremail, $userpassword, $userphone, $usera
                 $alert = new PHPAlert();
                 $alert->warn("Credential Already in use");
             } else {
-                $password = $_SESSION['userPassword'];
+                $password = _getsingleuser($id,'_userpassword');
                 if ($userpassword == $password) {
                     $encpassword = $userpassword;
-                    $sql = "UPDATE `tblusers` SET `_username`='$username',`_useremail`='$useremail',`_userphone`='$userphone',`_userbio`='$userbio',`_userage`='$userage',`_userlocation`='$location',`_userstate`='$country',`_userpin`='$userpin' WHERE `_id` = $id";
+                    $sql = "UPDATE `tblusers` SET `_username`='$username',`_useremail`='$useremail',`_userphone`='$userphone',`_userbio`='$userbio',`_userage`='$userage',`_userlocation`='$location',`_userstate`='$country',`_userpin`='$userpin',`_usercurrency`='$currency' WHERE `_id` = $id";
                 } else {
                     $encpassword = md5($userpassword);
-                    $sql = "UPDATE `tblusers` SET `_username`='$username',`_useremail`='$useremail',`_userphone`='$userphone',`_userbio`='$userbio',`_userage`='$userage',`_userlocation`='$location',`_userstate`='$country',`_userpin`='$userpin',`_userpassword`='$encpassword' WHERE `_id` = $id";
+                    $sql = "UPDATE `tblusers` SET `_username`='$username',`_useremail`='$useremail',`_userphone`='$userphone',`_userbio`='$userbio',`_userage`='$userage',`_userlocation`='$location',`_userstate`='$country',`_userpin`='$userpin',`_usercurrency`='$currency',`_userpassword`='$encpassword' WHERE `_id` = $id";
                 }
 
                 $query = mysqli_query($conn, $sql);
@@ -1088,10 +1101,10 @@ function _updateProfile($username, $useremail, $userpassword, $userphone, $usera
         $password = $_SESSION['userPassword'];
         if ($userpassword == $password) {
             $encpassword = $userpassword;
-            $sql = "UPDATE `tblusers` SET `_username`='$username',`_userbio`='$userbio',`_userage`='$userage',`_userlocation`='$location',`_userstate`='$country',`_userpin`='$userpin' WHERE `_id` = $id";
+            $sql = "UPDATE `tblusers` SET `_username`='$username',`_userbio`='$userbio',`_userage`='$userage',`_userlocation`='$location',`_userstate`='$country',`_userpin`='$userpin',`_usercurrency`='$currency' WHERE `_id` = $id";
         } else {
             $encpassword = md5($userpassword);
-            $sql = "UPDATE `tblusers` SET `_username`='$username',`_userbio`='$userbio',`_userage`='$userage',`_userlocation`='$location',`_userstate`='$country',`_userpin`='$userpin',`_userpassword`='$encpassword' WHERE `_id` = $id";
+            $sql = "UPDATE `tblusers` SET `_username`='$username',`_userbio`='$userbio',`_userage`='$userage',`_userlocation`='$location',`_userstate`='$country',`_userpin`='$userpin',`_usercurrency`='$currency',`_userpassword`='$encpassword' WHERE `_id` = $id";
         }
 
         $query = mysqli_query($conn, $sql);
@@ -2056,6 +2069,18 @@ function _conversion($amount, $currency)
     }
 }
 
+function _reverseconversion($amount,$currency){
+    require('_config.php');
+    $sql = "SELECT * FROM `tblcurrency` WHERE `_conversioncurrency` = '$currency'";
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        foreach ($query as $data) {
+            $price = $data['_price'];
+        }
+        return $amount / $price;
+    }
+}
+
 function _deletemarkup($id)
 {
 
@@ -2518,7 +2543,7 @@ function _allmemberships()
                         <ul>
                             <?php echo $data['_membershipdesc']; ?>
                         </ul>
-                        <a href="payment?amount=<?php echo $data['_price']; ?>&currency=INR&prod=membership&id=<?php echo $data['_id']; ?>" style="margin-top:-20px" class="plan-btn">Join Plan</a>
+                        <a href="payment?amount=<?php echo $data['_price']; ?>&prod=membership&id=<?php echo $data['_id']; ?>" style="margin-top:-20px" class="plan-btn">Join Plan</a>
                     </div>
                 </div>
             </div>
@@ -2814,7 +2839,7 @@ function _updateEmailTemplate($templateName, $templateCode)
     require('_config.php');
 
     $emailtemp = $conn->real_escape_string($templateCode);
-    $sql = "UPDATE `tblemailtemplates` SET `$templateName`='$emailtemp' WHERE `_id` = 1 ";
+    $sql = "UPDATE `tblemailtemplates` SET `$templateName`='$emailtemp' WHERE `_id` = 1";
 
     $query = mysqli_query($conn, $sql);
     if ($query) {
@@ -3219,8 +3244,66 @@ function _viewTranscation($useremail, $startfrom = '', $limit = '')
 }
 
 
-// Get Clients
+// View Exports
+function _viewexports($useremail, $startfrom = '', $limit = '')
+{
+    require('_config.php');
+    $userid = $_SESSION['userId'];
+    if(_getsingleuser($userid,'_usertype') == 2){
+        $sql = "SELECT * FROM `tblcontentrans` ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit";
+    }else{
+        $sql = "SELECT * FROM `tblcontentrans` WHERE `_useremail` = '$useremail' ORDER BY `CreationDate` DESC LIMIT $startfrom , $limit";
+    }
+    $query = mysqli_query($conn, $sql);
+    if ($query) {
+        $i = 1;
+        foreach ($query as $data) {
+        $i++;    
+        ?>
+            <tr>
+                <td>
+                    <?php
+                        if($data['_engine'] == 'text-ada-001'){
+                            echo 'Basic Engine';
+                        }
+                        if($data['_engine'] == 'text-babbage-001'){
+                            echo 'Premium Engine';
+                        }
+                        if($data['_engine'] == 'text-curie-001'){
+                            echo 'Elementry Engine';
+                        }
+                        if($data['_engine'] == 'text-davinci-003'){
+                            echo 'Advanced Engine';
+                        }
+                    ?>
+                </td>
+                <?php if(_getsingleuser($userid,'_usertype') == 2){ ?>
+                    <td><?php echo $data['_useremail']; ?></td>
+                <?php } ?>
+                <?php if(_getsingleuser($userid,'_usertype') == 2){ ?>
+                    <td><?php echo $data['_tokens']; ?></td>
+                <?php } ?>
+                <td><?php echo $data['_cost']; ?></td>
+                <?php if(_getsingleuser($userid,'_usertype') == 2){ ?>
+                <td><?php echo $data['_balance']; ?></td>
+                <?php } ?>
+                <?php if(_getsingleuser($userid,'_usertype') == 2){ ?>
+                <td><span style="display:none" id="content<?php echo $i; ?>"><?php echo $data['_content']; ?></span> <?php echo  substr_replace($data['_content'], "...", 12); ?><button onclick="copyText(<?php echo $i; ?>)" type="button" style="width:30px;height:30px" class="btn btn-primary btn-sm"><i style="margin-left:-5px;margin-top:-5px" class="mdi mdi-content-copy"></i></button></td>
+                <?php } ?>
+                <?php if(_getsingleuser($userid,'_usertype') != 2){ ?>
+                <td><span style="display:none" id="content<?php echo $i; ?>"><?php echo $data['_content']; ?></span> <?php echo  substr_replace($data['_content'], "...", 82); ?><button onclick="copyText(<?php echo $i; ?>)" type="button" style="width:30px;height:30px" class="btn btn-primary btn-sm"><i style="margin-left:-5px;margin-top:-5px" class="mdi mdi-content-copy"></i></button></td>
+                <?php } ?>
+                <td>
+                    <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>
+                </td>
+            </tr>
+        <?php
+        }
+    }
+}
 
+
+// Get Clients
 function _getClients($id = '')
 {
 
@@ -3265,7 +3348,8 @@ function _getClients($id = '')
 function _purchaserecharge($userid, $amount)
 {
     require('_config.php');
-    $sql = "UPDATE `tblusers` SET `_userwallet`=_userwallet + $amount WHERE `_id` = $userid";
+    $newamount = _reverseconversion($amount,_getsingleuser($userid,'_usercurrency'));
+    $sql = "UPDATE `tblusers` SET `_userwallet`=_userwallet + $newamount WHERE `_id` = $userid";
     $query = mysqli_query($conn, $sql);
     if ($query) {
         $sql = "SELECT * FROM `tblemailtemplates`";
@@ -3297,10 +3381,10 @@ function _aiconfig($param){
     }
 }
 
-function _saveaiconfig($suppliername,$apikey,$baseurl,$isactive){
+function _saveaiconfig($suppliername,$apikey,$baseurl,$isactive,$ada,$babbage,$curie,$davinci){
     require('_config.php');
     require('_alert.php');
-    $sql = "UPDATE `tblaiconfig` SET `_suppliername`='$suppliername',`_apikey`='$apikey',`_baseurl`='$baseurl',`_supplierstatus`='$isactive' WHERE `_id` = 1";
+    $sql = "UPDATE `tblaiconfig` SET `_suppliername`='$suppliername',`_apikey`='$apikey',`_baseurl`='$baseurl',`_supplierstatus`='$isactive',`text-ada-001`='$ada',`text-babbage-001`='$babbage',`text-curie-001`='$curie',`text-davinci-003`='$davinci' WHERE `_id` = 1";
     $query = mysqli_query($conn,$sql);
     if($query){
         $alert = new PHPAlert();
@@ -3323,9 +3407,9 @@ function costcalculation($words,$engine){
     return (float)$exactwords * (float)$exactengcost;
 }
 
-require '../vendor/autoload.php'; // remove this line if you use a PHP Framework.
 use Orhanerday\OpenAi\OpenAi;
-function _apigeneratecontent($tool,$content,$engine,$length,$cost){
+function _apigeneratecontent($tool,$content,$engine,$length,$cost,$type){
+    require '../vendor/autoload.php'; // remove this line if you use a PHP Framework.
     session_start();
     $userid = $_SESSION['userId'];
     if(_getsingleuser($userid,'_userwallet') > 10){
@@ -3339,35 +3423,74 @@ function _apigeneratecontent($tool,$content,$engine,$length,$cost){
         }
         $newcost =  _getsingleuser($userid,'_userwallet') - $cost;
         if($newcost < 0){
-            return 'lowballance';
+            return 0;
         }else{
             $int = (int)$length;
-            $complete = $open_ai->complete([
-                'engine' => $engine,
-                'prompt' => "$tool $content",
-                'temperature' => 0.7,
-                'max_tokens' => $int,
-                "top_p" => 1,
-                "frequency_penalty" => 0.97,
-                "presence_penalty" => 0.53
-            ]);
-            $data = json_decode($complete,true);
-            if($data){
+            if($type == 'text'){
+                $complete = $open_ai->complete([
+                    'engine' => $engine,
+                    'prompt' => "$tool $content",
+                    'temperature' => 0.7,
+                    'max_tokens' => $int,
+                    "top_p" => 1,
+                    "frequency_penalty" => 0.97,
+                    "presence_penalty" => 0.53
+                ]);
+                $data = json_decode($complete,true);
+                if($data){
+                    $useremail = _getsingleuser($userid,'_useremail');
+                    $content2 = $data['choices'][0]['text'];
+                    $token_used = $data['usage']['completion_tokens'];
+                    $total_cost = costcalculation($token_used,$engine);
+                    $newcost = _getsingleuser($userid,'_userwallet') - $total_cost;
+                    $total_words = $token_used * 0.75;
+                    $_SESSION['total_cost'] = $total_cost;
+                    $sql = "SELECT * FROM `tblusers` WHERE `_id` = $userid";
+                    $query = mysqli_query($conn,$sql);
+                    foreach($query as $data){
+                        $currentbalance = $data['_userwallet'];
+                    }
+                    $newbalance = $currentbalance - $total_cost;
+                    $sql = "UPDATE `tblusers` SET `_userwallet`='$newbalance' WHERE `_id` = $userid";
+                    $query = mysqli_query($conn,$sql);
+                    if($query){
+                        echo nl2br($content2,true);
+                        $content2 = preg_replace('/[^a-zA-Z0-9_ -]/s','',$content2);
+                        $sql = "INSERT INTO `tblcontentrans`(`_summary`, `_engine`, `_words`, `_content`, `_useremail`, `_cost`, `_balance`,`_tokens`) VALUES ('$content','$engine','$total_words', '$content2', '$useremail', '$total_cost','$newcost','$token_used')";
+                        $query = mysqli_query($conn,$sql);
+                    }
+                }
+            }else{
                 $useremail = _getsingleuser($userid,'_useremail');
-                $content2 = $data['choices'][0]['text'];
-                $token_used = $data['usage']['completion_tokens'];
-                $total_cost = costcalculation($token_used,$engine);
+                $complete = $open_ai->image([
+                    "prompt" => "$content",
+                    "n" => 1,
+                    "size" => $length,
+                    "response_format" => "url",
+                ]);
+                $data = json_decode($complete,true);
+                $content2 = $data['data'][0]['url'];
+                $total_cost = $cost;
+                $newcost = _getsingleuser($userid,'_userwallet') - $total_cost;
+                $total_words = $cost;
                 $_SESSION['total_cost'] = $total_cost;
-                return nl2br($content2,true);
-                $sql = "UPDATE `tblusers` SET `_userwallet`=_userwallet - $total_cost WHERE `_id` = $userid";
+                $sql = "SELECT * FROM `tblusers` WHERE `_id` = $userid";
                 $query = mysqli_query($conn,$sql);
-                // return str_replace('/n', '<br>', $content2);
-                // $sql = "INSERT INTO `tblcontentrans`(`_summary`, `_engine`, `_words`, `_content`, `_useremail`, `_cost`, `_balance`) VALUES ('$content','$engine','$int', '$content2', '$useremail', '$cost','$newcost')";
-                // $query = mysqli_query($conn,$sql);
+                foreach($query as $data){
+                    $currentbalance = $data['_userwallet'];
+                }
+                $newbalance = $currentbalance - $total_cost;
+                $sql = "UPDATE `tblusers` SET `_userwallet`='$newbalance' WHERE `_id` = $userid";
+                $query = mysqli_query($conn,$sql);
+                if($query){
+                    $sql = "INSERT INTO `tblcontentrans`(`_summary`, `_engine`, `_words`, `_content`, `_useremail`, `_cost`, `_balance`,`_tokens`) VALUES ('$content','AI Image','$total_words', '$content2', '$useremail', '$total_cost','$newcost','$total_cost')";
+                    $query = mysqli_query($conn,$sql);
+                    return $content2;
+                }
             }
         }
     }else{
-        return 'minimumbalance';
+        return 1;
     }
 }    
 

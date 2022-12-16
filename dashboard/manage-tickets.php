@@ -68,7 +68,7 @@ $start_from = ($page - 1) * $record_per_page;
           <div class="col-12 grid-margin stretch-card">
             <div class="card">
               <div class="card-body">
-                <h4 class="card-title">Manage Tickets (Support Ticket)</h4>
+                <h4 class="card-title"><img src="../assets/icons/customer-service.png" class="menu-icon" style="margin-right: 10px;margin-top:-5px;width:22px"> Manage Tickets (Support Ticket)</h4>
                 <p class="card-description">
                   Web Help Desk uses tickets to manage service requests. These tickets can be initiated through email,
                   created in the application, and imported from another application. Techs, admins, and clients can also

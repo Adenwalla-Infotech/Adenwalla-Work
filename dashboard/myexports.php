@@ -18,12 +18,6 @@ require('../includes/_functions.php');
 require('../includes/_config.php');
 
 
-if (isset($_GET['del'])) {
-    $_id = $_GET['id'];
-    _deleteInvoice($_id);
-}
-
-
 $record_per_page = 5;
 $page = '';
 if (isset($_GET["page"])) {
@@ -40,7 +34,7 @@ $start_from = ($page - 1) * $record_per_page;
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>My Invoices |
+    <title>My Exports |
         <?php echo _siteconfig('_sitetitle'); ?>
     </title>
     <!-- plugins:css -->
@@ -70,7 +64,7 @@ $start_from = ($page - 1) * $record_per_page;
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title"> <img src="../assets/icons/validating-ticket.png" class="menu-icon" style="margin-right: 6px;margin-top:-5px;width:25px;margin-left:0px"> My Invoices (Payment Reciept)</h4>
+                                <h4 class="card-title"><img src="../assets/icons/share.png" class="menu-icon" style="margin-right: 10px;margin-top:-5px;width:22px"> My Exports (All Creation)</h4>
                                 <p class="card-description">
                                     From here, you'll see a list of all the categories on your site. You can edit or
                                     delete them from here. You can also change the order of your categories by dragging
@@ -79,20 +73,27 @@ $start_from = ($page - 1) * $record_per_page;
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="table-responsive">
-                                            <table id="example" class="display table expandable-table" style="width:100%">
+                                            <table id="example" class="display table expandable-table"
+                                                style="width:100%">
                                                 <thead>
                                                     <tr>
-                                                        <th>Id</th>
-                                                        <th>Payment Status</th>
-                                                        <th>Due Date</th>
-                                                        <th>Created at</th>
-                                                        <th>Updated at</th>
-                                                        <th>Action</th>
+                                                        <th>Engine</th>
+                                                        <?php if(_getsingleuser($_userid,'_usertype') == 2){ ?>
+                                                        <th>User Email</th>
+                                                        <th>Tokens</th>
+                                                        <?php } ?>
+                                                        <th>Cost</th>
+                                                        <?php if(_getsingleuser($_userid,'_usertype') == 2){ ?>
+                                                        <th>Balance</th>
+                                                        <?php } ?>
+                                                        <th>Content</th>
+                                                        <th>Creation Date</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody style="text-align: left;margin-left: 30px">
                                                     <?php
-                                                    _viewInvoice($start_from, $record_per_page);
+                                                    $useremail = $_SESSION['userEmailId'];
+                                                    _viewexports($useremail, $start_from, $record_per_page);
                                                     ?>
                                                 </tbody>
                                             </table>
@@ -104,7 +105,7 @@ $start_from = ($page - 1) * $record_per_page;
                                         <?php
                                         $userid = $_SESSION['userId'];
                                         $useremail = _getsingleuser($userid, '_useremail');
-                                        $query = mysqli_query($conn, "SELECT * FROM `tblinvoice` WHERE `_clientemail` = '$useremail'");
+                                        $query = mysqli_query($conn, "SELECT * FROM `tblcontentrans` where `_useremail`='$useremail'");
                                         $total_records = mysqli_num_rows($query);
                                         $total_pages = ceil($total_records / $record_per_page);
                                         $start_loop = $page;
@@ -115,18 +116,18 @@ $start_from = ($page - 1) * $record_per_page;
                                         $end_loop = $start_loop + 3;
                                         if ($page > 1) {
                                             echo "<li class='page-item'>
-                                                <a href='category-manage?page=" . ($page - 1) . "' class='page-link'>Previous</a>
-                                                 </li>";
+                        <a href='myexports?page=" . ($page - 1) . "' class='page-link'>Previous</a>
+                      </li>";
                                         }
                                         if ($total_records > 5) {
                                             for ($i = 1; $i <= $total_pages; $i++) {
                                                 echo "
-                      <li class='page-item'><a class='page-link' href='category-manage?page=" . $i . "'>$i</a></li>";
+                      <li class='page-item'><a class='page-link' href='myexports?page=" . $i . "'>$i</a></li>";
                                             }
                                         }
                                         if ($page <= $end_loop) {
                                             echo "<li class='page-item'>
-                        <a class='page-link' href='category-manage?page=" . ($page + 1) . "'>Next</a>
+                        <a class='page-link' href='myexports?page=" . ($page + 1) . "'>Next</a>
                       </li>";
                                         } ?>
                                     </ul>
@@ -148,6 +149,14 @@ $start_from = ($page - 1) * $record_per_page;
 <script src="../assets/vendors/js/vendor.bundle.base.js"></script>
 <!-- endinject -->
 <!-- Plugin js for this page -->
+<script>
+        function copyText(index) {
+            var text = document.getElementById(`content${index}`).innerHTML;
+            /* Copy text into clipboard */
+            navigator.clipboard.writeText
+                (text);
+        }
+    </script>
 <!-- End plugin js for this page -->
 <!-- inject:js -->
 <script src="../assets/js/off-canvas.js"></script>

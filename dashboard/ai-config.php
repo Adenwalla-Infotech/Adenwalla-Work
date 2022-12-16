@@ -29,7 +29,11 @@ if(isset($_POST['submit'])){
     }else{
         $isactive = false;
     }
-    _saveaiconfig($suppliername,$apikey,$baseurl,$isactive);
+    $ada = $_POST['ada'];
+    $babbage = $_POST['babbage'];
+    $curie = $_POST['curie'];
+    $davinci = $_POST['davinci'];
+    _saveaiconfig($suppliername,$apikey,$baseurl,$isactive,$ada,$babbage,$curie,$davinci);
 }
 
 
@@ -103,19 +107,19 @@ if(isset($_POST['submit'])){
                         <div class="row g-3" style="margin-top: 20px;">
                             <div class="col">
                                 <label for="formFile" class="form-label">Basic Engine</label>
-                                <input type="text" value="<?php echo _aiconfig('text-ada-001'); ?>" class="form-control" placeholder="Base URL" aria-label="base url" name="baseurl" required>
+                                <input type="text" name="ada" value="<?php echo _aiconfig('text-ada-001'); ?>" class="form-control" placeholder="Base URL" aria-label="base url" required>
                             </div>
                             <div class="col">
                                 <label for="formFile" class="form-label">Elementry Engine</label>
-                                <input type="text" value="<?php echo _aiconfig('text-babbage-001'); ?>" class="form-control" placeholder="Base URL" aria-label="base url" name="baseurl" required>
+                                <input type="text" name="babbage" value="<?php echo _aiconfig('text-babbage-001'); ?>" class="form-control" placeholder="Base URL" aria-label="base url" required>
                             </div>
                             <div class="col">
                                 <label for="formFile" class="form-label">Premium Engine</label>
-                                <input type="text" value="<?php echo _aiconfig('text-curie-001'); ?>" class="form-control" placeholder="Base URL" aria-label="base url" name="baseurl" required>
+                                <input type="text" name="curie" value="<?php echo _aiconfig('text-curie-001'); ?>" class="form-control" placeholder="Base URL" aria-label="base url" required>
                             </div>
                             <div class="col">
                                 <label for="formFile" class="form-label">Enterprice Engine</label>
-                                <input type="text" value="<?php echo _aiconfig('text-davinci-002'); ?>" class="form-control" placeholder="Base URL" aria-label="base url" name="baseurl" required>
+                                <input type="text" name="davinci" value="<?php echo _aiconfig('text-davinci-003'); ?>" class="form-control" placeholder="Base URL" aria-label="base url" required>
                             </div>
                         </div>
                         <div class="col-12" style="margin-top: 30px;">

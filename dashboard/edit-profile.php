@@ -28,7 +28,8 @@ if (isset($_POST['submit'])) {
     $location = $_POST['location'];
     $pincode = $_POST['pincode'];
     $country = $_POST['country'];
-    _updateProfile($username, $useremail, $userpassword, $userphone, $userage, $userbio, $location, $pincode, $country);
+    $currency = $_POST['currency'];
+    _updateProfile($username, $useremail, $userpassword, $userphone, $userage, $userbio, $location, $pincode, $country,$currency);
 }
 
 if (isset($_POST['update'])) {
@@ -573,15 +574,25 @@ if (isset($_POST['update'])) {
                                                         </div>
                                                     </div>
                                                     <div class="row mb-3">
-                                                        <div class="col-lg-12">
+                                                        <div class="col-lg-6">
                                                             <label class="small mb-1" for="inputEmailAddress">Email
                                                                 address</label>
                                                             <input class="form-control" id="inputEmailAddress"
                                                                 type="email" placeholder="Enter your email address"
                                                                 name="useremail"
                                                                 value="<?php echo _getsingleuser($_id, '_useremail'); ?>">
-                                                            <div class="invalid-feedback">Please type correct email
+                                                                <div class="invalid-feedback">Please type correct email
                                                             </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <label class="small mb-1" for="inputEmailAddress">Default Currency</label>
+                                                            <select name="currency" style="height: 46px;" id="usertype" name="usertype" class="form-control form-control-sm" id="exampleFormControlSelect2" required>
+                                                                <option
+                                                                    value="<?php echo _getsingleuser($_id, '_usercurrency'); ?>">
+                                                                    <?php echo _getsingleuser($_id, '_usercurrency'); ?>
+                                                                </option>
+                                                                <?php _getmarkupOnlyCurrency() ?>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                     <div class="row gx-3 mb-3">

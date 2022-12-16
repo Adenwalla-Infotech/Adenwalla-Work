@@ -67,7 +67,7 @@ $start_from = ($page - 1) * $record_per_page;
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">My Transcations (All Payments)</h4>
+                                <h4 class="card-title"><img src="../assets/icons/cash-flow.png" class="menu-icon" style="margin-right: 10px;margin-top:-5px;width:22px"> My Transcations (All Payments)</h4>
                                 <p class="card-description">
                                     From here, you'll see a list of all the categories on your site. You can edit or
                                     delete them from here. You can also change the order of your categories by dragging

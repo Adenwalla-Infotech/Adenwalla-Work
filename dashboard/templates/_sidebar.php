@@ -2,21 +2,28 @@
   <ul class="nav">
     <li class="nav-item">
       <a class="nav-link" href="index">
-        <i class="icon-grid menu-icon"></i>
+        <img src="../assets/icons/speedometer.png" class="menu-icon" style="margin-right: 12px;margin-top:-5px;width:22px;margin-left:0px">
         <span class="menu-title">Dashboard</span>
       </a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="myinvoice">
-        <i class="mdi mdi-cash-multiple menu-icon"></i>
-        <span class="menu-title">My Invoice</span>
+        <img src="../assets/icons/validating-ticket.png" class="menu-icon" style="margin-right: 12px;margin-top:-5px;width:25px;margin-left:0px">
+        <span class="menu-title">My Invoices</span>
       </a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="mytranscations">
         <!-- <i class="mdi mdi-wallet-membership menu-icon"></i> -->
-        <i class="mdi mdi-cash-multiple menu-icon"></i>
-        <span class="menu-title">My Transactions</span>
+        <img src="../assets/icons/cash-flow.png" class="menu-icon" style="margin-right: 10px;margin-top:-5px;width:25px"> 
+        <span class="menu-title">My Payments</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="myexports">
+        <!-- <i class="mdi mdi-wallet-membership menu-icon"></i> -->
+        <img src="../assets/icons/share.png" class="menu-icon" style="margin-right: 10px;margin-top:-5px;width:25px"> 
+        <span class="menu-title">My Exports</span>
       </a>
     </li>
     <hr style="width: 100%;height:0.1px;background-color:#E5E5E5">
@@ -117,7 +124,7 @@
     <?php } ?>
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#ui-ticket" aria-expanded="false" aria-controls="ui-basic">
-        <i class="mdi mdi-ticket-account menu-icon"></i>
+        <img src="../assets/icons/customer-service.png" class="menu-icon" style="margin-right: 10px;margin-top:-5px;width:25px"> 
         <span class="menu-title">Support Ticket</span>
         <i class="menu-arrow"></i>
       </a>
@@ -130,7 +137,7 @@
     </li>
     <li class="nav-item">
       <a class="nav-link" href="edit-profile">
-        <i class="ti-settings menu-icon"></i>
+        <img src="../assets/icons/settings.png" class="menu-icon" style="margin-right: 10px;margin-top:-5px;width:25px"> 
         <span class="menu-title">Profile Setting</span>
       </a>
     </li>
@@ -174,7 +181,7 @@
       </li>
     <li class="nav-item">
         <a class="nav-link" data-toggle="collapse" href="#ui-invoice" aria-expanded="false" aria-controls="ui-basic">
-          <i class="mdi mdi-cash-multiple menu-icon"></i>
+          🛠️<i class="menu-icon"></i>
           <span class="menu-title">Invoice</span>
           <i class="menu-arrow"></i>
         </a>
@@ -188,19 +195,21 @@
       <?php } ?>
       <li class="nav-item">
       <a class="nav-link" href="memberships">
-        <i class="mdi mdi-wallet-membership menu-icon"></i>
+        <img src="../assets/icons/member-card.png" class="menu-icon" style="margin-right: 12px;margin-top:-5px;width:25px;margin-left:5px">
         <span class="menu-title">All Memberships</span>
       </a>
     </li>
     <li class="nav-item">
         <a class="nav-link" data-toggle="collapse" href="#ui-content" aria-expanded="false" aria-controls="ui-basic">
-          <i class="mdi mdi-tune-vertical menu-icon"></i>
-          <span class="menu-title">Content Tools</span>
+          <img src="../assets/icons/robot.png" class="menu-icon" style="margin-right: 10px;margin-top:-5px"> 
+          <span class="menu-title">AI Modules</span>
           <i class="menu-arrow"></i>
         </a>
         <div class="collapse" id="ui-content">
           <ul class="nav flex-column sub-menu">
             <li class="nav-item"> <a class="nav-link" href="email-writer">Email Writer</a></li>
+            <li class="nav-item"> <a class="nav-link" href="story-writer">Story Writer</a></li>
+            <li class="nav-item"> <a class="nav-link" href="image-writer">Image Writer</a></li>
           </ul>
         </div>
       </li>
