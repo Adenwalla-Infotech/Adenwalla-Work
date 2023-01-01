@@ -3440,7 +3440,7 @@ function _apigeneratecontent($tool,$content,$engine,$length,$cost,$type){
                     "presence_penalty" => 0.53
                 ]);
                 $data = json_decode($complete,true);
-                return $data;
+                // return $data;
                 if($data){
                     $useremail = _getsingleuser($userid,'_useremail');
                     $content2 = $data['choices'][0]['text'];
