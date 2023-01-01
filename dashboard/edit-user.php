@@ -130,7 +130,7 @@ if (isset($_POST['submit'])) {
                                         </div>
                                         <div class="col">
                                             <label for="userlocation" class="form-label">User Wallet</label>
-                                            <input type="number" class="form-control" placeholder="Wallet Balance" aria-label="user location" value="<?php echo _getsingleuser($_id, '_userwallet'); ?>"  name="userwallet">
+                                            <input type="text" class="form-control" placeholder="Wallet Balance" aria-label="user location" value="<?php echo _getsingleuser($_id, '_userwallet'); ?>"  name="userwallet">
                                         </div>
 
                                         <!-- <div class="col">

@@ -3274,6 +3274,8 @@ function _viewexports($useremail, $startfrom = '', $limit = '')
                         }
                         if($data['_engine'] == 'text-davinci-003'){
                             echo 'Advanced Engine';
+                        }else{
+                            echo $data['_engine'];
                         }
                     ?>
                 </td>
@@ -3288,10 +3290,10 @@ function _viewexports($useremail, $startfrom = '', $limit = '')
                 <td><?php echo $data['_balance']; ?></td>
                 <?php } ?>
                 <?php if(_getsingleuser($userid,'_usertype') == 2){ ?>
-                <td><span style="display:none" id="content<?php echo $i; ?>"><?php echo $data['_content']; ?></span> <?php echo  substr_replace($data['_content'], "...", 12); ?><button onclick="copyText(<?php echo $i; ?>)" type="button" style="width:30px;height:30px" class="btn btn-primary btn-sm"><i style="margin-left:-5px;margin-top:-5px" class="mdi mdi-content-copy"></i></button></td>
+                <td><span style="display:none" id="content<?php echo $i; ?>"><?php echo $data['_content']; ?></span> <?php echo  substr_replace($data['_content'], "   ", 12); ?><button onclick="copyText(<?php echo $i; ?>)" type="button" style="width:30px;height:30px" class="btn btn-primary btn-sm"><i style="margin-left:-5px;margin-top:-5px" class="mdi mdi-content-copy"></i></button></td>
                 <?php } ?>
                 <?php if(_getsingleuser($userid,'_usertype') != 2){ ?>
-                <td><span style="display:none" id="content<?php echo $i; ?>"><?php echo $data['_content']; ?></span> <?php echo  substr_replace($data['_content'], "...", 82); ?><button onclick="copyText(<?php echo $i; ?>)" type="button" style="width:30px;height:30px" class="btn btn-primary btn-sm"><i style="margin-left:-5px;margin-top:-5px" class="mdi mdi-content-copy"></i></button></td>
+                <td><span style="display:none" id="content<?php echo $i; ?>"><?php echo $data['_content']; ?></span><?php echo  substr_replace($data['_content'], "   ", 82); ?>&nbsp;&nbsp;<button onclick="copyText(<?php echo $i; ?>)" type="button" style="width:30px;height:30px" class="btn btn-primary btn-sm"><i style="margin-left:-5px;margin-top:-25px" class="mdi mdi-content-copy"></i></button></td>
                 <?php } ?>
                 <td>
                     <?php echo date("M j, Y", strtotime($data['CreationDate'])); ?>

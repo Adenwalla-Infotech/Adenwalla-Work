@@ -15919,7 +15919,7 @@ button.bg-dark:focus,
 }
 
 .d-none, .navbar .navbar-menu-wrapper .navbar-nav.navbar-nav-right .nav-item.nav-settings {
-  display: none !important;
+  display: flex !important;
 }
 
 .d-inline {

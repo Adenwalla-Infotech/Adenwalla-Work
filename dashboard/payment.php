@@ -17,17 +17,18 @@ if (!isset($_SESSION['isLoggedIn']) || !$_SESSION['isLoggedIn'] || $_SESSION['is
 require('../includes/_functions.php');
 
 $_id =  $_SESSION['userId'];
-$getprice = $_GET['amount'];
 $currency = _getsingleuser($_id,'_usercurrency');
 if(!$currency){
     $currency = 'INR';
 }
-if(isset($_GET['prod'])&& isset($_GET['id'])){
+if(isset($_GET['prod']) != '' && isset($_GET['id']) != '' && isset($_GET['amount']) != ''){
     $product = $_GET['prod'];
     $productid = $_GET['id'];
+    $getprice = $_GET['amount'];
 }else{
-    $product =null;
-    $productid = null;
+    echo "<script>";
+    echo "window.location.href = 'index'";
+    echo "</script>";
 }
 $getamount = _conversion($getprice,$currency);
 

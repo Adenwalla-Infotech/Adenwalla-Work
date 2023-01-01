@@ -3,7 +3,7 @@
 include("../includes/_config.php");
 include("../includes/_functions.php");
 
-if (!empty($_POST["words"])) {
+if (!empty($_POST["content"])) {
 
     if(isset($_POST['language'])){
         $language = $_POST['language'];

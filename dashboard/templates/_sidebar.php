@@ -1,12 +1,12 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
   <ul class="nav">
-    <li class="nav-item">
+     <li class="nav-item">
       <a class="nav-link" href="index">
         <img src="../assets/icons/speedometer.png" class="menu-icon" style="margin-right: 12px;margin-top:-5px;width:22px;margin-left:0px">
         <span class="menu-title">Dashboard</span>
       </a>
     </li>
-    <li class="nav-item">
+    <!-- <li class="nav-item">
       <a class="nav-link" href="myinvoice">
         <img src="../assets/icons/validating-ticket.png" class="menu-icon" style="margin-right: 12px;margin-top:-5px;width:25px;margin-left:0px">
         <span class="menu-title">My Invoices</span>
@@ -14,19 +14,20 @@
     </li>
     <li class="nav-item">
       <a class="nav-link" href="mytranscations">
-        <!-- <i class="mdi mdi-wallet-membership menu-icon"></i> -->
         <img src="../assets/icons/cash-flow.png" class="menu-icon" style="margin-right: 10px;margin-top:-5px;width:25px"> 
         <span class="menu-title">My Payments</span>
       </a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="myexports">
-        <!-- <i class="mdi mdi-wallet-membership menu-icon"></i> -->
         <img src="../assets/icons/share.png" class="menu-icon" style="margin-right: 10px;margin-top:-5px;width:25px"> 
         <span class="menu-title">My Exports</span>
       </a>
-    </li>
+    </li> -->
+    <?php if ($_SESSION['userType'] == 2) { ?>
     <hr style="width: 100%;height:0.1px;background-color:#E5E5E5">
+    <?php } ?>
+
     <?php if ($_SESSION['userType'] == 2) { ?>
       <li class="nav-item">
         <a class="nav-link" data-toggle="collapse" href="#ui-transactions" aria-expanded="false" aria-controls="ui-basic">
@@ -123,6 +124,12 @@
       </li>
     <?php } ?>
     <li class="nav-item">
+      <a class="nav-link" href="memberships">
+        <img src="../assets/icons/subscription.png" class="menu-icon" style="margin-right: 12px;margin-top:-5px;width:25px;">
+        <span class="menu-title">Memberships</span>
+      </a>
+    </li>
+    <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#ui-ticket" aria-expanded="false" aria-controls="ui-basic">
         <img src="../assets/icons/customer-service.png" class="menu-icon" style="margin-right: 10px;margin-top:-5px;width:25px"> 
         <span class="menu-title">Support Ticket</span>
@@ -135,12 +142,12 @@
         </ul>
       </div>
     </li>
-    <li class="nav-item">
+    <!-- <li class="nav-item">
       <a class="nav-link" href="edit-profile">
         <img src="../assets/icons/settings.png" class="menu-icon" style="margin-right: 10px;margin-top:-5px;width:25px"> 
         <span class="menu-title">Profile Setting</span>
       </a>
-    </li>
+    </li> -->
     <hr style="width: 100%;height:0.1px;background-color:#E5E5E5">
 
     <?php if ($_SESSION['userType'] == 2) { ?>
@@ -191,15 +198,33 @@
             <li class="nav-item"> <a class="nav-link" href="manage-invoice">Manage Invoice</a></li>
           </ul>
         </div>
-      </li>
+    </li>
       <?php } ?>
-      <li class="nav-item">
-      <a class="nav-link" href="memberships">
-        <img src="../assets/icons/member-card.png" class="menu-icon" style="margin-right: 12px;margin-top:-5px;width:25px;margin-left:5px">
-        <span class="menu-title">All Memberships</span>
+    <li class="nav-item">
+      <a class="nav-link" href="email-writer">
+        <img src="../assets/icons/email.png" class="menu-icon" style="margin-right: 12px;margin-top:-5px;width:25px;margin-left:5px">
+        <span class="menu-title">Email Writer</span>
       </a>
     </li>
     <li class="nav-item">
+      <a class="nav-link" href="story-writer">
+        <img src="../assets/icons/script.png" class="menu-icon" style="margin-right: 12px;margin-top:-5px;width:25px;margin-left:5px">
+        <span class="menu-title">Story Writer</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="image-writer">
+        <img src="../assets/icons/pictures.png" class="menu-icon" style="margin-right: 12px;margin-top:-5px;width:25px;margin-left:5px">
+        <span class="menu-title">Image Writer</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="blog-writer">
+        <img src="../assets/icons/blogger.png" class="menu-icon" style="margin-right: 12px;margin-top:-5px;width:25px;margin-left:5px">
+        <span class="menu-title">Blog Writer</span>
+      </a>
+    </li>
+    <!-- <li class="nav-item">
         <a class="nav-link" data-toggle="collapse" href="#ui-content" aria-expanded="false" aria-controls="ui-basic">
           <img src="../assets/icons/robot.png" class="menu-icon" style="margin-right: 10px;margin-top:-5px"> 
           <span class="menu-title">AI Modules</span>
@@ -210,8 +235,10 @@
             <li class="nav-item"> <a class="nav-link" href="email-writer">Email Writer</a></li>
             <li class="nav-item"> <a class="nav-link" href="story-writer">Story Writer</a></li>
             <li class="nav-item"> <a class="nav-link" href="image-writer">Image Writer</a></li>
+            <li class="nav-item"> <a class="nav-link" href="blog-writer">Blog Writer</a></li>
+            <li class="nav-item"> <a class="nav-link" href="keyword-writer">Keyword Writer</a></li>
           </ul>
         </div>
-      </li>
+      </li> -->
   </ul>
 </nav>
