@@ -3440,6 +3440,7 @@ function _apigeneratecontent($tool,$content,$engine,$length,$cost,$type){
                     "presence_penalty" => 0.53
                 ]);
                 $data = json_decode($complete,true);
+                return $data;
                 if($data){
                     $useremail = _getsingleuser($userid,'_useremail');
                     $content2 = $data['choices'][0]['text'];
@@ -3453,6 +3454,7 @@ function _apigeneratecontent($tool,$content,$engine,$length,$cost,$type){
                     foreach($query as $data){
                         $currentbalance = $data['_userwallet'];
                     }
+                    // if($content2)
                     $newbalance = $currentbalance - $total_cost;
                     $sql = "UPDATE `tblusers` SET `_userwallet`='$newbalance' WHERE `_id` = $userid";
                     $query = mysqli_query($conn,$sql);
