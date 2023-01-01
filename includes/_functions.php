@@ -3353,22 +3353,22 @@ function _purchaserecharge($userid, $amount)
     $newamount = _reverseconversion($amount,_getsingleuser($userid,'_usercurrency'));
     $sql = "UPDATE `tblusers` SET `_userwallet`=_userwallet + $newamount WHERE `_id` = $userid";
     $query = mysqli_query($conn, $sql);
-    if ($query) {
-        $sql = "SELECT * FROM `tblemailtemplates`";
-        $query = mysqli_query($conn, $sql);
-        foreach ($query as $data) {
-            $template = $data['_paymenttemplate'];
-        }
-        $variables = array();
-        $variables['name'] = _getsingleuser($userid, '_username');
-        $variables['price'] = $amount;
-        $variables['date'] = date('M j, Y');
-        $variables['companyname'] = _siteconfig('_sitetitle');
-        $variables['paymentid'] = $_SESSION['transid'];
-        $sendmail = _usetemplate($template, $variables);
-        $message = 'Thank you for your Payment with' . _siteconfig('_sitetitle') . '. We have mailed your details';
-        // _notifyuser(_getsingleuser($userid, '_useremail'), _getsingleuser($userid, '_userphone'), $sendmail, $message, 'Payment Successfull');
-    }
+    // if ($query) {
+    //     $sql = "SELECT * FROM `tblemailtemplates`";
+    //     $query = mysqli_query($conn, $sql);
+    //     foreach ($query as $data) {
+    //         $template = $data['_paymenttemplate'];
+    //     }
+    //     $variables = array();
+    //     $variables['name'] = _getsingleuser($userid, '_username');
+    //     $variables['price'] = $amount;
+    //     $variables['date'] = date('M j, Y');
+    //     $variables['companyname'] = _siteconfig('_sitetitle');
+    //     $variables['paymentid'] = $_SESSION['transid'];
+    //     $sendmail = _usetemplate($template, $variables);
+    //     $message = 'Thank you for your Payment with' . _siteconfig('_sitetitle') . '. We have mailed your details';
+    //     // _notifyuser(_getsingleuser($userid, '_useremail'), _getsingleuser($userid, '_userphone'), $sendmail, $message, 'Payment Successfull');
+    // }
 }
 
 // AI Functions 
