@@ -3424,7 +3424,7 @@ function _apigeneratecontent($tool,$content,$engine,$length,$cost,$type){
             }
         }
         $newcost =  _getsingleuser($userid,'_userwallet') - $cost;
-        return $newcost;
+        // return $newcost;
         if($newcost <= 0){
             return 0;
         }else{
