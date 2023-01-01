@@ -3425,73 +3425,73 @@ function _apigeneratecontent($tool,$content,$engine,$length,$cost,$type){
         }
         $newcost =  _getsingleuser($userid,'_userwallet') - $cost;
         return $newcost;
-        // if($newcost < 0){
-        //     return 0;
-        // }else{
-        //     $int = (int)$length;
-        //     if($type == 'text'){
-        //         $complete = $open_ai->complete([
-        //             'engine' => $engine,
-        //             'prompt' => "$tool $content",
-        //             'temperature' => 0.7,
-        //             'max_tokens' => $int,
-        //             "top_p" => 1,
-        //             "frequency_penalty" => 0.97,
-        //             "presence_penalty" => 0.53
-        //         ]);
-        //         $data = json_decode($complete,true);
-        //         if($data){
-        //             $useremail = _getsingleuser($userid,'_useremail');
-        //             $content2 = $data['choices'][0]['text'];
-        //             $token_used = $data['usage']['completion_tokens'];
-        //             $total_cost = costcalculation($token_used,$engine);
-        //             $newcost = _getsingleuser($userid,'_userwallet') - $total_cost;
-        //             $total_words = $token_used * 0.75;
-        //             $_SESSION['total_cost'] = $total_cost;
-        //             $sql = "SELECT * FROM `tblusers` WHERE `_id` = $userid";
-        //             $query = mysqli_query($conn,$sql);
-        //             foreach($query as $data){
-        //                 $currentbalance = $data['_userwallet'];
-        //             }
-        //             $newbalance = $currentbalance - $total_cost;
-        //             $sql = "UPDATE `tblusers` SET `_userwallet`='$newbalance' WHERE `_id` = $userid";
-        //             $query = mysqli_query($conn,$sql);
-        //             if($query){
-        //                 echo nl2br($content2,true);
-        //                 $content2 = preg_replace('/[^a-zA-Z0-9_ -]/s','',$content2);
-        //                 $sql = "INSERT INTO `tblcontentrans`(`_summary`, `_engine`, `_words`, `_content`, `_useremail`, `_cost`, `_balance`,`_tokens`) VALUES ('$content','$engine','$total_words', '$content2', '$useremail', '$total_cost','$newcost','$token_used')";
-        //                 $query = mysqli_query($conn,$sql);
-        //             }
-        //         }
-        //     }else{
-        //         $useremail = _getsingleuser($userid,'_useremail');
-        //         $complete = $open_ai->image([
-        //             "prompt" => "$content",
-        //             "n" => 1,
-        //             "size" => $length,
-        //             "response_format" => "url",
-        //         ]);
-        //         $data = json_decode($complete,true);
-        //         $content2 = $data['data'][0]['url'];
-        //         $total_cost = $cost;
-        //         $newcost = _getsingleuser($userid,'_userwallet') - $total_cost;
-        //         $total_words = $cost;
-        //         $_SESSION['total_cost'] = $total_cost;
-        //         $sql = "SELECT * FROM `tblusers` WHERE `_id` = $userid";
-        //         $query = mysqli_query($conn,$sql);
-        //         foreach($query as $data){
-        //             $currentbalance = $data['_userwallet'];
-        //         }
-        //         $newbalance = $currentbalance - $total_cost;
-        //         $sql = "UPDATE `tblusers` SET `_userwallet`='$newbalance' WHERE `_id` = $userid";
-        //         $query = mysqli_query($conn,$sql);
-        //         if($query){
-        //             $sql = "INSERT INTO `tblcontentrans`(`_summary`, `_engine`, `_words`, `_content`, `_useremail`, `_cost`, `_balance`,`_tokens`) VALUES ('$content','AI Image','$total_words', '$content2', '$useremail', '$total_cost','$newcost','$total_cost')";
-        //             $query = mysqli_query($conn,$sql);
-        //             return $content2;
-        //         }
-        //     }
-        // }
+        if($newcost <= 0){
+            return 0;
+        }else{
+            $int = (int)$length;
+            if($type == 'text'){
+                $complete = $open_ai->complete([
+                    'engine' => $engine,
+                    'prompt' => "$tool $content",
+                    'temperature' => 0.7,
+                    'max_tokens' => $int,
+                    "top_p" => 1,
+                    "frequency_penalty" => 0.97,
+                    "presence_penalty" => 0.53
+                ]);
+                $data = json_decode($complete,true);
+                if($data){
+                    $useremail = _getsingleuser($userid,'_useremail');
+                    $content2 = $data['choices'][0]['text'];
+                    $token_used = $data['usage']['completion_tokens'];
+                    $total_cost = costcalculation($token_used,$engine);
+                    $newcost = _getsingleuser($userid,'_userwallet') - $total_cost;
+                    $total_words = $token_used * 0.75;
+                    $_SESSION['total_cost'] = $total_cost;
+                    $sql = "SELECT * FROM `tblusers` WHERE `_id` = $userid";
+                    $query = mysqli_query($conn,$sql);
+                    foreach($query as $data){
+                        $currentbalance = $data['_userwallet'];
+                    }
+                    $newbalance = $currentbalance - $total_cost;
+                    $sql = "UPDATE `tblusers` SET `_userwallet`='$newbalance' WHERE `_id` = $userid";
+                    $query = mysqli_query($conn,$sql);
+                    if($query){
+                        echo nl2br($content2,true);
+                        $content2 = preg_replace('/[^a-zA-Z0-9_ -]/s','',$content2);
+                        $sql = "INSERT INTO `tblcontentrans`(`_summary`, `_engine`, `_words`, `_content`, `_useremail`, `_cost`, `_balance`,`_tokens`) VALUES ('$content','$engine','$total_words', '$content2', '$useremail', '$total_cost','$newcost','$token_used')";
+                        $query = mysqli_query($conn,$sql);
+                    }
+                }
+            }else{
+                $useremail = _getsingleuser($userid,'_useremail');
+                $complete = $open_ai->image([
+                    "prompt" => "$content",
+                    "n" => 1,
+                    "size" => $length,
+                    "response_format" => "url",
+                ]);
+                $data = json_decode($complete,true);
+                $content2 = $data['data'][0]['url'];
+                $total_cost = $cost;
+                $newcost = _getsingleuser($userid,'_userwallet') - $total_cost;
+                $total_words = $cost;
+                $_SESSION['total_cost'] = $total_cost;
+                $sql = "SELECT * FROM `tblusers` WHERE `_id` = $userid";
+                $query = mysqli_query($conn,$sql);
+                foreach($query as $data){
+                    $currentbalance = $data['_userwallet'];
+                }
+                $newbalance = $currentbalance - $total_cost;
+                $sql = "UPDATE `tblusers` SET `_userwallet`='$newbalance' WHERE `_id` = $userid";
+                $query = mysqli_query($conn,$sql);
+                if($query){
+                    $sql = "INSERT INTO `tblcontentrans`(`_summary`, `_engine`, `_words`, `_content`, `_useremail`, `_cost`, `_balance`,`_tokens`) VALUES ('$content','AI Image','$total_words', '$content2', '$useremail', '$total_cost','$newcost','$total_cost')";
+                    $query = mysqli_query($conn,$sql);
+                    return $content2;
+                }
+            }
+        }
     }else{
         return 1;
     }
