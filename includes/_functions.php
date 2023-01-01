@@ -3350,9 +3350,9 @@ function _getClients($id = '')
 function _purchaserecharge($userid, $amount)
 {
     require('_config.php');
-    $newamount = _reverseconversion($amount,_getsingleuser($userid,'_usercurrency'));
-    $sql = "UPDATE `tblusers` SET `_userwallet`=_userwallet + $newamount WHERE `_id` = $userid";
-    $query = mysqli_query($conn, $sql);
+    // $newamount = _reverseconversion($amount,_getsingleuser($userid,'_usercurrency'));
+    // $sql = "UPDATE `tblusers` SET `_userwallet`=_userwallet + $newamount WHERE `_id` = $userid";
+    // $query = mysqli_query($conn, $sql);
     // if ($query) {
     //     $sql = "SELECT * FROM `tblemailtemplates`";
     //     $query = mysqli_query($conn, $sql);
