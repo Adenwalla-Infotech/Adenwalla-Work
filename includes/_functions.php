@@ -3367,7 +3367,7 @@ function _purchaserecharge($userid, $amount)
         $variables['paymentid'] = $_SESSION['transid'];
         $sendmail = _usetemplate($template, $variables);
         $message = 'Thank you for your Payment with' . _siteconfig('_sitetitle') . '. We have mailed your details';
-        _notifyuser(_getsingleuser($userid, '_useremail'), _getsingleuser($userid, '_userphone'), $sendmail, $message, 'Payment Successfull');
+        // _notifyuser(_getsingleuser($userid, '_useremail'), _getsingleuser($userid, '_userphone'), $sendmail, $message, 'Payment Successfull');
     }
 }
 
